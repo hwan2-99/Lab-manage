@@ -24,9 +24,16 @@ public class UserService {
         return a > 0;
     }
 
+    public boolean duplicationCheck(UserDto.SignUpReq req){
+        User user[] = userMapper.selectUserById((new User(req.getId())));
+        if(user.length == 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
     public void addUser(UserDto.SignUpReq req){
         userMapper.insertUser(new User(req.getName(), req.getId(), req.getPw()));
-
     }
 
     public UserDto login(UserDto userDto){

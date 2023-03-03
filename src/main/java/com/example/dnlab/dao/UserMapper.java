@@ -7,4 +7,5 @@ import java.util.HashMap;
 @Mapper
 public interface UserMapper {
     public void insertUser(User user);
+    public User[] selectUserById(User user);
 }

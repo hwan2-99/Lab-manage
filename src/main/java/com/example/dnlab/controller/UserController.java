@@ -29,19 +29,37 @@ public class UserController {
         return "ok";
     }
 
+    // 회원가입 페이지 이동
     @GetMapping("/addUser")
     public String addUserPage(){
         System.out.printf("test");
         return "signUp";
     }
 
+    // 회원가입 요청 처리 및 페이지 이동
     @PostMapping("/addUser")
-    public String addUser(UserDto.SignUpReq req, HttpSession session){
+    public String addUser(UserDto.SignUpReq req, UserDto.SignUpRes res){
         logger.info("UserController addUser()");
 
-        service.addUser(req);
-        session.setAttribute("id",req.getId());
-        return "login";
+        if(req.getId() == ""){
+            res.setErrorMsg("Id를 입력 해주세요.");
+            return "signUp";
+        }else if(req.getName() == ""){
+            res.setErrorMsg("이름을 입력 해주세요.");
+            return "signUp";
+        }else if(req.getPw() == ""){
+            res.setErrorMsg("패스워드를 입력 해주세요.");
+            return "signUp";
+        }
+
+        if(service.duplicationCheck(req)){
+            res.setErrorMsg("이미 존재하는 아이디입니다.");
+            return "signUp";
+        }else{
+            service.addUser(req);
+            return "home";
+        }
+
     }
     @GetMapping("/login")
     public String login(){

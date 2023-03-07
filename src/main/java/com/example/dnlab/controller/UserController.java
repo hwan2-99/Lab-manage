@@ -1,14 +1,19 @@
 package com.example.dnlab.controller;
 
 import com.example.dnlab.dto.UserDto;
+import com.example.dnlab.entity.User;
 import com.example.dnlab.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,16 +23,6 @@ import javax.servlet.http.HttpSession;
 public class UserController {
     public final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService service;
-
-    @PostMapping("/getId")
-    public String getId(UserDto userDto){
-        logger.info("UserController getId()");
-        boolean a = service.getId(userDto);
-        if(a) {
-            return "no";
-        }
-        return "ok";
-    }
 
     // 회원가입 페이지 이동
     @GetMapping("/addUser")
@@ -61,15 +56,29 @@ public class UserController {
         }
 
     }
+    //로그인 Get
     @GetMapping("/login")
     public String login(){
         logger.info("UserController login()");
         return "login";
     }
 
+    //로그인 Post
     @PostMapping("/login")
-    public UserDto login(UserDto userDto){
-        logger.info("UserController login()");
-        return service.login(userDto);
+    public String login(HttpSession session, UserDto.loginReq req, Model model){
+        if(session.getAttribute("login")!= null){
+            session.removeAttribute("login");
+        }
+
+        User user = service.login(req);
+
+        if(user != null){
+            session.setAttribute("login",user);
+            logger.info("로그인 성공");
+            return "redirect:/home";
+        }
+        logger.info("로그인 실패");
+        return "redirect:/login";
     }
+
 }

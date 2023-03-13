@@ -2,32 +2,23 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.dnlab.dao.UserMapper">
-    <resultMap id="userMap" type="com.example.dnlab.entity.User">
-        <result property="id" column="id"/>
-        <result property="pw" column="pw"/>
-        <result property="name" column="name"/>
-    </resultMap>
+<mapper namespace="com.example.dnlab.global.user.repository.UserMapper">
 
     <!-- 회원 가입 중복 검사-->
-    <select id = "selectUserById" resultType="com.example.dnlab.entity.User">
-        SELECT * FROM user WHERE id = #{id} ;
-    </select>
-
-    <select id="getUserById" parameterType="String" resultMap="userMap">
-        SELECT * FROM USER
-        WHERE id = #{id}
+    <select id = "dupleId" resultType="User">
+        SELECT ID FROM USER
+        WHERE ID = #{id}
     </select>
 
     <!-- 회원 가입 -->
     <insert id="insertUser">
-        INSERT INTO USER(NAME, ID, PW)
-        VALUES (#{name}, #{id}, #{pw})
+        INSERT INTO USER(NAME, GENERATION, ID, PW, LEDERYN)
+        VALUES (#{name}, #{generation}, #{id}, #{pw}, #{leaderYN})
     </insert>
 
     <!-- 로그인 -->
-    <select id="login">
-        SELECT * FROM USER
+    <select id="login" resultType="User">
+        SELECT ID, PW FROM USER
         WHERE ID = #{id} AND PW = #{pw}
     </select>
 

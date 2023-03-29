@@ -1,4 +1,4 @@
-package com.example.dnlab.global.user.entity;
+package com.example.dnlab.domain.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +22,5 @@ public class User {
         this.generation = 0;
         this.pw = pw;
         this.leaderYN = false;
-
     }
 }

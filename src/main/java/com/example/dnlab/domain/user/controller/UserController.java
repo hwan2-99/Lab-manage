@@ -1,12 +1,11 @@
-package com.example.dnlab.global.user.controller;
+package com.example.dnlab.domain.user.controller;
 
-import com.example.dnlab.global.user.dto.UserDto;
-import com.example.dnlab.global.user.service.UserService;
+import com.example.dnlab.domain.user.dto.UserDto;
+import com.example.dnlab.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 
 @Slf4j
-@RestController
 @RequiredArgsConstructor
+@RestController
 public class UserController {
     private final UserService service;
 

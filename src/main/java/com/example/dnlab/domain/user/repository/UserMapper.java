@@ -1,7 +1,7 @@
-package com.example.dnlab.global.user.repository;
+package com.example.dnlab.domain.user.repository;
 
-import com.example.dnlab.global.user.dto.UserDto;
-import com.example.dnlab.global.user.entity.User;
+import com.example.dnlab.domain.user.dto.UserDto;
+import com.example.dnlab.domain.user.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

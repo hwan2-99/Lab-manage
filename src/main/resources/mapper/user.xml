@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.dnlab.global.user.repository.UserMapper">
+<mapper namespace="com.example.dnlab.domain.user.repository.UserMapper">
 
     <!-- 회원 가입 중복 검사-->
     <select id = "dupleId" resultType="User">

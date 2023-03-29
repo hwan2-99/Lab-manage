@@ -1,8 +1,6 @@
-package com.example.dnlab.global.user.dto;
+package com.example.dnlab.domain.user.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -43,6 +41,7 @@ public class UserDto {
     public static class dupleId{
         private String id;
     }
+    //유저 아이디 반환용 dto
     @Data
     public static class UserCheckId{
         private String id;

@@ -3,56 +3,39 @@ package com.example.dnlab.domain.user.controller;
 import com.example.dnlab.domain.user.dto.UserDto;
 import com.example.dnlab.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
-@Slf4j
-@RequiredArgsConstructor
 @RestController
+@RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
-    private final UserService service;
-
-    // 회원가입 페이지 이동
-    @GetMapping("/addUser")
-    public String addUserPage(){
-        System.out.printf("test");
-        return "signUp";
-    }
-
-    //로그인 Get
-    @GetMapping("/login")
-    public String login(){
-        return "login";
-    }
+    private final UserService userService;
 
     //로그아웃
-    @GetMapping("/logOut")
-    public ResponseEntity logOut(HttpSession session){
+    @PostMapping("/logOut")
+    public String logout(HttpSession session) {
         session.invalidate();
-        return new ResponseEntity(HttpStatus.OK);
+        return "redirect:/";
     }
 
-    // 회원가입 요청 처리 및 페이지 이동
-    @PostMapping("/addUser")
-    public ResponseEntity addUser(@RequestBody UserDto.SignUpReq req){
-        service.addUser(req);
-        return new ResponseEntity<>(HttpStatus.OK);
-
+    //회원 가입
+    @PostMapping("/signUp")
+    public ResponseEntity<Void> signUp(@RequestBody UserDto.SignUpReq req){
+        userService.addUser(req);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    //로그인 Post
+
+    //로그인
     @PostMapping("/login")
-    public ResponseEntity<UserDto.UserCheckId>addUser(HttpSession session, @RequestBody UserDto.loginReq req){
-        UserDto.UserCheckId userCheckId = service.login(req);
-
-        session.setAttribute("id",userCheckId.getId());
-
-        return new ResponseEntity<>(userCheckId, HttpStatus.OK);
+    public ResponseEntity<UserDto.UserCheckId> login(@RequestBody UserDto.loginReq req,HttpSession session){
+        return userService.login(req,session);
     }
 }
+
+

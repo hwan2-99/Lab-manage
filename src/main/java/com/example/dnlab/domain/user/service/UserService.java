@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -22,9 +23,12 @@ public class UserService {
 
     //회원 가입
     public void addUser(UserDto.SignUpReq req){
-        log.info("name : {}, id = {}, pw = {} ",req.getName(), req.getId(), req.getPw());
+        log.info("name : {}, StudentId :{}, id = {}, pw = {} ",req.getName(), req.getStudentId(),req.getId(), req.getPw());
 
-        userMapper.insertUser(new User(req.getName(), req.getId(),null, req.getPw(),false));
+        if(userMapper.getUserById(req.getId()) != null) {
+            throw new IllegalArgumentException("이미 존재하는 학번입니다.");
+        }
+        userMapper.insertUser(new User(req.getName(),req.getStudentId(), req.getPw(),req.getId()));
     }
 
 
@@ -33,6 +37,7 @@ public class UserService {
         log.info("id : {}",req.getId());
 
         User user = userMapper.selectUserById(req.getId());
+
 
 
         //존재하는 아이디가 아닐때
@@ -49,10 +54,15 @@ public class UserService {
         UserDto.UserCheckId userCheckId = new UserDto.UserCheckId();
         userCheckId.setId(user.getId());
 
-        //세션 저장
+        //세션 저장(pk)
         session.setAttribute("user",user);
 
         //세션 id 반환
         return ResponseEntity.ok().header("SESSION-ID", session.getId()).body(userCheckId);
     }
+
+    public List<User> getAllUsers(){
+        return userMapper.getAllUser();
+    }
+
 }

@@ -1,8 +1,8 @@
-package com.example.dnlab.domain.book.controller;
+package com.example.dnlab.domain.application.controller;
 
+import com.example.dnlab.domain.application.dto.ApplicationDto;
+import com.example.dnlab.domain.application.service.ApplicationService;
 import com.example.dnlab.domain.book.dto.BookDto;
-import com.example.dnlab.domain.book.service.BookService;
-import com.example.dnlab.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/book")
+@RequestMapping("/application")
 @RequiredArgsConstructor
-public class BookController {
-
-    private final BookService bookService;
-
-    //도서 추가
-    @PostMapping("/insertBook")
-    public ResponseEntity<Void> insertBook(@RequestBody BookDto.insertBookReq req){
-        bookService.insertBook(req);
+public class ApplicationController {
+    private final ApplicationService applicationService;
+    @PostMapping("/insertApplication")
+    public ResponseEntity<Void> insertApplication(@RequestBody ApplicationDto.LabSignUpReq req){
+        applicationService.crateApplication(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

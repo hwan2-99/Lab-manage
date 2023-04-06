@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>유저 목록</title>
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th>이름</th>
+    <th>학번</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $.get("/user/userList", function(data) {
+      $.each(data, function(index, user) {
+        var row = $("<tr><td>" + user.name + "</td><td>" + user.studentId + "</td></tr>");
+        $("tbody").append(row);
+      });
+    });
+  </script>
+  </tbody>
+</table>
+</body>
+</html>

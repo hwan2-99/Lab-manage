@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.dnlab.domain.application.repository.ApplicationMapper">
+
+    <!-- 신청서 작성 -->
+    <insert id="createApplication">
+        INSERT INTO Application (motive, intro, wanted, user_num)
+        VALUES (#{motive}, #{intro}, #{wanted}, #{user.num})
+    </insert>
+
+    <!-- 유저 정보와 신청서 정보를 함께 가져오는 매퍼 -->
+    <select id="getApplicationWithUser">
+        SELECT a.id, a.motive, a.intro, a.wanted, a.created_at, a.updated_at,
+               u.name AS user_name, u.student_id AS user_student_id
+        FROM Application a
+                 JOIN User u ON a.user_id = u.id
+        WHERE a.id = #{id}
+    </select>
+</mapper>

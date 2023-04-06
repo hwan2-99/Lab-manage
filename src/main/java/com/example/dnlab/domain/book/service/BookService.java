@@ -14,9 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BookService {
 
-    private BookMapper bookMapper;
+    private final BookMapper bookMapper;
 
     public void insertBook(BookDto.insertBookReq req) {
         bookMapper.insertBook(new Book(req.getTitle(), req.getAuthor(), false));
     }
+
 }

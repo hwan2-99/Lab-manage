@@ -11,6 +11,7 @@ public class UserDto {
     @Builder
     public static class SignUpReq {
         private String name;
+        private int studentId;
         private String id;
         private String pw;
     }

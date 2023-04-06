@@ -3,13 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>DN Lab: 도서추가</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('form').on('submit', function(e){
+        e.preventDefault();
+        var book = {
+          "title": $('input[name=title]').val(),
+          "author": $('input[name=author]').val()
+        };
+        $.ajax({
+          url:'/book/insertBook',
+          type:'POST',
+          data: JSON.stringify(book),
+          contentType: 'application/json',
+          success:function(){
+            alert("도서가 추가되었습니다.");
+            $('input[name=title]').val('');
+            $('input[name=author]').val('');
+          }
+        });
+      });
+    });
+  </script>
 </head>
 <body>
-<form method="post" action="/book/insertBook">
+<form>
   <h2>도서추가</h2>
   <input type="text" name="title" placeholder="제목"><br>
   <input type="text" name="author" placeholder="작가"><br>
-  <button type="submit">도서추가<</button>
+  <button type="submit">도서추가</button>
 </form>
 </body>
 </html>

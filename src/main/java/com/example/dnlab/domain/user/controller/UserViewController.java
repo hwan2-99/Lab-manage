@@ -7,12 +7,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user")
 @Controller
 public class UserViewController {
-    @GetMapping("/login")
+    @GetMapping("login")
     public String login(){
         return "login";
     }
     @GetMapping("signUp")
     public String signUp(){
         return "signUp";
+    }
+    @GetMapping("/userList")
+    public String userLists(){
+        return "userList";
     }
 }

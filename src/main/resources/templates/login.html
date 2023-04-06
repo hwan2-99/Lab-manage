@@ -3,9 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>DN Lab: 로그인</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('form').on('submit', function(e){
+                e.preventDefault();
+                var user = {
+                    "id": $('input[name=id]').val(),
+                    "pw": $('input[name=pw]').val()
+                };
+                $.ajax({
+                    url:'/user/login',
+                    type:'POST',
+                    data: JSON.stringify(user),
+                    contentType: 'application/json',
+                    success:function(){
+                        alert("로그인 되었습니다.");
+                        $('input[name=id]').val('');
+                        $('input[name=pw]').val('');
+                    },
+                    error:function(){
+                        alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
-<form method="post" action="/user/login">
+<form>
     <input type="text" name="id" placeholder="아이디"><br>
     <input type="password" name="pw" placeholder="비밀번호"><br>
     <button type="submit">로그인</button>

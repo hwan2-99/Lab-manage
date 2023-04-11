@@ -13,12 +13,14 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Application {
+    private int num; // pk
+    private User user; // 외래키를 받기위한 객체
     private String motive; //지원동기
     private String intro; // 자기소개
     private String wanted; // 가입 후 하고싶은 연구활동
     private Date createdAt; // 신청서 작성날짜
     private Date updatedAt; // 신청서 수정날짜
-    private int userNum; //유저 외래키
+    private int userNum; // 회원 외래키
 
     public Application(String motive, String intro, String wanted, int userNum) {
         this.motive = motive;
@@ -26,4 +28,5 @@ public class Application {
         this.wanted = wanted;
         this.userNum = userNum;
     }
+
 }

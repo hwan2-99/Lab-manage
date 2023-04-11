@@ -17,9 +17,9 @@
     </insert>
 
     <!-- 로그인 -->
-    <select id="login" resultType="User">
-        SELECT ID, PW FROM USER
-        WHERE ID = #{id} AND PW = #{pw}
+    <select id="selectUserById" resultType="User">
+        SELECT * FROM USER
+        WHERE ID = #{id}
     </select>
 
     <!-- 회원 pk 가져오기 -->
@@ -27,6 +27,7 @@
         SELECT NUM FROM USER WHERE ID = #{id}
     </select>
 
+    <!-- 회원 전훤 조회 -->
     <select id="getAllUser" resultType="User">
         SELECT NAME, STUDENTID FROM USER
     </select>

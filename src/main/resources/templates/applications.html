@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>신청서 목록</title>
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th>지원 동기</th>
+    <th>자기 소개</th>
+    <th>가입후 원하는 연구 활동</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $.get("/application/getAllApplication", function(data) {
+      $.each(data, function(index, application) {
+        var row = $("<tr><td>" + application.motive + "</td><td>" + application.intro + "</td><td>" + application.wanted + "</td></tr>");
+        $("tbody").append(row);
+      });
+    });
+  </script>
+  </tbody>
+</table>
+</body>
+</html>

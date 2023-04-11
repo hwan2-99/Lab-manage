@@ -1,10 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <title>DN Lab: 신청서 작성</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('form').on('submit', function(e){
+                e.preventDefault();
+                var application = {
+                    "motive": $('input[name=motive]').val(),
+                    "intro": $('input[name=intro]').val(),
+                    "wanted": $('input[name=wanted]').val()
+                };
+                $.ajax({
+                    url:'/application/insertApplication',
+                    type:'POST',
+                    data: JSON.stringify(application),
+                    contentType: 'application/json',
+                    success:function(){
+                        alert("신청서 작성이 완료되었습니다.");
+                        $('input[name=motive]').val('');
+                        $('input[name=intro]').val('');
+                        $('input[name=wanted]').val('');
+                    }
+                });
+            });
+        });
+    </script>
 
-</body>
+    <form>
+        <h2>Dn 가입 신청서</h2>
+        <input type="text" name="motive" placeholder="지원 동기"><br>
+        <input type="text" name="intro" placeholder="자기 소개"><br>
+        <input type="text" name="wanted" placeholder="가입 후 원하는 연구활동"><br>
+        <button type="submit">신청서 제출</button>
+    </form>
+
+    </body>
 </html>

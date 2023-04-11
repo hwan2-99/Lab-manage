@@ -34,33 +34,28 @@ public class UserService {
 
     //로그인
     public ResponseEntity<UserDto.UserCheckId> login(UserDto.loginReq req, HttpSession session){
-        log.info("id : {}",req.getId());
 
         User user = userMapper.selectUserById(req.getId());
+        log.info("id : {}, pw : {}",req.getId(),req.getPw());
+        log.info("userId : {}, userPw : {}",user.getId(),user.getPw());
 
+        //로그인 성공
+        if(user.getId().equals(req.getId())){
+            UserDto.UserCheckId userCheckId = new UserDto.UserCheckId();
+            userCheckId.setId(user.getId());
 
+            //세션 저장(pk)
+            session.setAttribute("user",user);
 
-        //존재하는 아이디가 아닐때
-        if(user == null){
+            //세션 id 반환
+            return ResponseEntity.ok().header("SESSION-ID", session.getId()).body(userCheckId);
+        }else{ //로그인 실패
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        //비밀번호 틀림
-        if(user.getPw() != req.getPw()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        //로그인성공
-        UserDto.UserCheckId userCheckId = new UserDto.UserCheckId();
-        userCheckId.setId(user.getId());
-
-        //세션 저장(pk)
-        session.setAttribute("user",user);
-
-        //세션 id 반환
-        return ResponseEntity.ok().header("SESSION-ID", session.getId()).body(userCheckId);
     }
 
+
+    //전체 회원 조회
     public List<User> getAllUsers(){
         return userMapper.getAllUser();
     }

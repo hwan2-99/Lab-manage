@@ -7,8 +7,9 @@
     <!-- 신청서 작성 -->
     <insert id="createApplication">
         INSERT INTO Application (motive, intro, wanted, user_num)
-        VALUES (#{motive}, #{intro}, #{wanted}, #{user.num})
+        VALUES (#{motive}, #{intro}, #{wanted}, #{userNum})
     </insert>
+
 
     <!-- 유저 정보와 신청서 정보를 함께 가져오는 매퍼 -->
     <select id="getApplicationWithUser">
@@ -18,4 +19,10 @@
                  JOIN User u ON a.user_id = u.id
         WHERE a.id = #{id}
     </select>
+
+    <!-- 회원 전훤 조회 -->
+    <select id="getAllApplication" resultType="Application">
+        SELECT * FROM APPLICATION
+    </select>
+
 </mapper>

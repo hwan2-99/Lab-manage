@@ -15,8 +15,8 @@ public class UserViewController {
     public String signUp(){
         return "signUp";
     }
-    @GetMapping("/userList")
+    @GetMapping("/userLists")
     public String userLists(){
-        return "userList";
+        return "userLists";
     }
 }

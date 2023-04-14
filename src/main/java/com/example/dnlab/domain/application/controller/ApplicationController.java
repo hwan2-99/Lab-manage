@@ -27,7 +27,7 @@ public class ApplicationController {
     }
 
     //신청서 조회 Get
-    @GetMapping("/application")
+    @GetMapping("/applications")
     public List<Application> getAllApplications(){
         return applicationService.getAllApplications();
     }

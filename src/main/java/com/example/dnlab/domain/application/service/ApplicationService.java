@@ -26,9 +26,9 @@ public class ApplicationService {
     public void crateApplication(ApplicationDto.LabSignUpReq req){
 
         User user = (User)session.getAttribute("user");
-        int userNum = user.getNum();
+        int user_num = user.getNum();
         log.info("지원 동기: {}, 자기소개 : {}, 원하는 연구활동 : {} , 유저 pk : {}",req.getMotive(),req.getMotive(),req.getWanted(),user.getNum());
-        applicationMapper.createApplication(new Application(req.getMotive(), req.getIntro(), req.getWanted(), userNum));
+        applicationMapper.createApplication(new Application(req.getMotive(), req.getIntro(), req.getWanted(), user_num));
     }
 
     //모든 신청서 조회

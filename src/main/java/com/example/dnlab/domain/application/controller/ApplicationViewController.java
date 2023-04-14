@@ -12,8 +12,8 @@ public class ApplicationViewController {
     public String insertApplication(){
         return "insertApplication";
     }
-    @GetMapping("applications")
-    public String getAllApplications(){
+    @GetMapping("AllApplication")
+    public String getAllApplication(){
         return "applications";
     }
 }

@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookMapper {
     void insertBook(Book book);
+    void borrowBook();
 }

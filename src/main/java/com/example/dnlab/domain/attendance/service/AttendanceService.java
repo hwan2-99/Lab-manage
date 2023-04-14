@@ -1,0 +1,49 @@
+package com.example.dnlab.domain.attendance.service;
+
+import com.example.dnlab.domain.attendance.AttendanceStatus;
+import com.example.dnlab.domain.attendance.dto.AttendanceDto;
+import com.example.dnlab.domain.attendance.entity.Attendance;
+import com.example.dnlab.domain.attendance.repository.AttendanceMapper;
+import com.example.dnlab.domain.user.entity.User;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpSession;
+import java.util.Calendar;
+import java.util.Date;
+
+@Slf4j
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class AttendanceService {
+    private final AttendanceMapper attendanceMapper;
+    private final HttpSession session;
+
+    //출근 메소드(정상과 지각만)
+    public void doAttendance(AttendanceDto.StartCheck req){
+        User user = (User)session.getAttribute("user");
+        int userNum = user.getNum();
+
+        if(req.getStartTime().before(getTodayAt(10,0))){
+            attendanceMapper.insertAttendance(new Attendance(userNum, AttendanceStatus.NORMAL, req.getStartTime()));
+            log.info("회원: {}, 출근시간: {}",userNum,req.getStartTime());
+        }else{
+            attendanceMapper.insertAttendance(new Attendance(userNum,AttendanceStatus.LATE, req.getStartTime()));
+            log.info("회원: {}, 출근시간: {}",userNum,req.getStartTime());
+        }
+
+    }
+
+    // 금일의 시간 반환 메소드
+    public Date getTodayAt(int hour, int minute) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+}

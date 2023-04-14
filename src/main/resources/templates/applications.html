@@ -16,7 +16,7 @@
   <tbody>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    $.get("/application/getAllApplication", function(data) {
+    $.get("/application/applications", function(data) {
       $.each(data, function(index, application) {
         var row = $("<tr><td>" + application.motive + "</td><td>" + application.intro + "</td><td>" + application.wanted + "</td></tr>");
         $("tbody").append(row);

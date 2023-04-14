@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.dnlab.domain.attendance.repository.AttendanceMapper">
+
+    <!-- 출석 정보 넣기 -->
+    <insert id="insertAttendance">
+        INSERT INTO Attendance (start_time, status, user_num)
+        VALUES (#{startTime}, #{status}, #{userNum})
+    </insert>
+
+    <!-- 신청서 조회 -->
+    <select id="getAllApplication" resultType="com.example.dnlab.domain.application.entity.Application">
+        SELECT * FROM APPLICATION
+    </select>
+
+    <!-- 추후 퇴근 기능 추가 시 사용할 select -->
+<!--    &lt;!&ndash; 회원 pk로 마지막 출근 정보 가져오기&ndash;&gt;-->
+<!--    <select id="getLastAttendanceByUserNum" resultType="com.example.dnlab.domain.attendance.entity.Attendance">-->
+<!--        SELECT * FROM attendance-->
+<!--        WHERE user_num = #{userNum}-->
+<!--        ORDER BY start_time DESC-->
+<!--            LIMIT 1-->
+<!--    </select>-->
+<!--    -->
+
+<!-- 추후 퇴근 기능 추가 시 사용할 update -->
+<!--    <update id="leaveAttendance">-->
+<!--        UPDATE attendance-->
+<!--        SET  end_time = #{endTime}-->
+<!--        WHERE num = #{num}-->
+<!--    </update>-->
+
+</mapper>

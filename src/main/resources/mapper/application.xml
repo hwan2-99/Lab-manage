@@ -20,8 +20,8 @@
         WHERE a.id = #{id}
     </select>
 
-    <!-- 회원 전훤 조회 -->
-    <select id="getAllApplication" resultType="Application">
+    <!-- 신청서 조회 -->
+    <select id="getAllApplication" resultType="com.example.dnlab.domain.application.entity.Application">
         SELECT * FROM APPLICATION
     </select>
 

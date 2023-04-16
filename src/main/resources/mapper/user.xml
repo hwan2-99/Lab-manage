@@ -5,7 +5,7 @@
 <mapper namespace="com.example.dnlab.domain.user.repository.UserMapper">
 
     <!-- 회원 가입 중복 검사-->
-    <select id = "getUserById" resultType="User">
+    <select id = "getUserById" resultType="com.example.dnlab.domain.user.entity.User">
         SELECT ID FROM USER
         WHERE ID = #{id}
     </select>
@@ -27,9 +27,12 @@
         SELECT NUM FROM USER WHERE ID = #{id}
     </select>
 
-    <!-- 회원 전훤 조회 -->
+    <!-- 회원 전원 조회 -->
     <select id="getAllUser" resultType="User">
         SELECT NAME, STUDENTID FROM USER
     </select>
 
+    <select id="getUserByNum" resultType="com.example.dnlab.domain.user.entity.User">
+        SELECT * FROM USER WHERE NUM = #{userNum}
+    </select>
 </mapper>

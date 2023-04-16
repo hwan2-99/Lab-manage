@@ -33,4 +33,14 @@ public class UserDto {
         private String pw;
     }
 
+    @Getter
+    @Setter
+    public static class MyPageRes {
+        private String name;
+        private int studentId;
+        private int generation;
+
+        public MyPageRes(String name, int studentId, int generation) {
+        }
+    }
 }

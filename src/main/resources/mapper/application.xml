@@ -11,14 +11,14 @@
     </insert>
 
 
-    <!-- 유저 정보와 신청서 정보를 함께 가져오는 매퍼 -->
-    <select id="getApplicationWithUser">
-        SELECT a.id, a.motive, a.intro, a.wanted, a.created_at, a.updated_at,
-               u.name AS user_name, u.student_id AS user_student_id
-        FROM Application a
-                 JOIN User u ON a.user_id = u.id
-        WHERE a.id = #{id}
-    </select>
+<!--    &lt;!&ndash; 유저 정보와 신청서 정보를 함께 가져오는 매퍼 &ndash;&gt;-->
+<!--    <select id="getApplicationWithUser">-->
+<!--        SELECT a.id, a.motive, a.intro, a.wanted, a.created_at, a.updated_at,-->
+<!--               u.name AS user_name, u.student_id AS user_student_id-->
+<!--        FROM Application a-->
+<!--                 JOIN User u ON a.user_id = u.id-->
+<!--        WHERE a.id = #{id}-->
+<!--    </select>-->
 
     <!-- 신청서 조회 -->
     <select id="getAllApplication" resultType="com.example.dnlab.domain.application.entity.Application">

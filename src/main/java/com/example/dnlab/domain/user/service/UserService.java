@@ -54,10 +54,13 @@ public class UserService {
         }
     }
 
-
     //전체 회원 조회
     public List<User> getAllUsers(){
         return userMapper.getAllUser();
     }
 
+    //회원 한명의 정보 받아오기
+    public User getUserByNum(int num){
+        return userMapper.getUserByNum(num);
+    }
 }

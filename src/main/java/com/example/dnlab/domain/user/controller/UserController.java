@@ -5,14 +5,14 @@ import com.example.dnlab.domain.user.entity.User;
 import com.example.dnlab.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -43,6 +43,15 @@ public class UserController {
     @GetMapping("/userList")
     public List<User>getAllUsers(){
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/myPage")
+    public ResponseEntity<User> getMyPage(HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        User findUser = userService.getUserByNum(user.getNum());
+        log.info("1 = {}, 2 = {} 3 = {}",findUser.getName(),findUser.getStudentId(),findUser.getGeneration());
+
+        return ResponseEntity.ok().body(findUser);
     }
 
 }

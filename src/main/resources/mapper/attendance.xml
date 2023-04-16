@@ -10,10 +10,14 @@
         VALUES (#{startTime}, #{status}, #{userNum})
     </insert>
 
-    <!-- 신청서 조회 -->
-    <select id="getAllApplication" resultType="com.example.dnlab.domain.application.entity.Application">
-        SELECT * FROM APPLICATION
+    <!-- 당일 출석 정보 확인 -->
+    <select id="findAttendanceByUserNumAndStartTimeBetween" resultType="com.example.dnlab.domain.attendance.entity.Attendance">
+        SELECT *
+        FROM attendance
+        WHERE user_num = #{userNum}
+          AND start_time BETWEEN #{startDateTime} AND #{endDateTime}
     </select>
+
 
     <!-- 추후 퇴근 기능 추가 시 사용할 select -->
 <!--    &lt;!&ndash; 회원 pk로 마지막 출근 정보 가져오기&ndash;&gt;-->

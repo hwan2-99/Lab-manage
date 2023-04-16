@@ -15,7 +15,7 @@ public class User {
     private int studentId; //학번
     private String id; //아이디
     private String pw; //비밀번호
-    private String generation; //기수
+    private int generation; //기수
     private boolean leaderYN; // 연구실장 유무
 
     public User(String name, int studentId, String id, String pw) {

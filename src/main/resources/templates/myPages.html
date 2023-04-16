@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div id="user-info">
+    <h2>My Page</h2>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: "/user/myPage",
+            type: "GET",
+            success: function(data) {
+                var user = data;
+                var userInfo = "<p>Student ID: " + user.studentId + "</p>";
+                userInfo += "<p>Name: " + user.name + "</p>";
+                userInfo += "<p>Generation: " + user.generation + "</p>";
+                $("#user-info").html(userInfo);
+            },
+            error: function(xhr) {
+                $("#user-info").html("<p>Failed to load user information.</p>");
+            }
+        });
+    });
+</script>
+</body>
+</html>

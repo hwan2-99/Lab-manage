@@ -19,4 +19,8 @@ public class UserViewController {
     public String userLists(){
         return "userLists";
     }
+    @GetMapping("/myPages")
+    public String myPages(){
+        return "myPages";
+    }
 }

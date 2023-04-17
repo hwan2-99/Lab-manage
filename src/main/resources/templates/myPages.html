@@ -10,8 +10,47 @@
     <h2>My Page</h2>
 </div>
 
+<div id="add-todo">
+    <input type="text" id="todo-input" placeholder="할 일 내용을 입력하세요">
+    <button id="add-todo-btn">Add</button>
+</div>
+
+<div id="todo-list">
+</div>
+
 <script>
+    function deleteTodo(num) {
+        $.ajax({
+            url: "/todo/delete/{num}",
+            type: "DELETE",
+            success: function(data) {
+                refreshTodoList();
+            },
+            error: function(xhr) {
+                alert("할 일 삭제에 실패했어요.");
+            }
+        });
+    }
+    function refreshTodoList() {
+        $.ajax({
+            url: "/todo/thisWeekTodo",
+            type: "GET",
+            success: function(data) {
+                var todoList = $("#todo-list");
+                todoList.empty();
+                for (var i = 0; i < data.length; i++) {
+                    var todo = data[i];
+                    var newTodo = "<div class='todo-item'><label>" + todo.content + "</label></div>";
+                    todoList.append(newTodo);
+                }
+            },
+            error: function(xhr) {
+                $("#todo-list").html("<p>할 일 정보를 불러오는데 실패함</p>");
+            }
+        });
+    }
     $(document).ready(function() {
+        // Load user information
         $.ajax({
             url: "/user/myPage",
             type: "GET",
@@ -23,8 +62,63 @@
                 $("#user-info").html(userInfo);
             },
             error: function(xhr) {
-                $("#user-info").html("<p>Failed to load user information.</p>");
+                $("#user-info").html("<p>유저 정보가 없어요</p>");
             }
+        });
+
+        // Load todo list
+        function loadTodoList() {
+            $.ajax({
+                url: "/todo/thisWeekTodo",
+                type: "GET",
+                success: function(data) {
+                    var todoList = $("#todo-list");
+                    todoList.empty();
+                    for (var i = 0; i < data.length; i++) {
+                        console.log("시발련아");
+                        var todo = data[i];
+                        var newTodo = "<div class='todo-item'><input type='checkbox' id='todo-" + todo.num + "' ";
+                        newTodo += " ><label for='todo-" + todo.num + "'>" + todo.content + "</label>";
+                        newTodo += "<button class='delete-todo-btn' onclick='deleteTodo(" + todo.num + ")'>삭제</button></div>";
+                        console.log(data[i]);
+                        console.dir(newTodo);
+                        todoList.append(newTodo);
+                    }
+                    refreshTodoList();
+                },
+                error: function(xhr) {
+                    $("#todo-list").html("<p>할 일 정보를 불러오는데 실패함</p>");
+                }
+            });
+        }
+        loadTodoList();
+
+        $("#add-todo-btn").click(function() {
+            var todoContent = $("#todo-input").val();
+            if (todoContent === "") {
+                alert("내용을 입력해주세요.");
+                return;
+            }
+
+            $.ajax({
+                url: "/todo/createTodo",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    content: todoContent
+                }),
+                success: function (data) {
+                    var newTodo = "<div class='todo-item'><input type='checkbox' id='todo-" + data.id + "'><label for='todo-" + data.id + "'>" + data.content + "</label></div>";
+                    $("#todo-list").append(newTodo);
+                    $("#todo-input").val("");
+
+                    // 할 일 추가 후 리프레시하는 함수
+                    refreshTodoList();
+                },
+                error: function (xhr) {
+                    alert("할일 추가에 실패했어요");
+                }
+            });
         });
     });
 </script>

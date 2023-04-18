@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>장비 추가</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('form').on('submit', function(e){
+                e.preventDefault();
+                var reqBody = {
+                    "name": $('input[name=name]').val(),
+                    "price": $('input[name=price]').val(),
+                    "purchase_date": $('input[name=purchase_date]').val()
+                };
+                $.ajax({
+                    url:'/equipment/createEquipment',
+                    type:'POST',
+                    data: JSON.stringify(reqBody),
+                    contentType: 'application/json',
+                    success:function(){
+                        alert("장비가 추가되었습니다.");
+                        $('input[name=name]').val('');
+                        $('input[name=price]').val('');
+                        $('input[name=purchase_date]').val('');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<form>
+    <h2>장비 추가</h2>
+    <input type="text" name="name" placeholder="이름"><br>
+    <input type="text" name="price" placeholder="가격"><br>
+    <input type="date" name="purchase_date" placeholder="구매 날짜"><br>
+    <button type="submit">장비 추가</button>
+</form>
+</body>
+</html>

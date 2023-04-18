@@ -40,8 +40,19 @@ public class ToDoService {
         return toDoMapper.viewThisWeekToDo(user.getNum(),monday);
     }
 
+    // to-do-list 삭제
     public void deleteToDo(int num){
         toDoMapper.deleteTodo(num);
     }
 
+    //to-do-list 내용 수정
+    public void updateContent(int num, ToDoDto.updateReq req){
+        log.info("content : {}",req.getContent());
+
+        toDoMapper.updateContent(num, req.getContent());
+    }
+    // 금주의 연구실생 전원의 to-do-list 불러오기
+    public List<ToDo> viewThisWeekAllToDo(){
+        return toDoMapper.viewThisWeekAllToDo(monday);
+    }
 }

@@ -5,7 +5,9 @@
     <title>My Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
+
 <div id="user-info">
     <h2>My Page</h2>
 </div>
@@ -19,9 +21,26 @@
 </div>
 
 <script>
+    function updateTodoContent(num, content) {
+        $.ajax({
+            url: "/todo/updateContent/" + num,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "content": content
+            }),
+            success: function() {
+                console.log("할 일 내용이 수정됨");
+                refreshTodoList();
+            },
+            error: function(xhr) {
+                console.log("할 일 내용 수정에 실패함");
+            }
+        });
+    }
     function deleteTodo(num) {
         $.ajax({
-            url: "/todo/delete/{num}",
+            url: "/todo/delete/"+num,
             type: "DELETE",
             success: function(data) {
                 refreshTodoList();
@@ -40,7 +59,49 @@
                 todoList.empty();
                 for (var i = 0; i < data.length; i++) {
                     var todo = data[i];
-                    var newTodo = "<div class='todo-item'><label>" + todo.content + "</label></div>";
+                    var newTodo = $("<div>").addClass("todo-item");
+                    var checkbox = $("<input>").attr({
+                        "type": "checkbox",
+                        "id": "todo-" + todo.num
+                    });
+                    var label = $("<label>").attr("for", "todo-" + todo.num).text(todo.content);
+
+                    // 수정 버튼 생성
+                    let editBtn = $("<button>").addClass("edit-todo-btn").text("수정");
+                    let deleteBtn = $("<button>").addClass("delete-todo-btn").text("삭제");
+
+                    (function(todo, label, editBtn, deleteBtn, newTodo) {
+                        editBtn.click(function() {
+                            var editInput = $("<input>").attr({
+                                "type": "text",
+                                "class": "edit-todo-input",
+                                "value": label.text()
+                            });
+                            label.replaceWith(editInput);
+                            editBtn.hide();
+                            deleteBtn.hide();
+                            var saveBtn = $("<button>").addClass("save-todo-btn").text("저장");
+                            saveBtn.click(function() {
+                                var newContent = editInput.val();
+                                updateTodoContent(todo.num, newContent);
+                                label.text(newContent);
+                                editInput.replaceWith(label);
+                                editBtn.show();
+                                deleteBtn.show();
+                                saveBtn.remove();
+                            });
+                            saveBtn.insertAfter(deleteBtn);
+                        });
+
+                        deleteBtn.click(function() {
+                            deleteTodo(todo.num);
+                            newTodo.remove();
+                        });
+                    })(todo, label, editBtn, deleteBtn, newTodo);
+
+                    // 버튼들 추가
+                    newTodo.append(checkbox).append(label).append(deleteBtn).append(editBtn);
+
                     todoList.append(newTodo);
                 }
             },
@@ -75,22 +136,59 @@
                     var todoList = $("#todo-list");
                     todoList.empty();
                     for (var i = 0; i < data.length; i++) {
-                        console.log("시발련아");
                         var todo = data[i];
-                        var newTodo = "<div class='todo-item'><input type='checkbox' id='todo-" + todo.num + "' ";
-                        newTodo += " ><label for='todo-" + todo.num + "'>" + todo.content + "</label>";
-                        newTodo += "<button class='delete-todo-btn' onclick='deleteTodo(" + todo.num + ")'>삭제</button></div>";
-                        console.log(data[i]);
-                        console.dir(newTodo);
+                        var newTodo = $("<div>").addClass("todo-item");
+                        var checkbox = $("<input>").attr({
+                            "type": "checkbox",
+                            "id": "todo-" + todo.num
+                        });
+                        var label = $("<label>").attr("for", "todo-" + todo.num).text(todo.content);
+
+                        // 수정 버튼 생성
+                        let editBtn = $("<button>").addClass("edit-todo-btn").text("수정");
+                        let deleteBtn = $("<button>").addClass("delete-todo-btn").text("삭제");
+
+                        (function(todo, label, editBtn, deleteBtn, newTodo) {
+                            editBtn.click(function() {
+                                var editInput = $("<input>").attr({
+                                    "type": "text",
+                                    "class": "edit-todo-input",
+                                    "value": label.text()
+                                });
+                                label.replaceWith(editInput);
+                                editBtn.hide();
+                                deleteBtn.hide();
+                                var saveBtn = $("<button>").addClass("save-todo-btn").text("저장");
+                                saveBtn.click(function() {
+                                    var newContent = editInput.val();
+                                    updateTodoContent(todo.num, newContent);
+                                    label.text(newContent);
+                                    editInput.replaceWith(label);
+                                    editBtn.show();
+                                    deleteBtn.show();
+                                    saveBtn.remove();
+                                });
+                                saveBtn.insertAfter(deleteBtn);
+                            });
+
+                            deleteBtn.click(function() {
+                                deleteTodo(todo.num);
+                                newTodo.remove();
+                            });
+                        })(todo, label, editBtn, deleteBtn, newTodo);
+
+                        // 버튼들 추가
+                        newTodo.append(checkbox).append(label).append(deleteBtn).append(editBtn);
+
                         todoList.append(newTodo);
                     }
-                    refreshTodoList();
                 },
                 error: function(xhr) {
                     $("#todo-list").html("<p>할 일 정보를 불러오는데 실패함</p>");
                 }
             });
         }
+
         loadTodoList();
 
         $("#add-todo-btn").click(function() {

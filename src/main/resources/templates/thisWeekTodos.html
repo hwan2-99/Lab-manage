@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>할 일 목록</title>
+</head>
+<body>
+<div id="todo-list"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $.get("/todo/thisWeekAllTodo", function(data) {
+        $.each(data, function(userName, todos) {
+            var userDiv = $("<div>").addClass("user-todos");
+            var userHeader = $("<h3>").text(userName);
+            userDiv.append(userHeader);
+            $.each(todos, function(index, todo) {
+                var todoItem = $("<div>").addClass("todo-item");
+                var checkbox = $("<input>").attr({
+                    "type": "checkbox",
+                    "id": "todo-" + todo.num
+                });
+                var label = $("<label>").attr("for", "todo-" + todo.num).text(todo.content);
+                todoItem.append(checkbox).append(label);
+                userDiv.append(todoItem);
+            });
+            $("#todo-list").append(userDiv);
+        });
+    });
+</script>
+</body>
+</html>

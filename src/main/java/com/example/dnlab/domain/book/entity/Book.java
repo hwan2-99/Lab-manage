@@ -10,8 +10,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book {
+    private int num;
     private String title;
     private String author;
     private boolean borrowYN;
 
+    public Book(String title, String author, boolean b) {
+    }
 }

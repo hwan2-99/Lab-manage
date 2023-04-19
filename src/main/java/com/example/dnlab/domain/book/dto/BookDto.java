@@ -14,4 +14,16 @@ public class BookDto {
         private boolean borrowYN;
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class borrowBookReq{
+        private int bookNum;
+        private String title;
+        private String author;
+        private boolean borrowYN;
+    }
+
 }

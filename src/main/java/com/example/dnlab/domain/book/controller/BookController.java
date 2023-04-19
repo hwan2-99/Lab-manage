@@ -1,15 +1,15 @@
 package com.example.dnlab.domain.book.controller;
 
 import com.example.dnlab.domain.book.dto.BookDto;
+import com.example.dnlab.domain.book.entity.Book;
 import com.example.dnlab.domain.book.service.BookService;
 import com.example.dnlab.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/book")
@@ -23,5 +23,21 @@ public class BookController {
     public ResponseEntity<Void> insertBook(@RequestBody BookDto.insertBookReq req){
         bookService.insertBook(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getAllBook")
+    public List<Book>getAllBook(){
+        return bookService.getAllBook();
+    }
+
+    @PostMapping("/borrow/{bookNum}")
+    public void borrowBook(@PathVariable int bookNum) {
+        bookService.borrowBook(bookNum);
+    }
+
+    @PostMapping("/return/{bookNum}")
+    public ResponseEntity<String> returnBook(@PathVariable int bookNum) {
+        bookService.returnBook(bookNum);
+        return ResponseEntity.ok("책 반납이 완료되었습니다.");
     }
 }

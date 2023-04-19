@@ -12,4 +12,9 @@ public class BookViewController {
     public String insertBook(){
         return "insertBook";
     }
+
+    @GetMapping("/bookLists")
+    public String bookLists(){
+        return "bookLists";
+    }
 }

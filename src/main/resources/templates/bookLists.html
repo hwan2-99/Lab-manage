@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>도서 목록</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>제목</th>
+        <th>작가</th>
+        <th>대여 상태</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $.get("/book/getAllBook", function(data) {
+            $.each(data, function(index, book) {
+                var borrowStatus = book.borrowYN ? "대여중" : "대여가능";
+                var borrowBtn = $("<button onclick='borrowBook(" + book.num + ")'>대여</button>");
+                var returnBtn = $("<button onclick='returnBook(" + book.num + ")'>반납</button>");
+                var actionBtn = book.borrowYN ? returnBtn : borrowBtn;
+                var row = $("<tr><td>" + book.title + "</td><td>" + book.author + "</td><td>" + borrowStatus + "</td><td></td><td></td></tr>");
+                row.children().eq(3).append(actionBtn);
+                $("tbody").append(row);
+            });
+        });
+
+        function borrowBook(bookNum) {
+            $.ajax({
+                url: '/book/borrow/' + bookNum,
+                type: 'POST',
+                success: function() {
+                    alert('대여가 완료되었습니다.');
+                    location.reload();
+                },
+                error: function() {
+                    alert('대여에 실패하였습니다.');
+                }
+            });
+        }
+
+        function returnBook(bookNum) {
+            $.ajax({
+                url: '/book/return/' + bookNum,
+                type: 'POST',
+                success: function() {
+                    alert('반납이 완료되었습니다.');
+                    location.reload();
+                },
+                error: function() {
+                    alert('반납에 실패하였습니다.');
+                }
+            });
+        }
+    </script>
+    </tbody>
+</table>
+</body>
+</html>

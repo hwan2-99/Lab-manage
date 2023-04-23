@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.dnlab.domain.equipment.repository.UsingMapper">
+
+    <!-- 장비 대여 기록 추가 -->
+    <insert id="insertUseInfo">
+        INSERT INTO using(user_num, equipment_num, using_start_date,using_end_date)
+        VALUES (#{user_num}, #{equipment_num}, #{using_start_date},#{using_end_date})
+    </insert>
+</mapper>

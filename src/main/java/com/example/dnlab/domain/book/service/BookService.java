@@ -57,7 +57,6 @@ public class BookService {
         rentalMapper.updateRentInfo(rental.getNum(), rent_end_date);
         bookMapper.updateBorrowN(book.getNum());
     }
-
 }
 
 

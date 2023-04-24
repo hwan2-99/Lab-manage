@@ -25,4 +25,6 @@
         SELECT * FROM APPLICATION
     </select>
 
+
+
 </mapper>

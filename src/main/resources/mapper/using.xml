@@ -9,4 +9,13 @@
         INSERT INTO using(user_num, equipment_num, using_start_date,using_end_date)
         VALUES (#{user_num}, #{equipment_num}, #{using_start_date},#{using_end_date})
     </insert>
+
+    <select id="selectUsingByEquipmentNum" resultType="com.example.dnlab.domain.equipment.entity.Using">
+        select * from using where equipment_num = #{equipment_num}
+    </select>
+
+    <update id="updateUsingInfo" parameterType="map">
+        UPDATE using SET rent_end_date = #{rent_end_date} WHERE num = #{num}
+    </update>
+
 </mapper>

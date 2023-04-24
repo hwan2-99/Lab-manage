@@ -17,4 +17,7 @@ public class Using {
     private int equipment_num;
     private LocalDate using_start_date;
     private LocalDate using_end_date;
+
+    public Using(int num, int num1, LocalDate today) {
+    }
 }

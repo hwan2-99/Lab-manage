@@ -15,10 +15,18 @@ public interface ApplicationMapper {
     //신청서 작성
     void createApplication(Application application);
 
+    //pk로 신청서 가져오기
+    Application getApplicationByNum(int num);
     //신청서 조회(교수님 전용)
     List<Application> getAllApplication();
 
+    //신청서 조회(교수님 전용)
+    List<Application> getAllApplicationsWithUserInfo();
 
+    // 신청서 상세
+    Application getApplicationDetail(int num);
 
-    ApplicationDto.LabSignUpReq getApplicationById(Long id);
+    // 신청서 승인
+    void accessApplication(int num);
+
 }

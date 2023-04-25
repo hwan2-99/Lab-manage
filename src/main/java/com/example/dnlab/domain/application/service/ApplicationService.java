@@ -4,6 +4,7 @@ import com.example.dnlab.domain.application.dto.ApplicationDto;
 import com.example.dnlab.domain.application.entity.Application;
 import com.example.dnlab.domain.application.repository.ApplicationMapper;
 import com.example.dnlab.domain.user.entity.User;
+import com.example.dnlab.domain.user.repository.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ApplicationService {
 
     private final ApplicationMapper applicationMapper;
+    private final UserMapper userMapper;
     private final HttpSession session;
     LocalDate today = LocalDate.now();
 
@@ -34,9 +36,22 @@ public class ApplicationService {
 
     //모든 신청서 조회
     public List<Application> getAllApplications(){
-        return applicationMapper.getAllApplication();
+        return applicationMapper.getAllApplicationsWithUserInfo();
     }
 
+    public Application getApplicationDetail(int num){
+        return applicationMapper.getApplicationDetail(num);
+    }
+
+    public void approveApplication(int num){
+
+        Application application = applicationMapper.getApplicationByNum(num);
+        applicationMapper.accessApplication(application.getNum());
+
+        User user = userMapper.getUserByNum(application.getUser_num());
+//        user.setGeneration();
+
+    }
 
 
 }

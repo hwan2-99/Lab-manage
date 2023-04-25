@@ -25,6 +25,61 @@
         SELECT * FROM APPLICATION
     </select>
 
+    <!-- pk로 신청서 조회 -->
+    <select id="getApplicationByNum" resultType="com.example.dnlab.domain.application.entity.Application">
+        SELECT * FROM APPLICATION where num = #{num}
+    </select>
 
+    <!--전체 신청서를 학번이름 같이 보여주기 위함 -->
+    <select id="getAllApplicationsWithUserInfo" resultMap="applicationWithUserInfoResultMap">
+        SELECT
+            a.num as num,
+            a.motive as motive,
+            a.intro as intro,
+            a.wanted as wanted,
+            a.user_num as user_num,
+            a.createdAt as createdAt,
+            a.updatedAt as updatedAt,
+            a.status as status,
+            u.name as name,
+            u.studentId as studentId
+        FROM APPLICATION a
+                 INNER JOIN USER u ON a.user_num = u.num
+    </select>
+
+    <!--pk에 해당하는 신청서 상세정보 보여주기 위함 -->
+    <select id="getApplicationDetail" resultMap="applicationWithUserInfoResultMap">
+        SELECT
+            a.num as num,
+            a.motive as motive,
+            a.intro as intro,
+            a.wanted as wanted,
+            a.user_num as user_num,
+            a.createdAt as createdAt,
+            a.updatedAt as updatedAt,
+            a.status as status,
+            u.name as name,
+            u.studentId as studentId
+        FROM APPLICATION a
+                 INNER JOIN USER u ON a.user_num = u.num
+        WHERE a.num = #{num}
+    </select>
+
+    <resultMap id="applicationWithUserInfoResultMap" type="com.example.dnlab.domain.application.entity.Application">
+        <id property="num" column="num" />
+        <result property="motive" column="motive" />
+        <result property="intro" column="intro" />
+        <result property="wanted" column="wanted" />
+        <result property="user_num" column="user_num" />
+        <result property="createdAt" column="createdAt" />
+        <result property="updatedAt" column="updatedAt" />
+        <result property="status" column="status" />
+        <result property="userName" column="name" />
+        <result property="studentId" column="studentId" />
+    </resultMap>
+
+    <update id="accessApplication" parameterType="map">
+        update application set status = approved where num = #{num}
+    </update>
 
 </mapper>

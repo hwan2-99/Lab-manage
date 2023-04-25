@@ -1,5 +1,6 @@
 package com.example.dnlab.domain.application.entity;
 
+import com.example.dnlab.domain.application.ApplicationStatus;
 import com.example.dnlab.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,9 @@ public class Application {
     private LocalDate createdAt; // 신청서 작성날짜
     private LocalDate updatedAt; // 신청서 수정날짜
     private int user_num; // 회원 외래키
-    private boolean is_approved; // 신청서 승낙여부
+    private ApplicationStatus status; // 신청서 승낙여부
+    private String userName;
+    private String studentId;
 
     public Application(String motive, String intro, String wanted, int user_num) {
         this.motive = motive;

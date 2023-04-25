@@ -31,4 +31,14 @@ public class ApplicationController {
     public List<Application> getAllApplications(){
         return applicationService.getAllApplications();
     }
+
+    @GetMapping("/detail/{num}")
+    public Application getApplicationDetail(@PathVariable("num") int num) {
+        return applicationService.getApplicationDetail(num);
+    }
+
+    @PostMapping("/approve")
+    public void approveApplication(){
+//        applicationService.approveApplication();
+    }
 }

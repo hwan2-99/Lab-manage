@@ -24,6 +24,7 @@
     <update id="updateBorrowY" parameterType="map">
         update book set borrowYN = true where num = #{num}
     </update>
+
     <update id="updateBorrowN" parameterType="map">
         update book set borrowYN = false where num = #{num}
     </update>

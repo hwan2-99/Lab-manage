@@ -16,4 +16,9 @@ public class ApplicationViewController {
     public String getAllApplication(){
         return "applications";
     }
+
+    @GetMapping("details/{num}")
+    public String getApplicationDetail(){
+        return "applicationDetail";
+    }
 }

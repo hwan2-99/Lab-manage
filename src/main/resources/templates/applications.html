@@ -8,9 +8,8 @@
 <table>
   <thead>
   <tr>
-    <th>지원 동기</th>
-    <th>자기 소개</th>
-    <th>가입후 원하는 연구 활동</th>
+    <th>신청자 이름</th>
+    <th>신청자 학번</th>
   </tr>
   </thead>
   <tbody>
@@ -18,7 +17,7 @@
   <script>
     $.get("/application/applications", function(data) {
       $.each(data, function(index, application) {
-        var row = $("<tr><td>" + application.motive + "</td><td>" + application.intro + "</td><td>" + application.wanted + "</td></tr>");
+        var row = $("<tr><td><a href='/application/details/" + application.num + "'>" + application.userName + "</a></td><td>" + application.studentId + "</td></tr>");
         $("tbody").append(row);
       });
     });

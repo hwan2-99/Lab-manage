@@ -79,7 +79,10 @@
     </resultMap>
 
     <update id="accessApplication" parameterType="map">
-        update application set status = approved where num = #{num}
+        update application set status = 'approved' where num = #{num}
     </update>
 
+    <update id="rejectApplication" parameterType="map">
+        update application set status = 'rejected' where num = #{num}
+    </update>
 </mapper>

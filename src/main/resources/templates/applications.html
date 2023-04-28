@@ -17,8 +17,10 @@
   <script>
     $.get("/application/applications", function(data) {
       $.each(data, function(index, application) {
-        var row = $("<tr><td><a href='/application/details/" + application.num + "'>" + application.userName + "</a></td><td>" + application.studentId + "</td></tr>");
-        $("tbody").append(row);
+        if (application.status === 'non') {
+          var row = $("<tr><td><a href='/application/details/" + application.num + "'>" + application.userName + "</a></td><td>" + application.studentId + "</td></tr>");
+          $("tbody").append(row);
+        }
       });
     });
   </script>

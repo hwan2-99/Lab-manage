@@ -15,5 +15,6 @@ public interface UserMapper {
     void insertUser(User user); // 회원가입
     List<User> getAllUser(); // 학생 조회
     User getUserByNum(int num); // 중복 회원 확인용 아이디 가져오기
+    void updateUserGeneration(int generation, int user_num, boolean leaderYN); // 학생 가입승인시 기수 주입
 
 }

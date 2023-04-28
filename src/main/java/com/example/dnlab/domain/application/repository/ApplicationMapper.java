@@ -29,4 +29,7 @@ public interface ApplicationMapper {
     // 신청서 승인
     void accessApplication(int num);
 
+    // 신청서 거절
+    void rejectApplication(int num);
+
 }

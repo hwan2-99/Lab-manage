@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/application")
@@ -37,8 +38,26 @@ public class ApplicationController {
         return applicationService.getApplicationDetail(num);
     }
 
-    @PostMapping("/approve")
-    public void approveApplication(){
-//        applicationService.approveApplication();
+    @PostMapping("/action")
+    public ResponseEntity<String> approveAction(@RequestBody Map<String, Object> request) {
+        int userNum = Integer.parseInt(request.get("user_num").toString());
+        String action = request.get("action").toString();
+
+            if (action.equals("approve")) {
+                applicationService.approveApplication(userNum);
+            } else if (action.equals("reject")) {
+            applicationService.rejectApplication(userNum);
+            } else {
+                return new ResponseEntity<>("Invalid action", HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>("Application action succeeded", HttpStatus.OK);
+        }
     }
-}
+
+
+
+
+
+
+
+

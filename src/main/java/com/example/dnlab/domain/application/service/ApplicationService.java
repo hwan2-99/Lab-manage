@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +25,9 @@ public class ApplicationService {
     private final UserMapper userMapper;
     private final HttpSession session;
     LocalDate today = LocalDate.now();
+    LocalDateTime now = LocalDateTime.now();
+    int year = now.getYear();
+    int generation = year-2003;
 
     //신청서 작성
     public void crateApplication(ApplicationDto.LabSignUpReq req){
@@ -49,7 +53,16 @@ public class ApplicationService {
         applicationMapper.accessApplication(application.getNum());
 
         User user = userMapper.getUserByNum(application.getUser_num());
-//        user.setGeneration();
+        int user_num = user.getNum();
+
+        userMapper.updateUserGeneration(generation, user_num,false);
+
+    }
+
+    public void rejectApplication(int num){
+
+        Application application = applicationMapper.getApplicationByNum(num);
+        applicationMapper.rejectApplication(application.getNum());
 
     }
 

@@ -29,10 +29,12 @@
     $.ajax({
       url: "/application/action",
       type: "POST",
-      dataType: "json",
-      data: dataToSend,
+      data: JSON.stringify(dataToSend),
+      contentType: 'application/json',
       success: function(response) {
-        console.log("Application action succeeded.");
+        var message = action === "approve" ? "승인되었습니다." : "거절되었습니다.";
+        alert(message);
+        window.location.href = "/application/AllApplication";
       },
       error: function() {
         console.log("Error occurred while processing application action.");

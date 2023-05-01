@@ -13,4 +13,14 @@ public class PostDto {
         private String content;
 
     }
+
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class updateReq{
+        private String content; //할일 내용
+    }
 }

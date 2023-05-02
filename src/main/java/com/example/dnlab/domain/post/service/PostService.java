@@ -28,10 +28,13 @@ public class PostService {
     private final BoardMapper boardMapper;
 
     // 게시글 작성
-    public void createPost(PostDto.postReq req,int board_num){
+    public void createPost(PostDto.postReq req, int board_num){
         User user = (User)session.getAttribute("user");
         int user_num = user.getNum();
+
+        // 게시판 선택 시 게시판 pk 불러오기
         Board board = boardMapper.getBoardByNum(board_num);
+
 
         postMapper.createPost(new Post(board.getNum(),req.getTitle(), req.getContent(), user_num, today));
 
@@ -53,9 +56,6 @@ public class PostService {
     }
 
     public List<Post> getPostByBoardNum(int board_num){
-
-
-
         return postMapper.getPostByBoardNum(board_num);
     }
 }

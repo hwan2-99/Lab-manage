@@ -5,8 +5,8 @@
 <mapper namespace="com.example.dnlab.domain.post.repository.PostMapper">
 
     <!-- 게시글 추가 -->
-    <insert id="insertBook">
-        INSERT INTO POST(TITLE, AUTHOR, BORROWYN)
-        VALUES (#{title}, #{author}, #{borrowYN})
+    <insert id="createPost">
+        INSERT INTO POST(TITLE, CONTENT, BOARD_NUM,user_num,created_at)
+        VALUES (#{title}, #{content}, #{board_num},#{user_num},#{createdAt})
     </insert>
 </mapper>

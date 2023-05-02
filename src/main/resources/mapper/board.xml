@@ -7,4 +7,7 @@
     <select id="getBoardByNum" resultType="com.example.dnlab.domain.post.entity.Board">
         SELECT * FROM BOARD WHERE NUM = #{num}
     </select>
+    <select id="getBoardList" resultType="com.example.dnlab.domain.post.entity.Board">
+        SELECT * FROM board
+    </select>
 </mapper>

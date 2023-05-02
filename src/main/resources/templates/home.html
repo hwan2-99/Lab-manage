@@ -18,6 +18,7 @@
         <a th:if="${session.user != null}" href="/application/AllApplication">연구실 가입 승인</a>
         <a th:if="${session.user != null}" href="/equipment/createEquipment">기자재 추가</a>
         <a th:if="${session.user != null}" href="/todo/thisWeekTodos">금주의 목표</a>
+        <a th:if="${session.user != null}" href="/post/createPost">게시글 작성</a>
         <p>도서 기능</p>
         <a href="/book/insertBook">도서 추가</a>
         <a href="/book/bookLists">도서 목록</a>

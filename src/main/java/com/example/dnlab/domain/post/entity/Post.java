@@ -23,11 +23,11 @@ public class Post {
     private LocalDateTime updatedAt;
 
 
-    public Post(int board_num, String title, String content, int user_num, LocalDate today) {
+    public Post(int board_num, String title, String content, int user_num, LocalDate createdAt) {
         this.board_num = board_num;
         this.title = title;
         this.content = content;
         this.user_num = user_num;
-        this.createdAt = today;
+        this.createdAt = createdAt;
     }
 }

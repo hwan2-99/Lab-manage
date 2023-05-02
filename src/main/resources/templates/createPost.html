@@ -1,10 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>게시글 작성</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script th:inline="javascript">
+        $.ajax({
+            url: "/post/boardList",
+            type: "GET",
+            success: function(boardList) {
+                console.log(boardList);
+                boardList.forEach(function(board) {
+                    const option = $('<option>').attr('value', board.num).text(board.name);
+                    $('#board-select').append(option);
+                });
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+        function createPost() {
+            const boardNum = $('#board-select').val();
+            const title = $('#title-input').val();
+            const content = $('#content-textarea').val();
+            if (!boardNum || !title || !content) {
+                alert('모든 항목을 입력해주세요.');
+                return;
+            }
+
+            const requestBody = {
+                title: title,
+                content: content
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/post/createPost?board_num=' + boardNum,
+                data: JSON.stringify(requestBody),
+                contentType: 'application/json',
+                success: function () {
+                    alert('게시글이 작성되었습니다.');
+                    location.href = '/';
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert('게시글 작성에 실패하였습니다.');
+                }
+            });
+        }
+    </script>
 </head>
 <body>
-
+<form id="post-form">
+    <div>
+        <label for="board-select">게시판 선택:</label>
+        <select name="boardNum" id="board-select">
+            <option value="">선택하세요</option>
+        </select>
+    </div>
+    <div>
+        <label for="title-input">제목:</label>
+        <input type="text" id="title-input" name="title">
+    </div>
+    <div>
+        <label for="content-textarea">내용:</label>
+        <textarea id="content-textarea" name="content"></textarea>
+    </div>
+    <button type="button" onclick="createPost()">등록</button>
+</form>
 </body>
 </html>

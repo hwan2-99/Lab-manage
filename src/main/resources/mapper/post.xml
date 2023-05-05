@@ -9,4 +9,8 @@
         INSERT INTO POST(TITLE, CONTENT, BOARD_NUM,user_num,created_at)
         VALUES (#{title}, #{content}, #{board_num},#{user_num},#{createdAt})
     </insert>
+
+    <select id="getPostByBoardNum" resultType="com.example.dnlab.domain.post.entity.Post">
+        SELECT * FROM post where board_num = #{board_num}
+    </select>
 </mapper>

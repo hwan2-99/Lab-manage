@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>DN Lab</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -19,6 +20,10 @@
         <a th:if="${session.user != null}" href="/equipment/createEquipment">기자재 추가</a>
         <a th:if="${session.user != null}" href="/todo/thisWeekTodos">금주의 목표</a>
         <a th:if="${session.user != null}" href="/post/createPost">게시글 작성</a>
+        <p>게시판 목록</p>
+        <ul id="board-list">
+            <!-- 게시판 목록 출력 -->
+        </ul>
         <p>도서 기능</p>
         <a href="/book/insertBook">도서 추가</a>
         <a href="/book/bookLists">도서 목록</a>
@@ -26,7 +31,29 @@
 </div>
 
 <script>
-    document.getElementById("attendance-button").addEventListener("click", function (event) {
+    $(document).ready(function() {
+        loadBoardList();
+    });
+
+    function loadBoardList() {
+        $.ajax({
+            url: "/post/boardLists",
+            type: "GET",
+            dataType: "json",
+            success: function(boardList) {
+                var boardListHtml = "";
+                $.each(boardList, function(index, board) {
+                    boardListHtml += "<li><a href='/board/" + board.num + "'>" + board.name + "</a></li>";
+                });
+                $("#board-list").html(boardListHtml);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log("Error: " + errorThrown);
+            }
+        });
+    }
+
+    $("#attendance-button").on("click", function(event) {
         event.preventDefault(); // 기본 동작 중단
         var now = new Date();
         var hour = now.getHours();

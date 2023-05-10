@@ -26,6 +26,7 @@ public class BoardService {
     }
 
     public List<Post> getPostNyBoardNum(int board_num){
+        log.info("게시판 번호:{}",board_num);
         List<Post> postList = postMapper.getPostByBoardNum(board_num);
         return postList;
     }

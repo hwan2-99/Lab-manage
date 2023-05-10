@@ -37,13 +37,14 @@
 
     function loadBoardList() {
         $.ajax({
-            url: "/post/boardLists",
+            url: "/board/boardLists",
             type: "GET",
             dataType: "json",
             success: function(boardList) {
                 var boardListHtml = "";
                 $.each(boardList, function(index, board) {
-                    boardListHtml += "<li><a href='/board/" + board.num + "'>" + board.name + "</a></li>";
+                    // 링크 클릭 이벤트 추가
+                    boardListHtml += "<li><a href='/board/" + board.num + "/posts'>" + board.name + "</a></li>";
                 });
                 $("#board-list").html(boardListHtml);
             },
@@ -82,6 +83,10 @@
         cal.setSeconds(0);
         cal.setMilliseconds(0);
         return cal.toISOString();
+    }
+    function loadPostsByBoardNum(boardNum) {
+        console.log(boardNum);
+        location.href = "/board/" + boardNum;
     }
 </script>
 </body>

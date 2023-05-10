@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;

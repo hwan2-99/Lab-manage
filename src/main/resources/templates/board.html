@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Board</title>
+</head>
+<body>
+<div class="container">
+  <h1>게시판</h1>
+  <ul id="post-list">
+    <!-- 게시글 목록 출력 -->
+  </ul>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var boardNum = location.pathname.split("/")[2];
+    loadPostList(boardNum);
+  });
+
+  function loadPostList(boardNum) {
+    $.ajax({
+      url: "/board/" + boardNum,
+      type: "GET",
+      dataType: "json",
+      success: function(postList) {
+        console.log(postList);
+        var postListHtml = "";
+        $.each(postList, function(index, post) {
+          // 게시글 출력 코드
+          postListHtml += "<li>" +
+                  "<a href='/post/" + post.num + "'>" + post.title + "</a>" +
+                  "<span>" + post.createdAt + "</span>" +
+                  "</li>";
+        });
+
+        $("#post-list").html(postListHtml);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        console.log("Error: " + errorThrown);
+      }
+    });
+  }
+</script>
+</body>
+</html>

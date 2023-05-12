@@ -18,6 +18,10 @@
           AND start_time BETWEEN #{startDateTime} AND #{endDateTime}
     </select>
 
+    <select id="getMonthlyAttendanceForAll" resultType="com.example.dnlab.domain.attendance.entity.Attendance">
+        select * from attendance where YEAR(start_time) = #{year} and MONTH(start_time) = #{month}
+    </select>
+
 
     <!-- 추후 퇴근 기능 추가 시 사용할 select -->
 <!--    &lt;!&ndash; 회원 pk로 마지막 출근 정보 가져오기&ndash;&gt;-->

@@ -14,6 +14,7 @@
         <a th:if="${session.user == null}" href="/user/login">로그인</a>
         <a th:if="${session.user != null}" href="/user/userLists">사용자 목록</a>
         <a th:if="${session.user != null}" href="/user/myPages">마이 페이지</a>
+        <a th:if="${session.user != null}" href="/attendance/attendanceCheck">이달의 출석 확인</a>
         <a id="attendance-button" th:if="${session.user != null}" href="#">출석 확인</a>
         <a th:if="${session.user != null}" href="/application/insertApplication">연구실 가입 신청</a>
         <a th:if="${session.user != null}" href="/application/AllApplication">연구실 가입 승인</a>

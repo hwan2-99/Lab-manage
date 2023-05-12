@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Monthly Attendance</title>
+</head>
+<body>
+<div class="container">
+  <h1>모든 회원 이달의 출석 현황</h1>
+  <form id="search-form">
+    <label for="year">연도:</label>
+    <input type="number" id="year" name="year" min="2000" max="2100" value="2023">
+    <label for="month">월:</label>
+    <input type="number" id="month" name="month" min="1" max="12" value="5">
+    <button type="submit">조회</button>
+  </form>
+  <table id="attendance-table">
+    <thead>
+    <tr>
+      <th>이름</th>
+      <th>출석 횟수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 여기에 모든 회원의 이달의 출석 현황이 출력됩니다 -->
+    </tbody>
+  </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // 검색 버튼을 누를 때 Ajax 호출
+    $("#search-form").submit(function(event) {
+      event.preventDefault(); // 기본 동작을 막음
+      var year = $("#year").val();
+      var month = $("#month").val();
+      loadAttendanceList(year, month);
+    });
+  });
+
+  function loadAttendanceList(year, month) {
+    $.ajax({
+      url: "/attendance/monthly/all",
+      type: "GET",
+      data: { year: year, month: month },
+      dataType: "json",
+      success: function(attendanceList) {
+        console.log(attendanceList);
+        var attendanceListHtml = "";
+        $.each(attendanceList, function(index, attendance) {
+          attendanceListHtml += "<tr>";
+          attendanceListHtml += "<td>" + attendance.userName + "</td>";
+          attendanceListHtml += "<td>" + attendance.attendanceCount + "</td>";
+          attendanceListHtml += "</tr>";
+        });
+        $("#attendance-table tbody").html(attendanceListHtml);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        console.log("Error: " + errorThrown);
+      }
+    });
+  }
+</script>
+</body>
+</html>

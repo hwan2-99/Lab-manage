@@ -5,14 +5,18 @@ import com.example.dnlab.domain.attendance.dto.AttendanceDto;
 import com.example.dnlab.domain.attendance.entity.Attendance;
 import com.example.dnlab.domain.attendance.repository.AttendanceMapper;
 import com.example.dnlab.domain.user.entity.User;
+import com.example.dnlab.domain.user.repository.UserMapper;
+import com.example.dnlab.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -20,6 +24,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class AttendanceService {
     private final AttendanceMapper attendanceMapper;
+    private final UserMapper userMapper;
     private final HttpSession session;
 
     //출석 메소드(정상과 지각만)
@@ -54,4 +59,19 @@ public class AttendanceService {
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
+
+    public List<Attendance> getMonthlyAttendanceForAll(int year, int month) {
+        List<Attendance> attendanceList = attendanceMapper.getMonthlyAttendanceForAll(year, month);
+        for (Attendance attendance : attendanceList) {
+            User user = userMapper.getUserByNum(attendance.getUserNum());
+            if (user != null) {
+                attendance.setUserName(user.getName());
+            } else {
+                attendance.setUserName("Unknown");
+            }
+        }
+        return attendanceList;
+    }
+
+
 }

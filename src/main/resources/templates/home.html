@@ -21,6 +21,7 @@
         <a th:if="${session.user != null}" href="/equipment/createEquipment">기자재 추가</a>
         <a th:if="${session.user != null}" href="/todo/thisWeekTodos">금주의 목표</a>
         <a th:if="${session.user != null}" href="/post/createPost">게시글 작성</a>
+        <a th:if="${session.user != null}" href="#" onclick="logout(event)">로그 아웃</a>
         <p>게시판 목록</p>
         <ul id="board-list">
             <!-- 게시판 목록 출력 -->
@@ -36,6 +37,21 @@
         loadBoardList();
     });
 
+    function logout(event) {
+        event.preventDefault(); // 기본 동작인 링크 이동을 막습니다.
+
+        $.ajax({
+            type: "POST",
+            url: "/user/logOut",
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
     function loadBoardList() {
         $.ajax({
             url: "/board/boardLists",

@@ -9,8 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 @Slf4j
 @RestController
@@ -21,9 +24,19 @@ public class UserController {
 
     //로그아웃
     @PostMapping("/logOut")
-    public String logout(HttpSession session) {
+    public void logout(HttpSession session, HttpServletResponse response) throws IOException {
         session.invalidate();
-        return "redirect:/";
+        log.info("logOut");
+
+        // 리다이렉트할 URL
+        String redirectUrl = "/";
+
+        // RedirectView를 생성하여 리다이렉트 설정
+        RedirectView redirectView = new RedirectView(redirectUrl);
+        redirectView.setStatusCode(HttpStatus.SEE_OTHER);
+
+        // HttpServletResponse를 사용하여 리다이렉트 수행
+        response.sendRedirect(redirectView.getUrl());
     }
 
     //회원 가입
@@ -39,10 +52,10 @@ public class UserController {
         return userService.login(req,session);
     }
 
-    //유저조회
     @GetMapping("/userList")
-    public List<User>getAllUsers(){
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/myPage")

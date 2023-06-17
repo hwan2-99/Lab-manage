@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -31,32 +34,39 @@ public class UserService {
         userMapper.insertUser(new User(req.getName(),req.getStudentId(), req.getPw(),req.getId()));
     }
 
-
-    //로그인
-    public ResponseEntity<UserDto.UserCheckId> login(UserDto.loginReq req, HttpSession session){
+    // 로그인
+    public ResponseEntity<Void> login(UserDto.loginReq req, HttpSession session) {
 
         User user = userMapper.selectUserById(req.getId());
-        log.info("id : {}, pw : {}",req.getId(),req.getPw());
-        log.info("userId : {}, userPw : {}",user.getId(),user.getPw());
+        log.info("id: {}, pw: {}", req.getId(), req.getPw());
+        log.info("userId: {}, userPw: {}", user.getId(), user.getPw());
 
-        //로그인 성공
-        if(user.getId().equals(req.getId())){
-            UserDto.UserCheckId userCheckId = new UserDto.UserCheckId();
-            userCheckId.setId(user.getId());
+        // 아이디 확인
+        if (user != null) {
+            // 비밀번호 비교
+            if (user.getPw().equals(req.getPw())) {
+                // 세션 저장(pk)
+                session.setAttribute("user", user);
 
-            //세션 저장(pk)
-            session.setAttribute("user",user);
-
-            //세션 id 반환
-            return ResponseEntity.ok().header("SESSION-ID", session.getId()).body(userCheckId);
-        }else{ //로그인 실패
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                // 세션 id 반환
+                return ResponseEntity.ok().header("SESSION-ID", session.getId()).build();
+            }
         }
+
+        // 로그인 실패
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     //전체 회원 조회
-    public List<User> getAllUsers(){
-        return userMapper.getAllUser();
+    public List<User> getAllUsers() {
+        List<User> userList = userMapper.getAllUser();
+
+        if (userList.isEmpty()) {
+            throw new NoSuchElementException("데이터가 없음.");
+        }else{
+            Collections.sort(userList, Comparator.comparing(User::getGeneration)); // Generation을 기준으로 오름차순 정렬
+        }
+        return userList;
     }
 
     //회원 한명의 정보 받아오기

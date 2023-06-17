@@ -10,6 +10,7 @@
   <tr>
     <th>이름</th>
     <th>학번</th>
+    <th>기수</th>
   </tr>
   </thead>
   <tbody>
@@ -17,7 +18,7 @@
   <script>
     $.get("/user/userList", function(data) {
       $.each(data, function(index, user) {
-        var row = $("<tr><td>" + user.name + "</td><td>" + user.studentId + "</td></tr>");
+        var row = $("<tr><td>" + user.name + "</td><td>" + user.studentId + "</td><td>" + user.generation + "</td></tr>");
         $("tbody").append(row);
       });
     });

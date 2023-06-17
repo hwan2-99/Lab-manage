@@ -25,5 +25,4 @@ public class BookDto {
         private String author;
         private boolean borrowYN;
     }
-
 }

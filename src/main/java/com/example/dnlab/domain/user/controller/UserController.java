@@ -46,11 +46,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //로그인
+    // 로그인
     @PostMapping("/login")
-    public ResponseEntity<UserDto.UserCheckId> login(@RequestBody UserDto.loginReq req,HttpSession session){
-        return userService.login(req,session);
+    public ResponseEntity<Void> login(@RequestBody UserDto.loginReq req, HttpSession session) {
+        return userService.login(req, session);
     }
+
 
     @GetMapping("/userList")
     public ResponseEntity<List<User>> getAllUsers() {

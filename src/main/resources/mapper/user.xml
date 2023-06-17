@@ -29,7 +29,7 @@
 
     <!-- 회원 전원 조회 -->
     <select id="getAllUser" resultType="User">
-        SELECT NAME, STUDENTID FROM USER
+        SELECT * FROM USER
     </select>
 
     <select id="getUserByNum" resultType="com.example.dnlab.domain.user.entity.User">

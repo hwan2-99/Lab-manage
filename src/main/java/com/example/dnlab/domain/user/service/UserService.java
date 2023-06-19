@@ -52,7 +52,6 @@ public class UserService {
                 return ResponseEntity.ok().header("SESSION-ID", session.getId()).build();
             }
         }
-
         // 로그인 실패
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -62,7 +61,19 @@ public class UserService {
         List<User> userList = userMapper.getAllUser();
 
         if (userList.isEmpty()) {
-            throw new NoSuchElementException("데이터가 없음.");
+            throw new NoSuchElementException("찾는 연구생 없음.");
+        }else{
+            Collections.sort(userList, Comparator.comparing(User::getGeneration)); // Generation을 기준으로 오름차순 정렬
+        }
+        return userList;
+    }
+
+    //이름으로 회원 조회
+    public List<User> getUserByName(String name) {
+        List<User> userList = userMapper.getUserByName();
+
+        if (userList.isEmpty()) {
+            throw new NoSuchElementException("찾는 연구생 없음.");
         }else{
             Collections.sort(userList, Comparator.comparing(User::getGeneration)); // Generation을 기준으로 오름차순 정렬
         }

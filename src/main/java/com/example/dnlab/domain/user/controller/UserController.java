@@ -14,7 +14,11 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -57,6 +61,22 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam("name") String name) {
+        try {
+            List<User> userList = userService.getUserByName(name);
+
+            if (userList.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                Collections.sort(userList, Comparator.comparing(User::getGeneration)); // Generation을 기준으로 오름차순 정렬
+                return ResponseEntity.ok(userList);
+            }
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/myPage")

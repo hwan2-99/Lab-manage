@@ -69,8 +69,8 @@ public class UserService {
     }
 
     //이름으로 회원 조회
-    public List<User> getUserByName(String name) {
-        List<User> userList = userMapper.getUserByName();
+    public List<User> getUserByName(UserDto.searchReq req) {
+        List<User> userList = userMapper.getUserByName(req.getName());
 
         if (userList.isEmpty()) {
             throw new NoSuchElementException("찾는 연구생 없음.");

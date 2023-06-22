@@ -32,8 +32,8 @@
         SELECT * FROM USER
     </select>
     <!-- 회원 이름으로 검색 -->
-    <select id="getUserByName" resultType="com.example.dnlab.domain.user.entity.User">
-        SELECT * FROM USER WHERE Name = #{name}
+    <select id="getUserByName" resultType="User">
+        SELECT * FROM USER WHERE NAME = #{name}
     </select>
 
     <select id="getUserByNum" resultType="com.example.dnlab.domain.user.entity.User">

@@ -63,10 +63,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    // 회원검색
     @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUsers(@RequestParam("name") String name) {
+    public ResponseEntity<List<User>> searchUsers(@RequestParam("name") UserDto.searchReq req) {
+        System.out.println("controller check");
         try {
-            List<User> userList = userService.getUserByName(name);
+            List<User> userList = userService.getUserByName(req);
 
             if (userList.isEmpty()) {
                 return ResponseEntity.noContent().build();

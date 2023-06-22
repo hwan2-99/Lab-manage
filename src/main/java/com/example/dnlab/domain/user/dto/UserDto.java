@@ -32,6 +32,13 @@ public class UserDto {
         private String id;
         private String pw;
     }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class searchReq {
+        private String name;
+    }
 
     @Getter
     @Setter

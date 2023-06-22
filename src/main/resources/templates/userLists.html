@@ -12,6 +12,15 @@
     <th>학번</th>
     <th>기수</th>
   </tr>
+  <tr>
+    <th colspan="3">
+      <form id="searchForm">
+        <label for="name">이름:</label>
+        <input type="text" id="name" name="name">
+        <input type="submit" value="검색">
+      </form>
+    </th>
+  </tr>
   </thead>
   <tbody>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -20,6 +29,19 @@
       $.each(data, function(index, user) {
         var row = $("<tr><td>" + user.name + "</td><td>" + user.studentId + "</td><td>" + user.generation + "</td></tr>");
         $("tbody").append(row);
+      });
+    });
+
+    $("#searchForm").submit(function(event) {
+      event.preventDefault();
+      var name = $("#name").val();
+      var url = "/user/search?" + $.param({ name: name });
+      $.get(url, function(data) {
+        $("tbody").empty();
+        $.each(data, function(index, user) {
+          var row = $("<tr><td>" + user.name + "</td><td>" + user.studentId + "</td><td>" + user.generation + "</td></tr>");
+          $("tbody").append(row);
+        });
       });
     });
   </script>

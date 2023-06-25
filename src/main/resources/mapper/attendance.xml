@@ -7,14 +7,14 @@
     <!-- 출석 정보 넣기 -->
     <insert id="insertAttendance">
         INSERT INTO Attendance (start_time, status, user_num)
-        VALUES (#{startTime}, #{status}, #{userNum})
+        VALUES (#{startTime}, #{status}, #{user_num})
     </insert>
 
     <!-- 당일 출석 정보 확인 -->
     <select id="findAttendanceByUserNumAndStartTimeBetween" resultType="com.example.dnlab.domain.attendance.entity.Attendance">
         SELECT *
         FROM attendance
-        WHERE user_num = #{userNum}
+        WHERE user_num = #{user_num}
           AND start_time BETWEEN #{startDateTime} AND #{endDateTime}
     </select>
 

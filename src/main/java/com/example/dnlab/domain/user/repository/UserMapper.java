@@ -18,4 +18,6 @@ public interface UserMapper {
     User getUserByNum(int num); // 중복 회원 확인용 아이디 가져오기
     void updateUserGeneration(int generation, int user_num, boolean leaderYN); // 학생 가입승인시 기수 주입
 
+    List<User> getUsersWithoutAttendance(); // 출석정보가 없는 회원 리스트 가져오기
+
 }

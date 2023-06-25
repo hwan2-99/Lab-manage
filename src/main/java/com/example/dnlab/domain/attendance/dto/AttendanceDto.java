@@ -31,7 +31,7 @@ public class AttendanceDto {
     @Builder
     public static class AttendanceCheck{
         private int num; // 출석 pk
-        private int userNum; // 유저 외래키
+        private int user_num; // 유저 외래키
         private AttendanceStatus status; // 출석 상태;
         private Date startTime; // 출근 시작 시간
         private String userName; // 유저이름

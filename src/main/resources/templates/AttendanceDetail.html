@@ -18,7 +18,10 @@
     <thead>
     <tr>
       <th>이름</th>
-      <th>출석 횟수</th>
+      <th>정상 출석</th>
+      <th>지각</th>
+      <th>조퇴</th>
+      <th>결석</th>
     </tr>
     </thead>
     <tbody>
@@ -48,10 +51,18 @@
       success: function(attendanceList) {
         console.log(attendanceList);
         var attendanceListHtml = "";
-        $.each(attendanceList, function(index, attendance) {
+        $.each(attendanceList, function(userName, userStats) {
+          var normalCount = userStats.NORMAL || 0;
+          var lateCount = userStats.LATE || 0;
+          var earlyCount = userStats.EARLY || 0;
+          var absentCount = userStats.ABSENT || 0;
+
           attendanceListHtml += "<tr>";
-          attendanceListHtml += "<td>" + attendance.userName + "</td>";
-          attendanceListHtml += "<td>" + attendance.attendanceCount + "</td>";
+          attendanceListHtml += "<td>" + userName + "</td>";
+          attendanceListHtml += "<td>" + normalCount + "</td>";
+          attendanceListHtml += "<td>" + lateCount + "</td>";
+          attendanceListHtml += "<td>" + earlyCount + "</td>";
+          attendanceListHtml += "<td>" + absentCount + "</td>";
           attendanceListHtml += "</tr>";
         });
         $("#attendance-table tbody").html(attendanceListHtml);

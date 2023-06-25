@@ -35,14 +35,25 @@
     <select id="getUserByName" resultType="User">
         SELECT * FROM USER WHERE NAME = #{name}
     </select>
-
-    <select id="getUserByNum" resultType="com.example.dnlab.domain.user.entity.User">
+    <!-- 회원 pk로 검색 -->
+    <select id="getUserByNum" resultType="User">
         SELECT * FROM USER WHERE NUM = #{userNum}
     </select>
-
+    <!-- 회원 기수 주입 -->
     <update id="updateUserGeneration">
         UPDATE user
         SET generation = #{generation},leaderYN=false
         WHERE num = #{user_num}
     </update>
+    <!-- 출석정보 없는 회원 가져오기 -->
+    <select id="getUsersWithoutAttendance" resultType="com.example.dnlab.domain.user.entity.User">
+        SELECT *
+        FROM User
+        WHERE num NOT IN (
+            SELECT user_num
+            FROM attendance
+            WHERE DATE(start_time) = CURDATE()
+            GROUP BY user_num
+            )
+    </select>
 </mapper>

@@ -13,7 +13,7 @@ import java.util.List;
 public interface AttendanceMapper {
     void insertAttendance(Attendance attendance); // 출석
 
-    Attendance findAttendanceByUserNumAndStartTimeBetween(@Param("userNum") int userNum, @Param("startDateTime") Date startDateTime, @Param("endDateTime") Date endDateTime); // 해당 날짜에 출석한 내역이 있는지 조회
+    Attendance findAttendanceByUserNumAndStartTimeBetween(@Param("user_num") int user_num, @Param("startDateTime") Date startDateTime, @Param("endDateTime") Date endDateTime); // 해당 날짜에 출석한 내역이 있는지 조회
 
     List<Attendance> getMonthlyAttendanceForAll(@Param("year") int year, @Param("month") int month);
 }

@@ -180,7 +180,6 @@ public class AttendanceService {
     }
     // 특정 회원 출석정보 가져오기
     public Map<String, List<Attendance>> getAttendanceDetails(int year, int month, String userName) {
-        System.out.println("ser");
         List<User> userList = userMapper.getUserByName(userName);
         if (userList .isEmpty()) {
             throw new IllegalArgumentException("유저가 없음");

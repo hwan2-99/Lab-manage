@@ -60,7 +60,6 @@ public class AttendanceController {
 
     @GetMapping("/details")
     public ResponseEntity<Map<String, List<Attendance>>> getAttendanceDetails(@RequestParam int year, @RequestParam int month, @RequestParam String userName) {
-        System.out.println("con");
         return ResponseEntity.ok(attendanceService.getAttendanceDetails(year, month, userName));
     }
 

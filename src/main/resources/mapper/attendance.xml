@@ -17,6 +17,15 @@
         WHERE user_num = #{user_num}
           AND start_time BETWEEN #{startDateTime} AND #{endDateTime}
     </select>
+    <!-- 유저이름과 월별 출석 정보 확인 -->
+    <!-- 월별 특정 유저의 출석 정보 조회 -->
+    <select id="getMonthlyAttendanceForUser" resultType="com.example.dnlab.domain.attendance.entity.Attendance">
+        SELECT *
+        FROM attendance
+        WHERE YEAR(start_time) = #{year}
+          AND MONTH(start_time) = #{month}
+          AND user_num = #{user_num}
+    </select>
 
     <select id="getMonthlyAttendanceForAll" resultType="com.example.dnlab.domain.attendance.entity.Attendance">
         select * from attendance where YEAR(start_time) = #{year} and MONTH(start_time) = #{month}

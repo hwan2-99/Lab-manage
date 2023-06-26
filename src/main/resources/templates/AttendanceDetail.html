@@ -22,6 +22,7 @@
       <th>지각</th>
       <th>조퇴</th>
       <th>결석</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
@@ -63,9 +64,33 @@
           attendanceListHtml += "<td>" + lateCount + "</td>";
           attendanceListHtml += "<td>" + earlyCount + "</td>";
           attendanceListHtml += "<td>" + absentCount + "</td>";
+          attendanceListHtml += "<td><button class='detail-button' data-username='" + userName + "'>자세히 보기</button></td>";
           attendanceListHtml += "</tr>";
         });
         $("#attendance-table tbody").html(attendanceListHtml);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        console.log("Error: " + errorThrown);
+      }
+    });
+  }
+
+  // 자세히 보기 버튼 클릭 시 Ajax 호출
+  $(document).on("click", ".detail-button", function() {
+    var year = $("#year").val();
+    var month = $("#month").val();
+    var userName = $(this).data("username");
+    loadAttendanceDetails(year, month, userName);
+  });
+
+  function loadAttendanceDetails(year, month, userName) {
+    $.ajax({
+      url: "/attendance/details",
+      type: "GET",
+      data: { year: year, month: month, userName: userName },
+      dataType: "json",
+      success: function(attendanceDetails) {
+        // 자세한 정보를 처리하는 코드 작성
       },
       error: function(xhr, textStatus, errorThrown) {
         console.log("Error: " + errorThrown);

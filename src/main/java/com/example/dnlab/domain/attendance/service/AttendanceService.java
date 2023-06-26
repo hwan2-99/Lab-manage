@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 @Slf4j
@@ -91,6 +94,7 @@ public class AttendanceService {
 
         return ResponseEntity.ok(statsMap);
     }
+    //결석 추가
     public void checkAndAddAbsence() {
         // 현재 날짜 및 시간 정보 가져오기
         Date currentDate = new Date();
@@ -107,4 +111,103 @@ public class AttendanceService {
         }
     }
 
+    //퇴출명단 리스트
+    public ResponseEntity<Map<String, Map<String, Object>>> getPreviousMonthAttendanceStats() {
+        // 현재 날짜를 가져와 이전 달의 연도와 월을 계산
+        LocalDate currentDate = LocalDate.now();
+        YearMonth previousMonth = YearMonth.from(currentDate.minusMonths(1));
+        int year = previousMonth.getYear();
+        int month = previousMonth.getMonthValue();
+
+        List<Attendance> attendanceList = attendanceMapper.getMonthlyAttendanceForAll(year, month);
+
+        Map<String, Map<String, Object>> statsMap = new HashMap<>();
+        int totalDays = previousMonth.lengthOfMonth(); // 이전 달의 총 일 수
+        int weekdays = 0; // 주말을 제외한 일 수
+
+        for (Attendance attendance : attendanceList) {
+            int userNum = attendance.getUser_num();
+            User user = userMapper.getUserByNum(userNum);
+            if (user == null) {
+                // 사용자 정보가 없는 경우 스킵합니다.
+                continue;
+            }
+
+            String userName = user.getName();
+            AttendanceStatus status = attendance.getStatus();
+
+            // 해당 사용자 이름으로 맵에서 출석 상태별 수를 가져옵니다.
+            Map<String, Object> userStats = statsMap.get(userName);
+
+            // 맵에 사용자 이름이 없는 경우, 새로운 맵을 생성하여 맵에 추가합니다.
+            if (userStats == null) {
+                userStats = new HashMap<>();
+                statsMap.put(userName, userStats);
+            }
+
+            // 출석 상태별 수를 카운트합니다.
+            Integer count = (Integer) userStats.getOrDefault(status.toString(), 0);
+            userStats.put(status.toString(), count + 1);
+        }
+
+        // 주말을 제외한 일 수를 계산합니다.
+        for (int i = 1; i <= totalDays; i++) {
+            LocalDate date = LocalDate.of(year, month, i);
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
+            if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
+                weekdays++;
+            }
+        }
+
+        // 결과를 맵에 추가하고, 정상 출석률을 계산하여 넣습니다.
+        for (Map.Entry<String, Map<String, Object>> entry : statsMap.entrySet()) {
+            Map<String, Object> userStats = entry.getValue();
+            int normalAttendanceCount = (Integer) userStats.getOrDefault(AttendanceStatus.NORMAL.toString(), 0);
+            double attendanceRate = (double) normalAttendanceCount / weekdays * 100;
+
+            // 정상 출석률이 66보다 낮으면 결과에 추가합니다.
+            if (attendanceRate < 66) {
+                userStats.put("Weekdays_Count", weekdays);
+                userStats.put("Attendance_Rate", attendanceRate);
+                userStats.put("Low_Attendance_Rate", true);
+            } else {
+                // 출석률이 66 이상인 경우, 해당 정보를 제외합니다.
+                statsMap.remove(entry.getKey());
+            }
+        }
+
+        return ResponseEntity.ok(statsMap);
+    }
+    // 특정 회원 출석정보 가져오기
+    public Map<String, List<Attendance>> getAttendanceDetails(int year, int month, String userName) {
+        System.out.println("ser");
+        List<User> userList = userMapper.getUserByName(userName);
+        if (userList .isEmpty()) {
+            throw new IllegalArgumentException("유저가 없음");
+        }
+
+        int user_num = userList.get(0).getNum();
+        List<Attendance> attendanceList = attendanceMapper.getMonthlyAttendanceForUser(year, month, user_num);
+        log.info("년도 : {}",year);
+        log.info("월 : {}",month);
+
+        Map<String, List<Attendance>> attendanceDetailsMap = new HashMap<>();
+
+        for (Attendance attendance : attendanceList) {
+            Date date = attendance.getStartTime();
+            AttendanceStatus status = attendance.getStatus();
+
+            List<Attendance> attendanceDetails = attendanceDetailsMap.get(date);
+
+            if (attendanceDetails == null) {
+                attendanceDetails = new ArrayList<>();
+                attendanceDetailsMap.put(String.valueOf(date), attendanceDetails);
+            }
+
+            attendanceDetails.add(new Attendance(date, status));
+        }
+
+        return attendanceDetailsMap;
+    }
 }
+

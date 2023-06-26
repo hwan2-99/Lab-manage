@@ -24,6 +24,11 @@ public class Attendance {
         this.startTime = startTime;
     }
 
+    public Attendance(Date startTime, AttendanceStatus status) {
+        this.status = status;
+        this.startTime = startTime;
+    }
+
     public void setUserName(String name) {
     }
 }

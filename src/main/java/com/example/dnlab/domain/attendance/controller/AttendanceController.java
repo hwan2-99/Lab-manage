@@ -2,7 +2,10 @@ package com.example.dnlab.domain.attendance.controller;
 
 import com.example.dnlab.domain.attendance.AttendanceStatus;
 import com.example.dnlab.domain.attendance.dto.AttendanceDto;
+import com.example.dnlab.domain.attendance.entity.Attendance;
 import com.example.dnlab.domain.attendance.service.AttendanceService;
+import com.example.dnlab.domain.user.entity.User;
+import com.example.dnlab.domain.user.repository.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AttendanceController {
     private final AttendanceService attendanceService;
+    private final UserMapper userMapper;
 
     @PostMapping("/doAttendance")
     public ResponseEntity<AttendanceDto.StartCheck> doAttendance(@RequestBody AttendanceDto.StartCheck req){
@@ -54,6 +58,10 @@ public class AttendanceController {
         return response;
     }
 
-
+    @GetMapping("/details")
+    public ResponseEntity<Map<String, List<Attendance>>> getAttendanceDetails(@RequestParam int year, @RequestParam int month, @RequestParam String userName) {
+        System.out.println("con");
+        return ResponseEntity.ok(attendanceService.getAttendanceDetails(year, month, userName));
+    }
 
 }

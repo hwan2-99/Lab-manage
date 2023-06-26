@@ -28,7 +28,7 @@
         console.log(postList);
         var postListHtml = "";
         $.each(postList, function(index, post) {
-          // 게시글 출력 코드
+
           postListHtml += "<li>" +
                   "<a href='/post/" + post.num + "'>" + post.title + "</a>" +
                   "<span>" + post.createdAt + "</span>" +

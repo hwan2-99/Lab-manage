@@ -4,6 +4,9 @@ import com.example.dnlab.domain.attendance.AttendanceStatus;
 import com.example.dnlab.domain.user.entity.User;
 import lombok.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
 
@@ -11,7 +14,10 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Attendance {
+    @Id
+    @Column(name = "num")
     private int num; // 출석 pk
     private int user_num; // 유저 외래키
     private AttendanceStatus status; // 출석 상태;

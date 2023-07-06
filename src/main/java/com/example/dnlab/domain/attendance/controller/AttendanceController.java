@@ -4,7 +4,7 @@ import com.example.dnlab.domain.attendance.entity.AttendanceStatus;
 import com.example.dnlab.domain.attendance.dto.AttendanceDto;
 import com.example.dnlab.domain.attendance.entity.Attendance;
 import com.example.dnlab.domain.attendance.service.AttendanceService;
-import com.example.dnlab.domain.user.repository.UserMapper;
+import com.example.dnlab.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AttendanceController {
     private final AttendanceService attendanceService;
-    private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     @PostMapping("/doAttendance")
     public ResponseEntity<AttendanceDto.StartCheck> doAttendance(@RequestBody AttendanceDto.StartCheck req){

@@ -5,7 +5,7 @@ import com.example.dnlab.domain.attendance.dto.AttendanceDto;
 import com.example.dnlab.domain.attendance.entity.Attendance;
 import com.example.dnlab.domain.attendance.repository.AttendanceRepository;
 import com.example.dnlab.domain.user.entity.User;
-import com.example.dnlab.domain.user.repository.UserMapper;
+import com.example.dnlab.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
-    private final UserMapper userMapper;
+    private final UserRepository userRepository;
     private final HttpSession session;
 
     //출석 메소드(정상과 지각만)
@@ -68,7 +68,7 @@ public class AttendanceService {
 
         for (Attendance attendance : attendanceList) {
             int userNum = attendance.getUser().getNum();
-            User user = userMapper.getUserByNum(userNum);
+            User user = userRepository.getUserByNum(userNum);
             if (user == null) {
                 // 사용자 정보가 없는 경우 스킵합니다.
                 continue;
@@ -100,7 +100,7 @@ public class AttendanceService {
         Date currentDate = new Date();
 
         // 출석이 추가되지 않은 사용자 목록 가져오기
-        List<User> usersWithoutAttendance = userMapper.getUsersWithoutAttendance();
+        List<User> usersWithoutAttendance = userRepository.getUsersWithoutAttendance();
 
         for (User user : usersWithoutAttendance) {
             // 사용자의 출석 상태를 결석으로 설정하고 저장합니다.
@@ -128,7 +128,7 @@ public class AttendanceService {
 
         for (Attendance attendance : attendanceList) {
             int userNum = attendance.getUser().getNum();
-            User user = userMapper.getUserByNum(userNum);
+            User user = userRepository.getUserByNum(userNum);
             if (user == null) {
                 // 사용자 정보가 없는 경우 스킵합니다.
                 continue;
@@ -181,7 +181,7 @@ public class AttendanceService {
     }
     // 특정 회원 출석정보 가져오기
     public Map<String, List<Attendance>> getAttendanceDetails(int year, int month, String userName) {
-        List<User> userList = userMapper.getUserByName(userName);
+        List<User> userList = userRepository.getUserByName(userName);
         if (userList .isEmpty()) {
             throw new IllegalArgumentException("유저가 없음");
         }

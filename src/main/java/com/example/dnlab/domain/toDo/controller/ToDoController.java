@@ -3,9 +3,8 @@ package com.example.dnlab.domain.toDo.controller;
 import com.example.dnlab.domain.toDo.dto.ToDoDto;
 import com.example.dnlab.domain.toDo.entity.ToDo;
 import com.example.dnlab.domain.toDo.service.ToDoService;
-import com.example.dnlab.domain.user.dto.UserDto;
 import com.example.dnlab.domain.user.entity.User;
-import com.example.dnlab.domain.user.repository.UserMapper;
+import com.example.dnlab.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ToDoController {
     private final ToDoService todoservice;
-    private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     @PostMapping("/createTodo")
     public ResponseEntity<Void> createTodo(@RequestBody ToDoDto.createReq req){
@@ -53,7 +52,7 @@ public class ToDoController {
 
         // todo 객체 리스트를 조회하여 유저별로 todo 객체를 묶는 로직
         for (ToDo todo : allTodo) {
-            User user = userMapper.getUserByNum(todo.getUser().getNum());
+            User user = userRepository.getUserByNum(todo.getUser().getNum());
             if (user != null) { // 유저 객체가 null일 경우 무시
                 String userName = user.getName();
                 List<ToDo> userTodo = todoByUser.getOrDefault(userName, new ArrayList<>());

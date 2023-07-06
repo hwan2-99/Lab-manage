@@ -4,7 +4,7 @@ import com.example.dnlab.domain.application.dto.ApplicationDto;
 import com.example.dnlab.domain.application.entity.Application;
 import com.example.dnlab.domain.application.repository.ApplicationMapper;
 import com.example.dnlab.domain.user.entity.User;
-import com.example.dnlab.domain.user.repository.UserMapper;
+import com.example.dnlab.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ApplicationService {
 
     private final ApplicationMapper applicationMapper;
-    private final UserMapper userMapper;
+    private final UserRepository userRepository;
     private final HttpSession session;
     LocalDate today = LocalDate.now();
     LocalDateTime now = LocalDateTime.now();
@@ -52,10 +52,10 @@ public class ApplicationService {
         Application application = applicationMapper.getApplicationByNum(num);
         applicationMapper.accessApplication(application.getNum());
 
-        User user = userMapper.getUserByNum(application.getUser_num());
+        User user = userRepository.getUserByNum(application.getUser_num());
         int user_num = user.getNum();
 
-        userMapper.updateUserGeneration(generation, user_num,false);
+        userRepository.updateUserGeneration(generation, user_num,false);
 
     }
 

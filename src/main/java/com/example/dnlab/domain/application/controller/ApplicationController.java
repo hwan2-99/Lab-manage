@@ -23,7 +23,7 @@ public class ApplicationController {
     // 신청서 작성 Post
     @PostMapping("/insertApplication")
     public ResponseEntity<Void> insertApplication(@RequestBody ApplicationDto.LabSignUpReq req){
-        applicationService.crateApplication(req);
+        applicationService.createApplication(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

@@ -1,4 +1,4 @@
-package com.example.dnlab.domain.attendance;
+package com.example.dnlab.domain.attendance.entity;
 
 public enum AttendanceStatus {
     NORMAL, // 정상

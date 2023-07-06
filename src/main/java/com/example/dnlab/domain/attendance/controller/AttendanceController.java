@@ -1,10 +1,9 @@
 package com.example.dnlab.domain.attendance.controller;
 
-import com.example.dnlab.domain.attendance.AttendanceStatus;
+import com.example.dnlab.domain.attendance.entity.AttendanceStatus;
 import com.example.dnlab.domain.attendance.dto.AttendanceDto;
 import com.example.dnlab.domain.attendance.entity.Attendance;
 import com.example.dnlab.domain.attendance.service.AttendanceService;
-import com.example.dnlab.domain.user.entity.User;
 import com.example.dnlab.domain.user.repository.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num")
     private int num;  // 회원의 pk
     @Column(length = 45)
@@ -39,7 +39,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<ToDo> toDoList = new ArrayList<>();
-
 
 
     public User(String name, int studentId, String id, String pw) {

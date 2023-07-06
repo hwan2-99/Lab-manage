@@ -1,9 +1,9 @@
 package com.example.dnlab.domain.attendance.service;
 
-import com.example.dnlab.domain.attendance.AttendanceStatus;
+import com.example.dnlab.domain.attendance.entity.AttendanceStatus;
 import com.example.dnlab.domain.attendance.dto.AttendanceDto;
 import com.example.dnlab.domain.attendance.entity.Attendance;
-import com.example.dnlab.domain.attendance.repository.AttendanceMapper;
+import com.example.dnlab.domain.attendance.repository.AttendanceRepository;
 import com.example.dnlab.domain.user.entity.User;
 import com.example.dnlab.domain.user.repository.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class AttendanceService {
-    private final AttendanceMapper attendanceMapper;
+    private final AttendanceRepository attendanceRepository;
     private final UserMapper userMapper;
     private final HttpSession session;
 
@@ -37,13 +37,13 @@ public class AttendanceService {
 
         // 이미 출석했는지 확인 하기 위한 출석 객체 받아오기
 
-        Attendance attendance = attendanceMapper.findAttendanceByUserNumAndStartTimeBetween(user_num, today, new Date());
+        Attendance attendance = attendanceRepository.findAttendanceByUserNumAndStartTimeBetween(user_num, today, new Date());
         if (attendance == null) { // 출석한 적이 없는 경우에만 출석체크를 처리
             if(req.getStartTime().before(getTodayAt(10,0))){
-                attendanceMapper.insertAttendance(new Attendance(user_num, AttendanceStatus.NORMAL, req.getStartTime()));
+                attendanceRepository.save(new Attendance(user_num, AttendanceStatus.NORMAL, req.getStartTime()));
                 log.info("회원: {}, 출근시간: {}",user_num,req.getStartTime());
             }else{
-                attendanceMapper.insertAttendance(new Attendance(user_num,AttendanceStatus.LATE, req.getStartTime()));
+                attendanceRepository.save(new Attendance(user_num, AttendanceStatus.LATE, req.getStartTime()));
                 log.info("회원: {}, 출근시간: {}",user_num,req.getStartTime());
             }
         } else { // 이미 출석한 경우
@@ -62,12 +62,12 @@ public class AttendanceService {
     }
     //월별 출석일 수 가져오기
     public ResponseEntity<Map<String, Map<AttendanceStatus, Integer>>> getUserAttendanceStats(int year, int month) {
-        List<Attendance> attendanceList = attendanceMapper.getMonthlyAttendanceForAll(year, month);
+        List<Attendance> attendanceList = attendanceRepository.getMonthlyAttendanceForAll(year, month);
 
         Map<String, Map<AttendanceStatus, Integer>> statsMap = new HashMap<>();
 
         for (Attendance attendance : attendanceList) {
-            int userNum = attendance.getUser_num();
+            int userNum = attendance.getUser().getNum();
             User user = userMapper.getUserByNum(userNum);
             if (user == null) {
                 // 사용자 정보가 없는 경우 스킵합니다.
@@ -104,8 +104,9 @@ public class AttendanceService {
 
         for (User user : usersWithoutAttendance) {
             // 사용자의 출석 상태를 결석으로 설정하고 저장합니다.
-            Attendance absence = new Attendance(user.getNum(), AttendanceStatus.ABSENT, currentDate);
-            attendanceMapper.insertAttendance(absence);
+            Attendance absence = new Attendance(currentDate, AttendanceStatus.ABSENT);
+            absence.setUser(user);
+            attendanceRepository.save(absence);
 
             log.info("회원: {}, 결석 처리 날짜: {}", user.getNum(), currentDate);
         }
@@ -119,14 +120,14 @@ public class AttendanceService {
         int year = previousMonth.getYear();
         int month = previousMonth.getMonthValue();
 
-        List<Attendance> attendanceList = attendanceMapper.getMonthlyAttendanceForAll(year, month);
+        List<Attendance> attendanceList = attendanceRepository.getMonthlyAttendanceForAll(year, month);
 
         Map<String, Map<String, Object>> statsMap = new HashMap<>();
         int totalDays = previousMonth.lengthOfMonth(); // 이전 달의 총 일 수
         int weekdays = 0; // 주말을 제외한 일 수
 
         for (Attendance attendance : attendanceList) {
-            int userNum = attendance.getUser_num();
+            int userNum = attendance.getUser().getNum();
             User user = userMapper.getUserByNum(userNum);
             if (user == null) {
                 // 사용자 정보가 없는 경우 스킵합니다.
@@ -186,7 +187,7 @@ public class AttendanceService {
         }
 
         int user_num = userList.get(0).getNum();
-        List<Attendance> attendanceList = attendanceMapper.getMonthlyAttendanceForUser(year, month, user_num);
+        List<Attendance> attendanceList = attendanceRepository.getMonthlyAttendanceForUser(year, month, user_num);
         log.info("년도 : {}",year);
         log.info("월 : {}",month);
 

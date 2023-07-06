@@ -1,6 +1,5 @@
 package com.example.dnlab.domain.attendance.scheduler;
 
-import com.example.dnlab.domain.attendance.AttendanceStatus;
 import com.example.dnlab.domain.attendance.service.AttendanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ public class AttendanceScheduler {
         this.attendanceService = attendanceService;
     }
 
-    @Scheduled(cron = "0 0 0-21 * * SUN,MON-FRI") // 월요일부터 토요일 자정 전까지 매일 자정에 실행
+    @Scheduled(cron = "0 0 0-21 * * SUN,MON-FRI") // 월요일부터 토요일 자정 전까지 매일 오후 9시에 실행
     public void checkAndAddAbsence() {
         log.info("결석 처리");
         attendanceService.checkAndAddAbsence();

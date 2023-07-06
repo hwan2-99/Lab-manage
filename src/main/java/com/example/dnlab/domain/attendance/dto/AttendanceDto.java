@@ -1,7 +1,6 @@
 package com.example.dnlab.domain.attendance.dto;
 
-import com.example.dnlab.domain.attendance.AttendanceStatus;
-import com.example.dnlab.domain.user.entity.User;
+import com.example.dnlab.domain.attendance.entity.AttendanceStatus;
 import lombok.*;
 
 import java.util.Date;

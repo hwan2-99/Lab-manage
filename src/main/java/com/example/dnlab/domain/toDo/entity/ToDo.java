@@ -18,22 +18,25 @@ import java.util.Date;
 @Entity
 public class ToDo {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num")
     private int num;  // to-do-list 의 pk
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content; //할일 내용
     @Column
     private LocalDate week_start_date; //시작 날
     @Column
-    private String status; //할일 상태
+    @Enumerated(EnumType.STRING)
+    private TodoStatus status; //할일 상태
     @Column
     private Timestamp createdAt; // 생성 날짜
 
-    @JoinColumn(name = "num")
+    @JoinColumn(name = "user_num")
     @ManyToOne
     private User user;
 
+    public ToDo(String content, int num, LocalDate monday) {
+    }
 }
 
 

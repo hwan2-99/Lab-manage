@@ -1,20 +1,26 @@
 package com.example.dnlab.domain.book.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Builder
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "num")
     private int num;
+    @Column
     private String title;
+    @Column
     private String author;
+    @Column
     private boolean borrowYN;
 
-    public Book(String title, String author, boolean b) {
-    }
+
+
 }

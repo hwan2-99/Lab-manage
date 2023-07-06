@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
-@Repository
 public interface AttendanceRepository extends JpaRepository<Attendance, Integer> {
 
     @Query("SELECT a FROM Attendance a WHERE a.user.num = :userNum AND a.startTime >= :startDate AND a.startTime <= :endDate")

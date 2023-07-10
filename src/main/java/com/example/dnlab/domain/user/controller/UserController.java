@@ -66,7 +66,6 @@ public class UserController {
     // 회원검색
     @GetMapping("/search")
     public ResponseEntity<List<User>> searchUsers(@RequestParam("name") UserDto.searchReq req) {
-        System.out.println("controller check");
         try {
             List<User> userList = userService.getUserByName(req);
 

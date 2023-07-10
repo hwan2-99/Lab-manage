@@ -2,7 +2,7 @@ package com.example.dnlab.domain.toDo.service;
 
 import com.example.dnlab.domain.toDo.dto.ToDoDto;
 import com.example.dnlab.domain.toDo.entity.ToDo;
-import com.example.dnlab.domain.toDo.repository.ToDoMapper;
+import com.example.dnlab.domain.toDo.repository.ToDoRepository;
 import com.example.dnlab.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ToDoService {
-    private final ToDoMapper toDoMapper;
+    private final ToDoRepository toDoRepository;
     private final HttpSession session;
     LocalDate today = LocalDate.now();
     LocalDate monday = today.with(DayOfWeek.MONDAY);
@@ -31,28 +31,34 @@ public class ToDoService {
         log.info("월요일 날짜: {}",monday);
 
         User user = (User)session.getAttribute("user");
-        toDoMapper.createToDo(new ToDo(req.getContent(),user.getNum(),monday));
+        ToDo toDo = ToDo.builder()
+                .content(req.getContent())
+                .user(user)
+                .weekStartDate(monday)
+                .build();
+
+        toDoRepository.save(toDo);
     }
 
     //금주의 to-do-list 불러오기
     public List<ToDo> viewThisWeekToDo(){
         User user = (User)session.getAttribute("user");
-        return toDoMapper.viewThisWeekToDo(user.getNum(),monday);
+        return toDoRepository.findByUserNumAndWeekStartDate(user.getNum(),monday);
     }
 
     // to-do-list 삭제
     public void deleteToDo(int num){
-        toDoMapper.deleteTodo(num);
+        toDoRepository.deleteByNum(num);
     }
 
     //to-do-list 내용 수정
     public void updateContent(int num, ToDoDto.updateReq req){
         log.info("content : {}",req.getContent());
 
-        toDoMapper.updateContent(num, req.getContent());
+        toDoRepository.updateContentByNum(num, req.getContent());
     }
     // 금주의 연구실생 전원의 to-do-list 불러오기
     public List<ToDo> viewThisWeekAllToDo(){
-        return toDoMapper.viewThisWeekAllToDo(monday);
+        return toDoRepository.findAllByWeekStartDate(monday);
     }
 }

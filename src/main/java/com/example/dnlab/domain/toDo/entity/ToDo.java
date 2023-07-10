@@ -1,10 +1,7 @@
 package com.example.dnlab.domain.toDo.entity;
 
 import com.example.dnlab.domain.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class ToDo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +22,7 @@ public class ToDo {
     @Column(columnDefinition = "TEXT")
     private String content; //할일 내용
     @Column
-    private LocalDate week_start_date; //시작 날
+    private LocalDate weekStartDate; //시작 날
     @Column
     @Enumerated(EnumType.STRING)
     private TodoStatus status; //할일 상태

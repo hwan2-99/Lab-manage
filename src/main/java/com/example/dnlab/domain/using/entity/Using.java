@@ -1,31 +1,32 @@
-package com.example.dnlab.domain.attendance.entity;
+package com.example.dnlab.domain.using.entity;
 
+import com.example.dnlab.domain.equipment.entity.Equipment;
 import com.example.dnlab.domain.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
-
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder
-public class Attendance {
+public class Using {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num")
-    private int num; // 출석 pk
+    private int num;
     @Column
-    @Enumerated(EnumType.STRING)
-    private AttendanceStatus status; // 출석 상태;
+    private LocalDate using_start_date;
     @Column
-    private Date startTime; // 출근 시작 시간
-//    private Date endTime; // 퇴근 시간
+    private LocalDate using_end_date;
+
+    @ManyToOne
+    @JoinColumn(name = "equipment_num")
+    private Equipment equipment;
 
     @ManyToOne
     @JoinColumn(name = "user_num")
     private User user;
-
 }

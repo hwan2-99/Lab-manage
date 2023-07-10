@@ -3,20 +3,18 @@ package com.example.dnlab.domain.user.entity;
 import com.example.dnlab.domain.attendance.entity.Attendance;
 import com.example.dnlab.domain.post.entity.Post;
 import com.example.dnlab.domain.toDo.entity.ToDo;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.dnlab.domain.using.entity.Using;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,12 +41,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Post> post = new ArrayList<>();
-
-
-    public User(String name, int studentId, String id, String pw) {
-        this.name = name;
-        this.studentId = studentId;
-        this.id = id;
-        this.pw = pw;
-    }
+    @OneToMany(mappedBy = "user")
+    private List<Using> usings = new ArrayList<>();
 }

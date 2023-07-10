@@ -30,27 +30,30 @@ public class AttendanceService {
     //출석 메소드(정상과 지각만)
     public void doAttendance(AttendanceDto.StartCheck req){
         User user = (User)session.getAttribute("user");
-        int user_num = user.getNum();
-        System.out.println(user_num);
+        int userNum = user.getNum();
+        System.out.println(userNum);
 
         Date today = getTodayAt(0, 0);
 
         // 이미 출석했는지 확인 하기 위한 출석 객체 받아오기
+        Attendance attendance = attendanceRepository.findAttendanceByUserNumAndStartTimeBetween(userNum, today, new Date());
 
-        Attendance attendance = attendanceRepository.findAttendanceByUserNumAndStartTimeBetween(user_num, today, new Date());
         if (attendance == null) { // 출석한 적이 없는 경우에만 출석체크를 처리
             if(req.getStartTime().before(getTodayAt(10,0))){
-                attendanceRepository.save(new Attendance(user_num, AttendanceStatus.NORMAL, req.getStartTime()));
-                log.info("회원: {}, 출근시간: {}",user_num,req.getStartTime());
-            }else{
-                attendanceRepository.save(new Attendance(user_num, AttendanceStatus.LATE, req.getStartTime()));
-                log.info("회원: {}, 출근시간: {}",user_num,req.getStartTime());
+                AttendanceStatus attendanceStatus = req.getStartTime().before(getTodayAt(10, 0)) ? AttendanceStatus.NORMAL : AttendanceStatus.LATE;
+
+                Attendance newAttendance = Attendance.builder()
+                        .user(user)
+                        .status(attendanceStatus)
+                        .startTime(req.getStartTime())
+                        .build();
+                attendanceRepository.save(newAttendance);
+                log.info("회원: {}, 출근시간: {}",userNum,req.getStartTime());
             }
         } else { // 이미 출석한 경우
-            log.info("회원: {}, 이미 출석한 날짜: {}",user_num,today);
+            log.info("회원: {}, 이미 출석한 날짜: {}",userNum,today);
         }
     }
-
     // 금일의 시간 반환 메소드
     public Date getTodayAt(int hour, int minute) {
         Calendar cal = Calendar.getInstance();
@@ -104,8 +107,11 @@ public class AttendanceService {
 
         for (User user : usersWithoutAttendance) {
             // 사용자의 출석 상태를 결석으로 설정하고 저장합니다.
-            Attendance absence = new Attendance(currentDate, AttendanceStatus.ABSENT);
-            absence.setUser(user);
+            Attendance absence = Attendance.builder()
+                    .startTime(currentDate)
+                    .status(AttendanceStatus.ABSENT)
+                    .user(user)
+                    .build();
             attendanceRepository.save(absence);
 
             log.info("회원: {}, 결석 처리 날짜: {}", user.getNum(), currentDate);
@@ -204,7 +210,10 @@ public class AttendanceService {
                 attendanceDetailsMap.put(String.valueOf(date), attendanceDetails);
             }
 
-            attendanceDetails.add(new Attendance(date, status));
+            attendanceDetails.add(Attendance.builder()
+                    .startTime(date)
+                    .status(status)
+                    .build());
         }
 
         return attendanceDetailsMap;

@@ -31,7 +31,12 @@ public class UserService {
         if(userRepository.getUserById(req.getId()) != null) {
             throw new IllegalArgumentException("이미 존재하는 학번입니다.");
         }
-        userRepository.save(new User(req.getName(), req.getStudentId(), req.getPw(), req.getId()));
+        userRepository.save(User.builder()
+                .name(req.getName())
+                .studentId(req.getStudentId())
+                .pw(req.getPw())
+                .id(req.getId())
+                .build());
     }
 
     // 로그인

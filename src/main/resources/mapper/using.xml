@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.dnlab.domain.equipment.repository.UsingMapper">
+<mapper namespace="com.example.dnlab.domain.using.repository.UsingRepository">
 
     <!-- 장비 대여 기록 추가 -->
     <insert id="insertUseInfo">
@@ -10,7 +10,7 @@
         VALUES (#{user_num}, #{equipment_num}, #{using_start_date},#{using_end_date})
     </insert>
 
-    <select id="selectUsingByEquipmentNum" resultType="com.example.dnlab.domain.equipment.entity.Using">
+    <select id="selectUsingByEquipmentNum" resultType="com.example.dnlab.domain.using.entity.Using">
         select * from using where equipment_num = #{equipment_num}
     </select>
 

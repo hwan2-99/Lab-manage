@@ -21,7 +21,9 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num")
     private int num;
+    @Column
     private String name;
+    @Column
     private String description;
 
     @OneToMany(mappedBy = "board")

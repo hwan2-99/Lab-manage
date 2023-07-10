@@ -18,11 +18,9 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final PostRepository postRepository;
 
     // 게시글 작성에 필요한 게시판 목록 조히
-    public List<Board> getBoardList(){
-        return boardRepository.getBoardList();
+    public List<Board> getBoardList() {
+        return boardRepository.findAll();
     }
-
 }

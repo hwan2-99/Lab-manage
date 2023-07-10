@@ -31,10 +31,9 @@ public class PostService {
     // 게시글 작성
     public void createPost(PostDto.postReq req, int board_num){
         User user = (User)session.getAttribute("user");
-        int userNum = user.getNum();
 
         // 게시판 선택 시 게시판 pk 불러오기
-        Board board = boardRepository.getBoardByNum(board_num);
+        Board board = boardRepository.findByNum(board_num);
 
 
         Post post = Post.builder()
@@ -47,7 +46,6 @@ public class PostService {
 
         postRepository.save(post);
     }
-
 
     // 게시글 삭제
     public void deletePost(int num){

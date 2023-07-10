@@ -1,6 +1,7 @@
 package com.example.dnlab.domain.user.entity;
 
 import com.example.dnlab.domain.attendance.entity.Attendance;
+import com.example.dnlab.domain.post.entity.Post;
 import com.example.dnlab.domain.toDo.entity.ToDo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +40,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<ToDo> toDoList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> post = new ArrayList<>();
 
 
     public User(String name, int studentId, String id, String pw) {

@@ -1,11 +1,13 @@
 package com.example.dnlab.domain.post.controller;
 
 import com.example.dnlab.domain.post.dto.PostDto;
-import com.example.dnlab.domain.post.entity.Board;
-import com.example.dnlab.domain.post.service.BoardService;
+import com.example.dnlab.domain.board.entity.Board;
+import com.example.dnlab.domain.board.service.BoardService;
+import com.example.dnlab.domain.post.entity.Post;
 import com.example.dnlab.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,15 +21,34 @@ public class PostController {
     private final PostService postService;
     private final BoardService boardService;
 
-    @PostMapping("/createPost")
-    public void createPost(@RequestBody PostDto.postReq req, @RequestParam("board_num") int board_num) {
-
-        postService.createPost(req, board_num);
+    @PostMapping("/{boardNum}")
+    public ResponseEntity<Void> createPost(@RequestBody PostDto.postReq req, @PathVariable int boardNum) {
+        postService.createPost(req, boardNum);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/boardList")
-    public List<Board> getBoardList() {
-        return boardService.getBoardList();
+    @DeleteMapping("/{num}")
+    public ResponseEntity<Void> deletePost(@PathVariable int num) {
+        postService.deletePost(num);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{num}")
+    public ResponseEntity<Void> updateContent(@PathVariable int num, @RequestBody PostDto.updateReq req) {
+        postService.updateContent(num, req);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Post>> getAllPosts() {
+        List<Post> posts = postService.getAllPost();
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/board/{boardNum}")
+    public ResponseEntity<List<Post>> getPostsByBoardNum(@PathVariable int boardNum) {
+        List<Post> posts = postService.getPostByBoardNum(boardNum);
+        return ResponseEntity.ok(posts);
     }
 
 }

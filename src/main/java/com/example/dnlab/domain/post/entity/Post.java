@@ -1,33 +1,36 @@
 package com.example.dnlab.domain.post.entity;
 
+import com.example.dnlab.domain.board.entity.Board;
 import com.example.dnlab.domain.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Builder
 public class Post {
-
-    private int id;
-    private int board_num;
-    private int user_num;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "num")
+    private int num;
+    @Column
     private String title;
+    @Column
     private String content;
-    private LocalDate createdAt;
+    @Column
+    private LocalDateTime  createdAt;
+    @Column
     private LocalDateTime updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "user_num")
+    private User user;
 
-    public Post(int board_num, String title, String content, int user_num, LocalDate createdAt) {
-        this.board_num = board_num;
-        this.title = title;
-        this.content = content;
-        this.user_num = user_num;
-        this.createdAt = createdAt;
-    }
+    @ManyToOne
+    @JoinColumn(name = "board_num")
+    private Board board;
 }

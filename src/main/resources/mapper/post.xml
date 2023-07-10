@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.dnlab.domain.post.repository.PostMapper">
+<mapper namespace="com.example.dnlab.domain.post.repository.PostRepository">
 
     <!-- 게시글 추가 -->
     <insert id="createPost">

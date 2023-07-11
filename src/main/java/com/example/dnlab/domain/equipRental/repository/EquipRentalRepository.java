@@ -1,6 +1,6 @@
-package com.example.dnlab.domain.using.repository;
+package com.example.dnlab.domain.equipRental.repository;
 
-import com.example.dnlab.domain.using.entity.EquipRental;
+import com.example.dnlab.domain.equipRental.entity.EquipRental;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EquipRentalRepository extends JpaRepository<EquipRental, Integer> {

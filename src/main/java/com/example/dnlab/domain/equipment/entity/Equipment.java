@@ -1,6 +1,6 @@
 package com.example.dnlab.domain.equipment.entity;
 
-import com.example.dnlab.domain.using.entity.EquipRental;
+import com.example.dnlab.domain.equipRental.entity.EquipRental;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 

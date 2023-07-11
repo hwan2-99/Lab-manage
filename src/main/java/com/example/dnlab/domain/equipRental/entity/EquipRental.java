@@ -1,4 +1,4 @@
-package com.example.dnlab.domain.using.entity;
+package com.example.dnlab.domain.equipRental.entity;
 
 import com.example.dnlab.domain.equipment.entity.Equipment;
 import com.example.dnlab.domain.user.entity.User;

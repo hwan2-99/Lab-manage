@@ -1,5 +1,8 @@
 package com.example.dnlab.domain.user.service;
 
+import com.example.dnlab.domain.user.dto.LoginReq;
+import com.example.dnlab.domain.user.dto.SearchReq;
+import com.example.dnlab.domain.user.dto.SignUpReq;
 import com.example.dnlab.domain.user.dto.UserDto;
 import com.example.dnlab.domain.user.entity.User;
 import com.example.dnlab.domain.user.repository.UserRepository;
@@ -25,7 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     //회원 가입
-    public void addUser(UserDto.SignUpReq req){
+    public void addUser(SignUpReq req){
         log.info("name : {}, StudentId :{}, id = {}, pw = {} ",req.getName(), req.getStudentId(),req.getId(), req.getPw());
 
         if(userRepository.getUserById(req.getId()) != null) {
@@ -40,7 +43,7 @@ public class UserService {
     }
 
     // 로그인
-    public ResponseEntity<Void> login(UserDto.loginReq req, HttpSession session) {
+    public ResponseEntity<Void> login(LoginReq req, HttpSession session) {
 
         User user = userRepository.findById(req.getId());
         log.info("id: {}, pw: {}", req.getId(), req.getPw());
@@ -74,7 +77,7 @@ public class UserService {
     }
 
     //이름으로 회원 조회
-    public List<User> getUserByName(UserDto.searchReq req) {
+    public List<User> getUserByName(SearchReq req) {
         List<User> userList = userRepository.getUserByName(req.getName());
 
         if (userList.isEmpty()) {

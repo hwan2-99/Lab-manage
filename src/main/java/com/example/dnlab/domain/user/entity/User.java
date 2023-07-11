@@ -3,7 +3,7 @@ package com.example.dnlab.domain.user.entity;
 import com.example.dnlab.domain.attendance.entity.Attendance;
 import com.example.dnlab.domain.post.entity.Post;
 import com.example.dnlab.domain.toDo.entity.Todo;
-import com.example.dnlab.domain.using.entity.EquipRental;
+import com.example.dnlab.domain.equipRental.entity.EquipRental;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 

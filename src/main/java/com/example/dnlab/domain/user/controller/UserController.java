@@ -1,5 +1,8 @@
 package com.example.dnlab.domain.user.controller;
 
+import com.example.dnlab.domain.user.dto.LoginReq;
+import com.example.dnlab.domain.user.dto.SearchReq;
+import com.example.dnlab.domain.user.dto.SignUpReq;
 import com.example.dnlab.domain.user.dto.UserDto;
 import com.example.dnlab.domain.user.entity.User;
 import com.example.dnlab.domain.user.service.UserService;
@@ -45,14 +48,14 @@ public class UserController {
 
     //회원 가입
     @PostMapping("/signUp")
-    public ResponseEntity<Void> signUp(@RequestBody UserDto.SignUpReq req){
+    public ResponseEntity<Void> signUp(@RequestBody SignUpReq req){
         userService.addUser(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody UserDto.loginReq req, HttpSession session) {
+    public ResponseEntity<Void> login(@RequestBody LoginReq req, HttpSession session) {
         return userService.login(req, session);
     }
 
@@ -64,7 +67,7 @@ public class UserController {
 
     // 회원검색
     @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUsers(@RequestParam("name") UserDto.searchReq req) {
+    public ResponseEntity<List<User>> searchUsers(@RequestParam("name") SearchReq req) {
         try {
             List<User> userList = userService.getUserByName(req);
 

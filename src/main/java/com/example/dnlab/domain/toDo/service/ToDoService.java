@@ -1,7 +1,7 @@
 package com.example.dnlab.domain.toDo.service;
 
 import com.example.dnlab.domain.toDo.dto.ToDoDto;
-import com.example.dnlab.domain.toDo.entity.ToDo;
+import com.example.dnlab.domain.toDo.entity.Todo;
 import com.example.dnlab.domain.toDo.repository.ToDoRepository;
 import com.example.dnlab.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class ToDoService {
         log.info("월요일 날짜: {}",monday);
 
         User user = (User)session.getAttribute("user");
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .content(req.getContent())
                 .user(user)
                 .weekStartDate(monday)
@@ -41,7 +41,7 @@ public class ToDoService {
     }
 
     //금주의 to-do-list 불러오기
-    public List<ToDo> viewThisWeekToDo(){
+    public List<Todo> viewThisWeekToDo(){
         User user = (User)session.getAttribute("user");
         return toDoRepository.findByUserNumAndWeekStartDate(user.getNum(),monday);
     }
@@ -58,7 +58,7 @@ public class ToDoService {
         toDoRepository.updateContentByNum(num, req.getContent());
     }
     // 금주의 연구실생 전원의 to-do-list 불러오기
-    public List<ToDo> viewThisWeekAllToDo(){
+    public List<Todo> viewThisWeekAllToDo(){
         return toDoRepository.findAllByWeekStartDate(monday);
     }
 }

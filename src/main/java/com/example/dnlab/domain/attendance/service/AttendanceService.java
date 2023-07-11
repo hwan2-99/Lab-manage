@@ -34,12 +34,15 @@ public class AttendanceService {
         System.out.println(userNum);
 
         Date today = getTodayAt(0, 0);
+        Date endDate = getTodayAt(21, 0);
 
         // 이미 출석했는지 확인 하기 위한 출석 객체 받아오기
-        Attendance attendance = attendanceRepository.findAttendanceByUserNumAndStartTimeBetween(userNum, today, new Date());
+        Attendance attendance = attendanceRepository.findAttendanceByUserNumAndStartTimeBetween(userNum, today,endDate);
+        log.info("출석확인");
 
         if (attendance == null) { // 출석한 적이 없는 경우에만 출석체크를 처리
             if(req.getStartTime().before(getTodayAt(10,0))){
+                log.info("d");
                 AttendanceStatus attendanceStatus = req.getStartTime().before(getTodayAt(10, 0)) ? AttendanceStatus.NORMAL : AttendanceStatus.LATE;
 
                 Attendance newAttendance = Attendance.builder()

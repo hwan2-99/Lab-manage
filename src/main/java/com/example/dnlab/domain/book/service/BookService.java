@@ -2,9 +2,9 @@ package com.example.dnlab.domain.book.service;
 
 import com.example.dnlab.domain.book.dto.BookDto;
 import com.example.dnlab.domain.book.entity.Book;
-import com.example.dnlab.domain.book.entity.Rental;
+import com.example.dnlab.domain.rental.entity.Rental;
 import com.example.dnlab.domain.book.repository.BookRepository;
-import com.example.dnlab.domain.book.repository.RentalMapper;
+import com.example.dnlab.domain.rental.repository.RentalRepository;
 import com.example.dnlab.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final RentalMapper rentalMapper;
+    private final RentalRepository rentalRepository;
     private final HttpSession session;
     LocalDate today = LocalDate.now();
 
@@ -38,7 +38,7 @@ public class BookService {
     }
 
     public List<Book>getAllBook(){
-        return bookRepository.getAllBooks();
+        return bookRepository.findAll();
     }
 
     public void borrowBook(int bookNum){
@@ -48,7 +48,13 @@ public class BookService {
             throw new RuntimeException("이미 대여 된 도서입니다.");
         }
         log.info("대여자 pk: {}, 책 pk : {}",user.getNum(), book.getNum());
-        rentalMapper.insertRentInfo(new Rental(user.getNum(),book.getNum(),today));
+        Rental rental = Rental.builder()
+                .user(user)
+                .book(book)
+                .rent_start_date(today)
+                .build();
+
+        rentalRepository.save(rental);
         bookRepository.updateBorrowY(book.getNum());
     }
 
@@ -57,11 +63,11 @@ public class BookService {
         Book book = bookRepository.getBookByNum(bookNum);
         User user = (User)session.getAttribute("user");
 
-        Rental rental = rentalMapper.selectRentalByBookNum(user.getNum(), book.getNum());
+        Rental rental = rentalRepository.findByUserNumAndBookNum(user.getNum(), book.getNum());
         if(rental == null){
             throw new RuntimeException("대여하지 않은 도서입니다.");
         }
-        rentalMapper.updateRentInfo(rental.getNum(), rent_end_date);
+        rentalRepository.updateRentEndDate(rental.getNum(), rent_end_date);
         bookRepository.updateBorrowN(book.getNum());
     }
 }

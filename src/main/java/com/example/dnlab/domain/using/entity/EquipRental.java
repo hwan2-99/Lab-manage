@@ -12,21 +12,23 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Builder
-public class Using {
+public class EquipRental {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num")
     private int num;
-    @Column
-    private LocalDate using_start_date;
-    @Column
-    private LocalDate using_end_date;
 
-    @ManyToOne
+    @Column(name = "using_start_date")
+    private LocalDate usingStartDate;
+
+    @Column(name = "using_end_date")
+    private LocalDate usingEndDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipment_num")
     private Equipment equipment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_num")
     private User user;
 }

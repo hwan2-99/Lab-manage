@@ -2,8 +2,9 @@ package com.example.dnlab.domain.user.entity;
 
 import com.example.dnlab.domain.attendance.entity.Attendance;
 import com.example.dnlab.domain.post.entity.Post;
-import com.example.dnlab.domain.toDo.entity.ToDo;
-import com.example.dnlab.domain.using.entity.Using;
+import com.example.dnlab.domain.toDo.entity.Todo;
+import com.example.dnlab.domain.using.entity.EquipRental;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,13 +35,17 @@ public class User {
     private boolean leaderYN; // 연구실장 유무
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Attendance> attendances = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<ToDo> toDoList = new ArrayList<>();
+    @JsonIgnore
+    private List<Todo> todoList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Post> post = new ArrayList<>();
     @OneToMany(mappedBy = "user")
-    private List<Using> usings = new ArrayList<>();
+    @JsonIgnore
+    private List<EquipRental> equipRental = new ArrayList<>();
 }

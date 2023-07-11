@@ -1,20 +1,19 @@
 package com.example.dnlab.domain.toDo.entity;
 
 import com.example.dnlab.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder
-public class ToDo {
+public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num")
@@ -30,11 +29,9 @@ public class ToDo {
     private Timestamp createdAt; // 생성 날짜
 
     @JoinColumn(name = "user_num")
+    @JsonIgnore
     @ManyToOne
     private User user;
-
-    public ToDo(String content, int num, LocalDate monday) {
-    }
 }
 
 

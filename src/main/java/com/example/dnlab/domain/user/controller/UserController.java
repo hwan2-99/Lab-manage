@@ -56,7 +56,6 @@ public class UserController {
         return userService.login(req, session);
     }
 
-
     @GetMapping("/userList")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();

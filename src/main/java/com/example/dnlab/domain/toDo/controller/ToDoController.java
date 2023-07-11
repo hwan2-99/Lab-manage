@@ -1,7 +1,7 @@
 package com.example.dnlab.domain.toDo.controller;
 
 import com.example.dnlab.domain.toDo.dto.ToDoDto;
-import com.example.dnlab.domain.toDo.entity.ToDo;
+import com.example.dnlab.domain.toDo.entity.Todo;
 import com.example.dnlab.domain.toDo.service.ToDoService;
 import com.example.dnlab.domain.user.entity.User;
 import com.example.dnlab.domain.user.repository.UserRepository;
@@ -30,7 +30,7 @@ public class ToDoController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/thisWeekTodo")
-    public List<ToDo> viewThisWeekTodo(){
+    public List<Todo> viewThisWeekTodo(){
         return todoservice.viewThisWeekToDo();
     }
     @DeleteMapping("/delete/{num}")
@@ -46,16 +46,16 @@ public class ToDoController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/thisWeekAllTodo")
-    public Map<String, List<ToDo>> viewThisWeekAllTodoByUser() {
-        List<ToDo> allTodo = todoservice.viewThisWeekAllToDo();       // to-do-list 전부 가져오기
-        Map<String, List<ToDo>> todoByUser = new HashMap<>();         // 유저별 to-do-list 분류를 위한 hashMap
+    public Map<String, List<Todo>> viewThisWeekAllTodoByUser() {
+        List<Todo> allTodo = todoservice.viewThisWeekAllToDo();       // to-do-list 전부 가져오기
+        Map<String, List<Todo>> todoByUser = new HashMap<>();         // 유저별 to-do-list 분류를 위한 hashMap
 
         // todo 객체 리스트를 조회하여 유저별로 todo 객체를 묶는 로직
-        for (ToDo todo : allTodo) {
+        for (Todo todo : allTodo) {
             User user = userRepository.getUserByNum(todo.getUser().getNum());
             if (user != null) { // 유저 객체가 null일 경우 무시
                 String userName = user.getName();
-                List<ToDo> userTodo = todoByUser.getOrDefault(userName, new ArrayList<>());
+                List<Todo> userTodo = todoByUser.getOrDefault(userName, new ArrayList<>());
                 userTodo.add(todo);
                 todoByUser.put(userName, userTodo);
             }

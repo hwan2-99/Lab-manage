@@ -1,6 +1,7 @@
 package com.example.dnlab.domain.equipment.entity;
 
-import com.example.dnlab.domain.using.entity.Using;
+import com.example.dnlab.domain.using.entity.EquipRental;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class Equipment {
     private boolean usingYN;
 
     @OneToMany(mappedBy = "equipment")
-    private List<Using> usings = new ArrayList<>();
+    @JsonIgnore
+    private List<EquipRental> equipRental = new ArrayList<>();
 
 }

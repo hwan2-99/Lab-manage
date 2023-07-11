@@ -2,10 +2,10 @@ package com.example.dnlab.domain.equipment.service;
 
 import com.example.dnlab.domain.equipment.dto.EquipmentDto;
 import com.example.dnlab.domain.equipment.entity.Equipment;
-import com.example.dnlab.domain.using.entity.Using;
 import com.example.dnlab.domain.equipment.repository.EquipmentRepository;
-import com.example.dnlab.domain.using.repository.UsingRepository;
+import com.example.dnlab.domain.using.entity.EquipRental;
 import com.example.dnlab.domain.user.entity.User;
+import com.example.dnlab.domain.using.repository.EquipRentalRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class EquipmentService {
 
     private final HttpSession session;
     private final EquipmentRepository equipmentRepository;
-    private final UsingRepository usingRepository;
+    private final EquipRentalRepository equipRentalRepository;
     LocalDate today = LocalDate.now();
 
     // 장비추가
@@ -46,13 +46,13 @@ public class EquipmentService {
         }
         log.info("대여자 pk: {}, 책 pk : {}", user.getNum(), equipment.getNum());
 
-        Using using = Using.builder()
+        EquipRental equipRental = EquipRental.builder()
                 .user(user)
                 .equipment(equipment)
-                .using_start_date(today)
+                .usingStartDate(today)
                 .build();
 
-        usingRepository.save(using);
+        equipRentalRepository.save(equipRental);
         equipmentRepository.updateUsingY(equipment.getNum());
     }
 
@@ -62,20 +62,20 @@ public class EquipmentService {
         Equipment equipment = equipmentRepository.getEquipmentByNum(equipmentNum);
         User user = (User) session.getAttribute("user");
 
-        Using using = usingRepository.findByUserNumAndEquipmentNum(user.getNum(), equipment.getNum());
-        if (using == null) {
+        EquipRental equipRental = equipRentalRepository.findByUserNumAndEquipmentNum(user.getNum(), equipment.getNum());
+        if (equipRental == null) {
             throw new RuntimeException("대여하지 않은 장비입니다.");
         }
 
-        Using updatedUsing = Using.builder()
-                .num(using.getNum())
+        EquipRental updatedUsing = equipRental.builder()
+                .num(equipRental.getNum())
                 .user(user)
                 .equipment(equipment)
-                .using_start_date(using.getUsing_start_date())
-                .using_end_date(rentEndDate)
+                .usingStartDate(equipRental.getUsingStartDate())
+                .usingEndDate(rentEndDate)
                 .build();
 
-        usingRepository.save(updatedUsing);
+        equipRentalRepository.save(updatedUsing);
         equipmentRepository.updateUsingN(equipment.getNum());
     }
 

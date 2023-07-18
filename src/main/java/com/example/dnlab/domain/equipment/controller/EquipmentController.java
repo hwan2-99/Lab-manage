@@ -1,6 +1,7 @@
 package com.example.dnlab.domain.equipment.controller;
 
-import com.example.dnlab.domain.equipment.dto.EquipmentDto;
+import com.example.dnlab.domain.equipment.dto.EquipReqDto;
+
 import com.example.dnlab.domain.equipment.service.EquipmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class EquipmentController {
     private final EquipmentService service;
 
     @PostMapping("/createEquipment")
-    public ResponseEntity<Void> createTodo(@RequestBody EquipmentDto.createEquipmentReq req){
+    public ResponseEntity<Void> createTodo(@RequestBody EquipReqDto req){
         service.createEquipment(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

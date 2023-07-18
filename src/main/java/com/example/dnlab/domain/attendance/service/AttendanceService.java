@@ -108,6 +108,8 @@ public class AttendanceService {
         // 출석이 추가되지 않은 사용자 목록 가져오기
         List<User> usersWithoutAttendance = userRepository.getUsersWithoutAttendance();
 
+        List<Attendance> absences = new ArrayList<>();
+
         for (User user : usersWithoutAttendance) {
             // 사용자의 출석 상태를 결석으로 설정하고 저장합니다.
             Attendance absence = Attendance.builder()
@@ -115,10 +117,12 @@ public class AttendanceService {
                     .status(AttendanceStatus.ABSENT)
                     .user(user)
                     .build();
-            attendanceRepository.save(absence);
+            absences.add(absence);
 
             log.info("회원: {}, 결석 처리 날짜: {}", user.getNum(), currentDate);
         }
+
+        attendanceRepository.saveAll(absences);
     }
 
     //퇴출명단 리스트

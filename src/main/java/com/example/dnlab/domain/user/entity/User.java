@@ -33,6 +33,8 @@ public class User {
     private int generation; //기수
     @Column
     private boolean leaderYN; // 연구실장 유무
+    @Column(name = "graduation_yn")
+    private Boolean graduationYN;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore

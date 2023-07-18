@@ -1,9 +1,8 @@
 package com.example.dnlab.domain.book.controller;
 
-import com.example.dnlab.domain.book.dto.BookDto;
+import com.example.dnlab.domain.book.dto.InsertBookReqDto;
 import com.example.dnlab.domain.book.entity.Book;
 import com.example.dnlab.domain.book.service.BookService;
-import com.example.dnlab.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class BookController {
 
     //도서 추가
     @PostMapping("/insertBook")
-    public ResponseEntity<Void> insertBook(@RequestBody BookDto.insertBookReq req){
+    public ResponseEntity<Void> insertBook(@RequestBody InsertBookReqDto req){
         bookService.insertBook(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

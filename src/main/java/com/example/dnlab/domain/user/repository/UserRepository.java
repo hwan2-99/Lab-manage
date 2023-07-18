@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     User getUserByNum(int num);
 
-    @Query("SELECT u FROM User u WHERE NOT EXISTS (SELECT a FROM Attendance a WHERE a.user = u)")
+    @Query("SELECT u FROM User u WHERE NOT EXISTS (SELECT a FROM Attendance a WHERE a.user = u AND DATE(a.startTime) = CURRENT_DATE)")
     List<User> getUsersWithoutAttendance();
 
     @Modifying

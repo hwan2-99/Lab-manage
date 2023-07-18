@@ -14,15 +14,6 @@ public class AttendanceDto {
     public static class StartCheck{
         private Date startTime; // 출근시간
     }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class EndCheck{
-        private Date EndTime; // 퇴근시간
-    }
     @Getter 
     @Setter
     @NoArgsConstructor

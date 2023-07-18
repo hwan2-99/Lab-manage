@@ -1,8 +1,8 @@
 package com.example.dnlab.domain.post.controller;
 
-import com.example.dnlab.domain.post.dto.PostDto;
-import com.example.dnlab.domain.board.entity.Board;
 import com.example.dnlab.domain.board.service.BoardService;
+import com.example.dnlab.domain.post.dto.PostReqDto;
+import com.example.dnlab.domain.post.dto.PostUpdateReqDto;
 import com.example.dnlab.domain.post.entity.Post;
 import com.example.dnlab.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class PostController {
     private final BoardService boardService;
 
     @PostMapping("/{boardNum}")
-    public ResponseEntity<Void> createPost(@RequestBody PostDto.postReq req, @PathVariable int boardNum) {
+    public ResponseEntity<Void> createPost(@RequestBody PostReqDto req, @PathVariable int boardNum) {
         postService.createPost(req, boardNum);
         return ResponseEntity.ok().build();
     }
@@ -34,7 +34,7 @@ public class PostController {
     }
 
     @PutMapping("/{num}")
-    public ResponseEntity<Void> updateContent(@PathVariable int num, @RequestBody PostDto.updateReq req) {
+    public ResponseEntity<Void> updateContent(@PathVariable int num, @RequestBody PostUpdateReqDto req) {
         postService.updateContent(num, req);
         return ResponseEntity.ok().build();
     }

@@ -1,7 +1,8 @@
 package com.example.dnlab.domain.post.service;
 
-import com.example.dnlab.domain.post.dto.PostDto;
 import com.example.dnlab.domain.board.entity.Board;
+import com.example.dnlab.domain.post.dto.PostReqDto;
+import com.example.dnlab.domain.post.dto.PostUpdateReqDto;
 import com.example.dnlab.domain.post.entity.Post;
 import com.example.dnlab.domain.board.repository.BoardRepository;
 import com.example.dnlab.domain.post.repository.PostRepository;
@@ -29,7 +30,7 @@ public class PostService {
     private final BoardRepository boardRepository;
 
     // 게시글 작성
-    public void createPost(PostDto.postReq req, int board_num){
+    public void createPost(PostReqDto req, int board_num){
         User user = (User)session.getAttribute("user");
 
         // 게시판 선택 시 게시판 pk 불러오기
@@ -59,7 +60,7 @@ public class PostService {
     }
 
     //게시글 내용 수정
-    public void updateContent(int num, PostDto.updateReq req){
+    public void updateContent(int num, PostUpdateReqDto req){
         log.info("content: {}", req.getContent());
         Optional<Post> postOptional = postRepository.findById(num);
         if (postOptional.isPresent()) {

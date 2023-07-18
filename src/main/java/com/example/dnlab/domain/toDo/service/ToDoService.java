@@ -1,6 +1,7 @@
 package com.example.dnlab.domain.toDo.service;
 
-import com.example.dnlab.domain.toDo.dto.ToDoDto;
+import com.example.dnlab.domain.toDo.dto.TodoReqDto;
+import com.example.dnlab.domain.toDo.dto.TodoUpdateReqDto;
 import com.example.dnlab.domain.toDo.entity.Todo;
 import com.example.dnlab.domain.toDo.repository.ToDoRepository;
 import com.example.dnlab.domain.user.entity.User;
@@ -26,7 +27,7 @@ public class ToDoService {
 
 
     // to-do-list 생성
-    public void createToDo(ToDoDto.createReq req){
+    public void createToDo(TodoReqDto req){
         log.info("content : {}",req.getContent());
         log.info("월요일 날짜: {}",monday);
 
@@ -52,7 +53,7 @@ public class ToDoService {
     }
 
     //to-do-list 내용 수정
-    public void updateContent(int num, ToDoDto.updateReq req){
+    public void updateContent(int num, TodoUpdateReqDto req){
         log.info("content : {}",req.getContent());
 
         toDoRepository.updateContentByNum(num, req.getContent());

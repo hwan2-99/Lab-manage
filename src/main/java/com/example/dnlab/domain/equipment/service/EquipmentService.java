@@ -1,6 +1,7 @@
 package com.example.dnlab.domain.equipment.service;
 
-import com.example.dnlab.domain.equipment.dto.EquipmentDto;
+import com.example.dnlab.domain.equipment.dto.EquipReqDto;
+
 import com.example.dnlab.domain.equipment.entity.Equipment;
 import com.example.dnlab.domain.equipment.repository.EquipmentRepository;
 import com.example.dnlab.domain.equipRental.entity.EquipRental;
@@ -26,7 +27,7 @@ public class EquipmentService {
     LocalDate today = LocalDate.now();
 
     // 장비추가
-    public void createEquipment(EquipmentDto.createEquipmentReq req){
+    public void createEquipment(EquipReqDto req){
         log.info("이름 : {}, 장비 가격: {}, 구매일 : {} ",req.getName(), req.getPrice(), req.getPurchase_date());
         Equipment equipment = Equipment.builder()
                 .name(req.getName())

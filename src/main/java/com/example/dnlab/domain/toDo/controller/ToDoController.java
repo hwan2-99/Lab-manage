@@ -1,6 +1,7 @@
 package com.example.dnlab.domain.toDo.controller;
 
-import com.example.dnlab.domain.toDo.dto.ToDoDto;
+import com.example.dnlab.domain.toDo.dto.TodoReqDto;
+import com.example.dnlab.domain.toDo.dto.TodoUpdateReqDto;
 import com.example.dnlab.domain.toDo.entity.Todo;
 import com.example.dnlab.domain.toDo.service.ToDoService;
 import com.example.dnlab.domain.user.entity.User;
@@ -25,7 +26,7 @@ public class ToDoController {
     private final UserRepository userRepository;
 
     @PostMapping("/createTodo")
-    public ResponseEntity<Void> createTodo(@RequestBody ToDoDto.createReq req){
+    public ResponseEntity<Void> createTodo(@RequestBody TodoReqDto req){
         todoservice.createToDo(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -40,7 +41,7 @@ public class ToDoController {
     }
 
     @PutMapping("/updateContent/{num}")
-    public ResponseEntity<Void> updateContent(@PathVariable int num, @RequestBody ToDoDto.updateReq req) {
+    public ResponseEntity<Void> updateContent(@PathVariable int num, @RequestBody TodoUpdateReqDto req) {
         todoservice.updateContent(num, req);
         log.info("수정대상:{} , 수정내용: {}",num,req.getContent());
         return new ResponseEntity<>(HttpStatus.OK);

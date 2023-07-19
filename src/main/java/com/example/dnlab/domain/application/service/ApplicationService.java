@@ -4,6 +4,7 @@ import com.example.dnlab.domain.application.dto.ApplicationDto;
 import com.example.dnlab.domain.application.entity.Application;
 import com.example.dnlab.domain.application.entity.ApplicationStatus;
 import com.example.dnlab.domain.application.repository.ApplicationRepository;
+import com.example.dnlab.domain.user.entity.Role;
 import com.example.dnlab.domain.user.entity.User;
 import com.example.dnlab.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,16 +55,16 @@ public class ApplicationService {
         return applicationRepository.getApplicationDetail(num);
     }
 
-    public void approveApplication(int num){
-
+    public void approveApplication(int num) {
         Application application = applicationRepository.getApplicationByNum(num);
         applicationRepository.accessApplication(application.getNum());
 
         User user = userRepository.getUserByNum(application.getUser().getNum());
-        int user_num = user.getNum();
+        int userNum = user.getNum();
 
-        userRepository.updateUserGeneration(generation, user_num,false);
-
+        // 기존 권한 유지하고 RESEARCHER 권한 추가
+        user.addRole(Role.RESEARCHER);
+        userRepository.save(user);
     }
 
     public void rejectApplication(int num){

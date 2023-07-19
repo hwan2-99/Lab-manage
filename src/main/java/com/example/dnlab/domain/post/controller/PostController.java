@@ -8,6 +8,7 @@ import com.example.dnlab.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,18 +23,21 @@ public class PostController {
     private final BoardService boardService;
 
     @PostMapping("/{boardNum}")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<Void> createPost(@RequestBody PostReqDto req, @PathVariable int boardNum) {
         postService.createPost(req, boardNum);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{num}")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<Void> deletePost(@PathVariable int num) {
         postService.deletePost(num);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{num}")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<Void> updateContent(@PathVariable int num, @RequestBody PostUpdateReqDto req) {
         postService.updateContent(num, req);
         return ResponseEntity.ok().build();

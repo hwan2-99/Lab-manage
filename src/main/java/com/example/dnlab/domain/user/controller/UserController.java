@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -31,6 +32,7 @@ public class UserController {
 
     //로그아웃
     @PostMapping("/logOut")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER', 'MEMBER')")
     public void logout(HttpSession session, HttpServletResponse response) throws IOException {
         session.invalidate();
         log.info("logOut");
@@ -56,10 +58,12 @@ public class UserController {
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginReq req, HttpSession session) {
+        log.info("con");
         return userService.login(req, session);
     }
 
     @GetMapping("/userList")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER', 'MEMBER')")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
@@ -67,6 +71,7 @@ public class UserController {
 
     // 회원검색
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER', 'MEMBER')")
     public ResponseEntity<List<User>> searchUsers(@RequestParam("name") SearchReq req) {
         try {
             List<User> userList = userService.getUserByName(req);
@@ -83,6 +88,7 @@ public class UserController {
     }
 
     @GetMapping("/myPage")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<User> getMyPage(HttpSession session) {
         User user = (User)session.getAttribute("user");
         User findUser = userService.getUserByNum(user.getNum());

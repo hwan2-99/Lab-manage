@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,12 +24,14 @@ public class AttendanceController {
     private final UserRepository userRepository;
 
     @PostMapping("/doAttendance")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<AttendanceDto.StartCheck> doAttendance(@RequestBody AttendanceDto.StartCheck req){
         attendanceService.doAttendance(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/monthly/all")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER')")
     public ResponseEntity<Map<String, Map<AttendanceStatus, Integer>>> getMonthlyAttendanceForAll(@RequestParam int year, @RequestParam int month) {
 
         ResponseEntity<Map<String, Map<AttendanceStatus, Integer>>> response;
@@ -57,6 +60,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/details")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER')")
     public ResponseEntity<Map<String, List<Attendance>>> getAttendanceDetails(@RequestParam int year, @RequestParam int month, @RequestParam String userName) {
         log.info("test");
         return ResponseEntity.ok(attendanceService.getAttendanceDetails(year, month, userName));

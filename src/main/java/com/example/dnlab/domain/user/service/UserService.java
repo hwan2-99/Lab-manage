@@ -4,12 +4,15 @@ import com.example.dnlab.domain.user.dto.LoginReq;
 import com.example.dnlab.domain.user.dto.SearchReq;
 import com.example.dnlab.domain.user.dto.SignUpReq;
 import com.example.dnlab.domain.user.dto.UserDto;
+import com.example.dnlab.domain.user.entity.Role;
 import com.example.dnlab.domain.user.entity.User;
 import com.example.dnlab.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,25 +28,35 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    //회원 가입
-    public void addUser(SignUpReq req){
-        log.info("name : {}, StudentId :{}, id = {}, pw = {} ",req.getName(), req.getStudentId(),req.getId(), req.getPw());
+    // 회원 가입
+    public void addUser(SignUpReq req) {
+        log.info("name : {}, StudentId :{}, id = {}, pw = {} ", req.getName(), req.getStudentId(), req.getId(), req.getPw());
 
-        if(userRepository.getUserById(req.getId()) != null) {
+        if (userRepository.getUserById(req.getId()) != null) {
             throw new IllegalArgumentException("이미 존재하는 학번입니다.");
         }
-        userRepository.save(User.builder()
+        String encodedPassword = passwordEncoder.encode(req.getPw());
+
+        User user = User.builder()
                 .name(req.getName())
                 .studentId(req.getStudentId())
-                .pw(req.getPw())
+                .pw(encodedPassword)
                 .id(req.getId())
-                .build());
+                .build();
+
+        // 일반 회원으로 초기 역할 설정
+        user.addRole(Role.MEMBER);
+
+        userRepository.save(user);
     }
 
     // 로그인
     public ResponseEntity<Void> login(LoginReq req, HttpSession session) {
+        log.info("ser");
 
         User user = userRepository.findById(req.getId());
         log.info("id: {}, pw: {}", req.getId(), req.getPw());
@@ -51,16 +64,14 @@ public class UserService {
 
         // 아이디 확인
         if (user != null) {
-            // 비밀번호 비교
-            if (user.getPw().equals(req.getPw())) {
-                // 세션 저장(pk)
+            // 패스워드 비교 (암호화된 패스워드로 비교)
+            if (passwordEncoder.matches(req.getPw(), user.getPw())) {
+                // 로그인 성공 처리
                 session.setAttribute("user", user);
-
-                // 세션 id 반환
                 return ResponseEntity.ok().header("SESSION-ID", session.getId()).build();
             }
         }
-        // 로그인 실패
+        // 로그인 실패 처리
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 

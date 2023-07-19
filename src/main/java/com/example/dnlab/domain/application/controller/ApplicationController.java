@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ApplicationController {
 
     // 신청서 작성 Post
     @PostMapping("/insertApplication")
+    @PreAuthorize("hasAnyRole('MEMBER')")
     public ResponseEntity<Void> insertApplication(@RequestBody ApplicationDto.LabSignUpReq req){
         applicationService.createApplication(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -29,16 +31,19 @@ public class ApplicationController {
 
     //신청서 조회 Get
     @GetMapping("/applications")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER')")
     public List<Application> getAllApplications(){
         return applicationService.getAllApplications();
     }
 
     @GetMapping("/detail/{num}")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER')")
     public Application getApplicationDetail(@PathVariable("num") int num) {
         return applicationService.getApplicationDetail(num);
     }
 
     @PostMapping("/action")
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<String> approveAction(@RequestBody Map<String, Object> request) {
         int userNum = Integer.parseInt(request.get("user_num").toString());
         String action = request.get("action").toString();

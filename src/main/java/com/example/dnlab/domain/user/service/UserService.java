@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -40,12 +37,16 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 학번입니다.");
         }
         String encodedPassword = passwordEncoder.encode(req.getPw());
+        List<Role> roles = new ArrayList<>();
+        roles.add(Role.MEMBER);
+
 
         User user = User.builder()
                 .name(req.getName())
                 .studentId(req.getStudentId())
                 .pw(encodedPassword)
                 .id(req.getId())
+                .roles(roles)
                 .build();
 
         // 일반 회원으로 초기 역할 설정

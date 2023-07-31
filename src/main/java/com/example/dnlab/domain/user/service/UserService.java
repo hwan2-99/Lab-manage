@@ -12,21 +12,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     // 회원 가입
@@ -36,22 +40,19 @@ public class UserService {
         if (userRepository.getUserById(req.getId()) != null) {
             throw new IllegalArgumentException("이미 존재하는 학번입니다.");
         }
-        String encodedPassword = passwordEncoder.encode(req.getPw());
-        List<Role> roles = new ArrayList<>();
-        roles.add(Role.MEMBER);
-
+        String salt = BCrypt.gensalt(); // 랜덤한 salt 생성
+        String encodedPassword = BCrypt.hashpw(req.getPw(), salt); // 비밀번호 암호화
 
         User user = User.builder()
                 .name(req.getName())
                 .studentId(req.getStudentId())
                 .pw(encodedPassword)
+                .roles(new ArrayList<>())
                 .id(req.getId())
-                .roles(roles)
                 .build();
 
         // 일반 회원으로 초기 역할 설정
         user.addRole(Role.MEMBER);
-
         userRepository.save(user);
     }
 
@@ -66,7 +67,7 @@ public class UserService {
         // 아이디 확인
         if (user != null) {
             // 패스워드 비교 (암호화된 패스워드로 비교)
-            if (passwordEncoder.matches(req.getPw(), user.getPw())) {
+            if (BCrypt.checkpw(req.getPw(), user.getPw())) {
                 // 로그인 성공 처리
                 session.setAttribute("user", user);
                 return ResponseEntity.ok().header("SESSION-ID", session.getId()).build();
@@ -74,6 +75,21 @@ public class UserService {
         }
         // 로그인 실패 처리
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // 사용자 정보를 UserRepository를 사용하여 가져옴
+        User user = userRepository.getUserById(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with id: " + username);
+        }
+
+        // 권한 정보를 SimpleGrantedAuthority로 변환하여 UserDetails 객체 생성
+        List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())) // Spring Security에서는 권한 이름을 "ROLE_"로 시작해야 함
+                .collect(Collectors.toList());
+
+        return new org.springframework.security.core.userdetails.User(user.getId(), user.getPw(), authorities);
     }
 
     //전체 회원 조회

@@ -21,7 +21,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AttendanceController {
     private final AttendanceService attendanceService;
-    private final UserRepository userRepository;
 
     @PostMapping("/doAttendance")
     @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")

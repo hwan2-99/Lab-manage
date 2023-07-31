@@ -6,14 +6,16 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function(){
+
       $('form').on('submit', function(e){
-        e.preventDefault();
+
         var user = {
           "name": $('input[name=name]').val(),
           "studentId": $('input[name=studentId]').val(),
           "id": $('input[name=id]').val(),
           "pw": $('input[name=pw]').val()
         };
+
         $.ajax({
           url:'/user/signUp',
           type:'POST',
@@ -27,7 +29,9 @@
             alert("이미 존재하는 학번입니다.");
           }
         });
+
       });
+
     });
   </script>
 </head>
@@ -38,7 +42,7 @@
   <input type="text" name="studentId" placeholder="학번"><br>
   <input type="text" name="id" placeholder="아이디"><br>
   <input type="password" name="pw" placeholder="비밀번호"><br>
-  <button type="button">회원가입</button>
+  <button type="submit">회원가입</button>
 </form>
 </body>
 </html>

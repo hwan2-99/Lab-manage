@@ -55,11 +55,20 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginReq req, HttpSession session) {
+        System.out.println("1");
         log.info("con");
-        return userService.login(req, session);
+        ResponseEntity<Void> response = userService.login(req, session);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            // 로그인이 성공하면 메인 페이지로 리다이렉트
+            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/").build();
+        } else {
+            // 로그인이 실패하면 로그인 페이지로 리다이렉트
+            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/user/login?error").build();
+        }
     }
 
     @GetMapping("/userList")

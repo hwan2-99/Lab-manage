@@ -18,7 +18,7 @@ public class AttendanceScheduler {
         this.attendanceService = attendanceService;
     }
 
-    @Scheduled(cron = "0 0 21 * * SUN,MON-FRI") // 월요일부터 토요일 자정 전까지 매일 오후 9시에 실행
+    @Scheduled(cron = "0 0 21 * * 1-5") // 월요일부터 토요일 자정 전까지 매일 오후 9시에 실행
     public void checkAndAddAbsence() {
         log.info("결석 처리");
         attendanceService.checkAndAddAbsence();

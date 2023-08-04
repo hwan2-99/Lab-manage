@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
     public void addUser(SignUpReq req) {
         log.info("name : {}, StudentId :{}, id = {}, pw = {} ", req.getName(), req.getStudentId(), req.getId(), req.getPw());
 
-        if (userRepository.getUserById(req.getId()) != null) {
+        if (userRepository.findById(req.getId()) != null) {
             throw new IllegalArgumentException("이미 존재하는 학번입니다.");
         }
         String salt = BCrypt.gensalt(); // 랜덤한 salt 생성
@@ -79,7 +79,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 사용자 정보를 UserRepository를 사용하여 가져옴
-        User user = userRepository.getUserById(username);
+        User user = userRepository.findById(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with id: " + username);
         }

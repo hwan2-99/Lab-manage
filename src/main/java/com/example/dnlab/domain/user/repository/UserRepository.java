@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
 
-    User getUserById(String id);
 
     User findById(String id);
 

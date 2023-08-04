@@ -9,8 +9,8 @@
             $('form').on('submit', function(e){
                 e.preventDefault();
                 var user = {
-                    "username": $('input[name=username]').val(),
-                    "password": $('input[name=password]').val()
+                    "id": $('input[name=id]').val(),
+                    "pw": $('input[name=pw]').val()
                 };
                 console.log("test");
                 $.ajax({
@@ -21,7 +21,7 @@
                     success:function(){
                         console.log(user);
                         alert("로그인 되었습니다.");
-                        $('input[name=username]').val('');
+                        $('input[name=id]').val('');
                         $('input[name=pw]').val('');
                         window.location.href = "/";
                     },
@@ -35,8 +35,8 @@
 </head>
 <body>
 <form>
-    <input type="text" name="username" placeholder="아이디"><br>
-    <input type="password" name="password" placeholder="비밀번호"><br>
+    <input type="text" name="id" placeholder="아이디"><br>
+    <input type="password" name="pw" placeholder="비밀번호"><br>
     <button type="submit">로그인</button>
 </form>
 

@@ -1,6 +1,6 @@
 package com.example.dnlab.config;
 
-import com.example.dnlab.domain.user.service.UserService;
+import com.example.dnlab.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +26,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/member/**").hasAnyRole("PROFESSOR", "MANAGER", "RESEARCHER")
                 .antMatchers("/**", "/user/login").permitAll()
                 .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .usernameParameter("username")
-//                .passwordParameter("password")
-//                .loginProcessingUrl("/user/login")
-//                .loginPage("/user/login")
-//                .permitAll()
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")

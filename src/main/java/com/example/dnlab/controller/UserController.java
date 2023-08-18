@@ -1,14 +1,13 @@
 package com.example.dnlab.controller;
 
-import com.example.dnlab.dto.user.LoginReqDto;
-import com.example.dnlab.dto.user.SearchReqDto;
-import com.example.dnlab.dto.user.SignUpReqDto;
+import com.example.dnlab.dto.user.*;
 import com.example.dnlab.domain.User;
-import com.example.dnlab.dto.user.UserResDto;
 import com.example.dnlab.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -80,16 +79,18 @@ public class UserController {
 
     // 회원검색
     @GetMapping("/search")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER', 'MEMBER')")
-    public ResponseEntity<List<User>> searchUsers(@RequestParam("name") SearchReqDto req) {
+    public ResponseEntity<UserPaginationResDto> searchUsers(@RequestParam("name") String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        log.info("con");
+        SearchReqDto req = new SearchReqDto();
+        req.setName(name);
+        Pageable pageable = PageRequest.of(page,size);
         try {
-            List<User> userList = userService.getUserByName(req);
+            UserPaginationResDto userPaginationResDto = userService.getUserByName(req,pageable);
 
-            if (userList.isEmpty()) {
+            if (userPaginationResDto == null) {
                 return ResponseEntity.noContent().build();
             } else {
-                Collections.sort(userList, Comparator.comparing(User::getGeneration)); // Generation을 기준으로 오름차순 정렬
-                return ResponseEntity.ok(userList);
+                return ResponseEntity.ok(userPaginationResDto);
             }
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();

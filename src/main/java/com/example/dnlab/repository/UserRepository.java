@@ -1,6 +1,8 @@
 package com.example.dnlab.repository;
 
 import com.example.dnlab.domain.User;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     User findById(String id);
 
     List<User> getUserByName(String name);
+    @Query("select u from User u where u.name = :name order by u.num desc")
+    Slice<User> findUserByName(@Param("name") String name, Pageable pageable);
 
     User getUserByNum(int num);
 

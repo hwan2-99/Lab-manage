@@ -1,8 +1,11 @@
 package com.example.dnlab.dto.user;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class SearchReqDto {
     private String name;
+
+    public SearchReqDto() {
+    }
 }

@@ -1,14 +1,13 @@
 package com.example.dnlab.service;
 
-import com.example.dnlab.dto.user.LoginReqDto;
-import com.example.dnlab.dto.user.SearchReqDto;
-import com.example.dnlab.dto.user.SignUpReqDto;
+import com.example.dnlab.dto.user.*;
 import com.example.dnlab.domain.Role;
 import com.example.dnlab.domain.User;
-import com.example.dnlab.dto.user.UserResDto;
 import com.example.dnlab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -103,15 +102,20 @@ public class UserService implements UserDetailsService {
     }
 
     //이름으로 회원 조회
-    public List<User> getUserByName(SearchReqDto req) {
-        List<User> userList = userRepository.getUserByName(req.getName());
+    public UserPaginationResDto getUserByName(SearchReqDto req, Pageable pageable) {
+        log.info("ser");
+        Slice<User> allUserSliceBy = userRepository.findUserByName(req.getName(), pageable);
+        List<UserResDto> userResDto = allUserSliceBy.getContent().stream().map((UserResDto::of)).collect(Collectors.toList());
 
-        if (userList.isEmpty()) {
+        if (userResDto.isEmpty()) {
             throw new NoSuchElementException("찾는 연구생 없음.");
         }else{
-            Collections.sort(userList, Comparator.comparing(User::getGeneration)); // Generation을 기준으로 오름차순 정렬
+            return UserPaginationResDto.builder()
+                    .users(userResDto)
+                    .numberOfUser(allUserSliceBy.getNumberOfElements())
+                    .page(allUserSliceBy.getPageable().getPageNumber())
+                    .build();
         }
-        return userList;
     }
 
     //회원 한명의 정보 받아오기

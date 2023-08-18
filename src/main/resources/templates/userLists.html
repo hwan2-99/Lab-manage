@@ -35,10 +35,12 @@
     $("#searchForm").submit(function(event) {
       event.preventDefault();
       var name = $("#name").val();
-      var url = "/user/search?" + $.param({ name: name });
+      var page = 0; // 페이지 번호
+      var size = 10; // 한 페이지에 표시될 아이템 수
+      var url = `/user/search?name=${name}&page=${page}&size=${size}`; // 검색어와 페이지 정보를 URL 파라미터로 전달
       $.get(url, function(data) {
         $("tbody").empty();
-        $.each(data, function(index, user) {
+        $.each(data.content, function(index, user) {
           var row = $("<tr><td>" + user.name + "</td><td>" + user.studentId + "</td><td>" + user.generation + "</td></tr>");
           $("tbody").append(row);
         });

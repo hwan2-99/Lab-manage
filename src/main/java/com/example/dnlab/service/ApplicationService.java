@@ -1,8 +1,8 @@
 package com.example.dnlab.service;
 
-import com.example.dnlab.dto.application.ApplicationDto;
 import com.example.dnlab.domain.Application;
 import com.example.dnlab.domain.ApplicationStatus;
+import com.example.dnlab.dto.application.LabSignUpReq;
 import com.example.dnlab.repository.ApplicationRepository;
 import com.example.dnlab.domain.Role;
 import com.example.dnlab.domain.User;
@@ -32,7 +32,7 @@ public class ApplicationService {
     int generation = year-2003;
 
     //신청서 작성
-    public int createApplication(ApplicationDto.LabSignUpReq req) {
+    public int createApplication(LabSignUpReq req) {
         User user = (User) session.getAttribute("user");
         log.info("지원 동기: {}, 자기소개: {}, 원하는 연구활동: {}, 유저 pk: {}", req.getMotive(), req.getIntro(), req.getWanted(), user.getNum());
         Application application = Application.builder()

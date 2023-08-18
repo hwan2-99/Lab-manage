@@ -1,7 +1,7 @@
 package com.example.dnlab.controller;
 
-import com.example.dnlab.dto.application.ApplicationDto;
 import com.example.dnlab.domain.Application;
+import com.example.dnlab.dto.application.LabSignUpReq;
 import com.example.dnlab.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class ApplicationController {
     // 신청서 작성 Post
     @PostMapping("/insertApplication")
     @PreAuthorize("hasAnyRole('MEMBER')")
-    public ResponseEntity<Void> insertApplication(@RequestBody ApplicationDto.LabSignUpReq req){
+    public ResponseEntity<Void> insertApplication(@RequestBody LabSignUpReq req){
         applicationService.createApplication(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

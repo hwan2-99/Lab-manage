@@ -1,9 +1,10 @@
 package com.example.dnlab.controller;
 
-import com.example.dnlab.dto.user.LoginReq;
-import com.example.dnlab.dto.user.SearchReq;
-import com.example.dnlab.dto.user.SignUpReq;
+import com.example.dnlab.dto.user.LoginReqDto;
+import com.example.dnlab.dto.user.SearchReqDto;
+import com.example.dnlab.dto.user.SignUpReqDto;
 import com.example.dnlab.domain.User;
+import com.example.dnlab.dto.user.UserResDto;
 import com.example.dnlab.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,16 +51,15 @@ public class UserController {
 
     //회원 가입
     @PostMapping("/signUp")
-    public ResponseEntity<Void> signUp(@RequestBody SignUpReq req){
-        userService.addUser(req);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<UserResDto> signUp(@Valid @RequestBody SignUpReqDto req){
+        UserResDto res = userService.join(req);
+        return ResponseEntity.ok(res);
     }
 
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginReq req, HttpSession session) {
-        System.out.println("1");
+    public ResponseEntity<Void> login(@RequestBody LoginReqDto req, HttpSession session) {
         log.info("con");
         ResponseEntity<Void> response = userService.login(req, session);
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -80,7 +81,7 @@ public class UserController {
     // 회원검색
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER', 'MEMBER')")
-    public ResponseEntity<List<User>> searchUsers(@RequestParam("name") SearchReq req) {
+    public ResponseEntity<List<User>> searchUsers(@RequestParam("name") SearchReqDto req) {
         try {
             List<User> userList = userService.getUserByName(req);
 

@@ -1,10 +1,11 @@
 package com.example.dnlab.service;
 
-import com.example.dnlab.dto.user.LoginReq;
-import com.example.dnlab.dto.user.SearchReq;
-import com.example.dnlab.dto.user.SignUpReq;
+import com.example.dnlab.dto.user.LoginReqDto;
+import com.example.dnlab.dto.user.SearchReqDto;
+import com.example.dnlab.dto.user.SignUpReqDto;
 import com.example.dnlab.domain.Role;
 import com.example.dnlab.domain.User;
+import com.example.dnlab.dto.user.UserResDto;
 import com.example.dnlab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     // 회원 가입
-    public void addUser(SignUpReq req) {
+    public UserResDto join(SignUpReqDto req) {
         log.info("name : {}, StudentId :{}, id = {}, pw = {} ", req.getName(), req.getStudentId(), req.getId(), req.getPw());
 
         if (userRepository.findById(req.getId()) != null) {
@@ -40,21 +41,21 @@ public class UserService implements UserDetailsService {
         String salt = BCrypt.gensalt(); // 랜덤한 salt 생성
         String encodedPassword = BCrypt.hashpw(req.getPw(), salt); // 비밀번호 암호화
 
-        User user = User.builder()
-                .name(req.getName())
-                .studentId(req.getStudentId())
-                .pw(encodedPassword)
-                .roles(new ArrayList<>())
-                .id(req.getId())
-                .build();
+        User user = req.toEntity();
 
         // 일반 회원으로 초기 역할 설정
         user.addRole(Role.MEMBER);
         userRepository.save(user);
+        return UserResDto.builder()
+                .num(user.getNum())
+                .name(user.getName())
+                .id(user.getId())
+                .studentId(user.getStudentId())
+                .build();
     }
 
     // 로그인
-    public ResponseEntity<Void> login(LoginReq req, HttpSession session) {
+    public ResponseEntity<Void> login(LoginReqDto req, HttpSession session) {
         log.info("ser");
 
         User user = userRepository.findById(req.getId());
@@ -102,7 +103,7 @@ public class UserService implements UserDetailsService {
     }
 
     //이름으로 회원 조회
-    public List<User> getUserByName(SearchReq req) {
+    public List<User> getUserByName(SearchReqDto req) {
         List<User> userList = userRepository.getUserByName(req.getName());
 
         if (userList.isEmpty()) {

@@ -3,6 +3,6 @@ package com.example.dnlab.dto.user;
 import lombok.Getter;
 
 @Getter
-public class SearchReq {
+public class SearchReqDto {
     private String name;
 }

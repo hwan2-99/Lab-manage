@@ -80,7 +80,6 @@ public class UserController {
     // 회원검색
     @GetMapping("/search")
     public ResponseEntity<UserPaginationResDto> searchUsers(@RequestParam("name") String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        log.info("con");
         SearchReqDto req = new SearchReqDto();
         req.setName(name);
         Pageable pageable = PageRequest.of(page,size);
@@ -99,12 +98,11 @@ public class UserController {
 
     @GetMapping("/myPage")
     @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
-    public ResponseEntity<User> getMyPage(HttpSession session) {
+    public ResponseEntity<UserResDto> getMyPage(HttpSession session) {
         User user = (User)session.getAttribute("user");
-        User findUser = userService.getUserByNum(user.getNum());
-        log.info("1 = {}, 2 = {} 3 = {}",findUser.getName(),findUser.getStudentId(),findUser.getGeneration());
+        UserResDto res = userService.getUserByNum(user.getNum());
 
-        return ResponseEntity.ok().body(findUser);
+        return ResponseEntity.ok().body(res);
     }
 
 }

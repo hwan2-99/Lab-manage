@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     User findById(String id);
 
     List<User> getUserByName(String name);
-    @Query("select u from User u where u.name = :name order by u.num desc")
+    @Query("select u from User u where u.name like %:name% order by u.num desc")
     Slice<User> findUserByName(@Param("name") String name, Pageable pageable);
 
     User getUserByNum(int num);

@@ -55,7 +55,6 @@ public class UserService implements UserDetailsService {
 
     // 로그인
     public ResponseEntity<Void> login(LoginReqDto req, HttpSession session) {
-        log.info("ser");
 
         User user = userRepository.findById(req.getId());
         log.info("id: {}, pw: {}", req.getId(), req.getPw());
@@ -103,7 +102,6 @@ public class UserService implements UserDetailsService {
 
     //이름으로 회원 조회
     public UserPaginationResDto getUserByName(SearchReqDto req, Pageable pageable) {
-        log.info("ser");
         Slice<User> allUserSliceBy = userRepository.findUserByName(req.getName(), pageable);
         List<UserResDto> userResDto = allUserSliceBy.getContent().stream().map((UserResDto::of)).collect(Collectors.toList());
 
@@ -119,7 +117,15 @@ public class UserService implements UserDetailsService {
     }
 
     //회원 한명의 정보 받아오기
-    public User getUserByNum(int num){
-        return userRepository.getUserByNum(num);
+    public UserResDto getUserByNum(int num){
+        User user = userRepository.getUserByNum(num);
+        return UserResDto.builder()
+                .num(user.getNum())
+                .studentId(user.getStudentId())
+                .id(user.getId())
+                .generation(user.getGeneration())
+                .name(user.getName())
+                .leaderYN(user.isLeaderYN())
+                .build();
     }
 }

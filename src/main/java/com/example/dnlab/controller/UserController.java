@@ -58,15 +58,14 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginReqDto req, HttpSession session) {
-        log.info("con");
-        ResponseEntity<Void> response = userService.login(req, session);
-        if (response.getStatusCode() == HttpStatus.OK) {
+    public ResponseEntity<UserResDto> login(@RequestBody LoginReqDto req, HttpSession session) {
+         UserResDto res = userService.login(req, session);
+        if (res.isLoginSuccess()) {
             // 로그인이 성공하면 메인 페이지로 리다이렉트
-            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/").build();
+            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/").body(res);
         } else {
             // 로그인이 실패하면 로그인 페이지로 리다이렉트
-            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/user/login?error").build();
+            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/user/login?error").body(res);
         }
     }
 

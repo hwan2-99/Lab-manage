@@ -14,10 +14,10 @@ public class UserResDto {
     private int studentId; //학번
     private String id; //아이디
     private int generation; //기수
+    private boolean loginSuccess;
     private boolean leaderYN; // 연구실장 유무
 
     public static UserResDto of(User user) {
-
 
         return UserResDto.builder()
                 .num(user.getNum())

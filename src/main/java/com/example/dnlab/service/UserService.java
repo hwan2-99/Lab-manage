@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
     }
 
     // 로그인
-    public ResponseEntity<Void> login(LoginReqDto req, HttpSession session) {
+    public UserResDto login(LoginReqDto req, HttpSession session) {
 
         User user = userRepository.findById(req.getId());
         log.info("id: {}, pw: {}", req.getId(), req.getPw());
@@ -66,11 +66,20 @@ public class UserService implements UserDetailsService {
             if (BCrypt.checkpw(req.getPw(), user.getPw())) {
                 // 로그인 성공 처리
                 session.setAttribute("user", user);
-                return ResponseEntity.ok().header("SESSION-ID", session.getId()).build();
+
+                return UserResDto.builder()
+                        .num(user.getNum())
+                        .name(user.getName())
+                        .id(user.getId())
+                        .loginSuccess(true)
+                        .studentId(user.getStudentId())
+                        .build();
             }
         }
         // 로그인 실패 처리
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return UserResDto.builder()
+                .loginSuccess(false)
+                .build();
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

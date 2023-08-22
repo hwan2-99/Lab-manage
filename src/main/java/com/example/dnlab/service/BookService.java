@@ -1,5 +1,6 @@
 package com.example.dnlab.service;
 
+import com.example.dnlab.dto.book.BookResDto;
 import com.example.dnlab.dto.book.InsertBookReqDto;
 import com.example.dnlab.domain.Book;
 import com.example.dnlab.domain.Rental;
@@ -26,7 +27,7 @@ public class BookService {
     private final HttpSession session;
     LocalDate today = LocalDate.now();
 
-    public int insertBook(InsertBookReqDto req) {
+    public BookResDto insertBook(InsertBookReqDto req) {
         Book book = Book.builder()
                 .title(req.getTitle())
                 .author(req.getAuthor())
@@ -34,7 +35,10 @@ public class BookService {
                 .build();
 
         bookRepository.save(book);
-        return bookRepository.save(book).getNum();
+        return BookResDto.builder()
+                .title(book.getTitle())
+                .author(book.getAuthor())
+                .build();
     }
 
     public List<Book>getAllBook(){

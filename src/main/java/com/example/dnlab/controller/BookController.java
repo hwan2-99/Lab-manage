@@ -1,5 +1,6 @@
 package com.example.dnlab.controller;
 
+import com.example.dnlab.dto.book.BookResDto;
 import com.example.dnlab.dto.book.InsertBookReqDto;
 import com.example.dnlab.domain.Book;
 import com.example.dnlab.service.BookService;
@@ -22,9 +23,9 @@ public class BookController {
     //도서 추가
     @PostMapping("/insertBook")
     @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER')")
-    public ResponseEntity<Void> insertBook(@RequestBody InsertBookReqDto req){
-        bookService.insertBook(req);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<BookResDto> insertBook(@RequestBody InsertBookReqDto req){
+        BookResDto res = bookService.insertBook(req);
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/getAllBook")

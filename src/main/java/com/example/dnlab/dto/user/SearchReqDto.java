@@ -6,6 +6,5 @@ import lombok.Data;
 public class SearchReqDto {
     private String name;
 
-    public SearchReqDto() {
-    }
+
 }

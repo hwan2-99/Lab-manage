@@ -1,9 +1,12 @@
 package com.example.dnlab.dto.user;
 import javax.validation.constraints.NotBlank;
 import com.example.dnlab.domain.User;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class SignUpReqDto {
     @NotBlank(message = "이름은 필수 입력 항목입니다.")
     private String name;

@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -78,9 +76,7 @@ public class UserController {
 
     // 회원검색
     @GetMapping("/search")
-    public ResponseEntity<UserPaginationResDto> searchUsers(@RequestParam("name") String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        SearchReqDto req = new SearchReqDto();
-        req.setName(name);
+    public ResponseEntity<UserPaginationResDto> searchUsers(@RequestBody SearchReqDto req, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page,size);
         try {
             UserPaginationResDto userPaginationResDto = userService.getUserByName(req,pageable);

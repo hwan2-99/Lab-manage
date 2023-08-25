@@ -1,5 +1,6 @@
 package com.example.dnlab.controller;
 
+import com.example.dnlab.domain.User;
 import com.example.dnlab.dto.book.BookResDto;
 import com.example.dnlab.dto.book.InsertBookReqDto;
 import com.example.dnlab.domain.Book;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -42,7 +44,8 @@ public class BookController {
 
     @PostMapping("/return/{bookNum}")
     @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
-    public ResponseEntity<String> returnBook(@PathVariable int bookNum) {
+    public ResponseEntity<String> returnBook(@PathVariable int bookNum, HttpSession session) {
+
         bookService.returnBook(bookNum);
         return ResponseEntity.ok("책 반납이 완료되었습니다.");
     }

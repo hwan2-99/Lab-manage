@@ -1,1 +1,1 @@
-# Lab-manage
+# 연관

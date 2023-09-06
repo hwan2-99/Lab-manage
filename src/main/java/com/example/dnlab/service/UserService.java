@@ -41,9 +41,7 @@ public class UserService implements UserDetailsService {
         String encodedPassword = BCrypt.hashpw(req.getPw(), salt); // 비밀번호 암호화
 
         User user = req.toEntity();
-
         // 일반 회원으로 초기 역할 설정
-        user.addRole(Role.MEMBER);
         userRepository.save(user);
         return UserResDto.builder()
                 .num(user.getNum())
@@ -90,9 +88,8 @@ public class UserService implements UserDetailsService {
         }
 
         // 권한 정보를 SimpleGrantedAuthority로 변환하여 UserDetails 객체 생성
-        List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())) // Spring Security에서는 권한 이름을 "ROLE_"로 시작해야 함
-                .collect(Collectors.toList());
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
         return new org.springframework.security.core.userdetails.User(user.getId(), user.getPw(), authorities);
     }

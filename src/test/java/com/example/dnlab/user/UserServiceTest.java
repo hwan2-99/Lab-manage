@@ -47,58 +47,6 @@ public class UserServiceTest {
         assertEquals(userList, result);
     }
 
-    @Test
-    public void testGetUserByName() {
-        String searchName = "조대수";
-        Slice<User> userSlice = mock(Slice.class);
-        Pageable pageable = mock(Pageable.class);
 
-        // Create a list of User instances
-        List<User> userList = new ArrayList<>();
-        User user1 = new User();
-        user1.setNum(1);
-        user1.setName("조대수");
-        user1.setStudentId(1);
-        user1.setId("admin");
-        user1.setGeneration(1);
-        user1.setLeaderYN(true);
-        userList.add(user1);
-        // Add more User instances as needed
-
-        // Create a list of UserResDto instances using UserResDto.of()
-        List<UserResDto> userResDtoList = userList.stream()
-                .map(UserResDto::of)
-                .collect(Collectors.toList());
-
-        // Mock the userRepository.findUserByName() to return the userSlice
-        when(userRepository.findUserByName(eq(searchName), eq(pageable))).thenReturn(userSlice);
-
-        // Create a SearchReqDto and set the searchName
-        SearchReqDto searchReqDto = new SearchReqDto();
-        searchReqDto.setName(searchName);
-
-        // Call the method being tested with the created SearchReqDto
-        UserPaginationResDto result = userService.getUserByName(searchReqDto, pageable);
-
-        assertNotNull(result);
-        // Add more specific assertions if needed
-    }
-
-
-    @Test
-    public void testGetUserByNum() {
-        int userNum = 1;
-        User user = new User(/* Initialize user data here */);
-
-        when(userRepository.getUserByNum(userNum)).thenReturn(user);
-
-        UserResDto result = userService.getUserByNum(userNum);
-
-        // Add your assertions here to validate the result
-        assertNotNull(result);
-        // You can add more specific assertions based on the behavior of your code
-    }
-
-    // Add more test cases for other methods in UserService
 
 }

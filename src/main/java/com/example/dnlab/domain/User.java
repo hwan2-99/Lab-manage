@@ -31,10 +31,9 @@ public class User {
     private boolean leaderYN; // 연구실장 유무
     @Column(name = "graduationYN")
     private Boolean graduationYN;
-    @ElementCollection
-    @Column(name = "role")
+
     @Enumerated(EnumType.STRING)
-    private List<Role> roles = new ArrayList<>();
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
@@ -51,8 +50,5 @@ public class User {
     @JsonIgnore
     private List<EquipRental> equipRental = new ArrayList<>();
 
-    public void addRole(Role role) {
-        roles.add(role);
-    }
 
 }

@@ -63,7 +63,7 @@ public class ApplicationService {
         int userNum = user.getNum();
 
         // 기존 권한 유지하고 RESEARCHER 권한 추가
-        user.addRole(Role.RESEARCHER);
+        user.setRole(Role.RESEARCHER);
         userRepository.save(user);
     }
 

@@ -30,7 +30,6 @@ public class UserController {
 
     //로그아웃
     @PostMapping("/logOut")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER', 'MEMBER')")
     public void logout(HttpSession session, HttpServletResponse response) throws IOException {
         session.invalidate();
         log.info("logOut");
@@ -67,8 +66,9 @@ public class UserController {
         }
     }
 
+    //회원 조회
     @GetMapping("/userList")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER', 'MEMBER')")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);

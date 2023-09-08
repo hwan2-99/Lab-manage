@@ -22,14 +22,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("PROFESSOR")
-                .antMatchers("/manager/**","/book/insertBook").hasAnyRole("PROFESSOR", "MANAGER")
-                .antMatchers("/**","/user/**").permitAll()
+                .antMatchers("/manager/**").hasAnyRole("PROFESSOR", "MANAGER")
+                .antMatchers("/**","/user/**","/book/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
-                .and()
-                .exceptionHandling().accessDeniedPage("/access-denied");
+                .and().exceptionHandling().accessDeniedHandler(new org.springframework.security.web.access.AccessDeniedHandlerImpl());
     }
 
     @Override

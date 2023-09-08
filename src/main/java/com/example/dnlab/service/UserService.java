@@ -56,7 +56,6 @@ public class UserService implements UserDetailsService {
 
         User user = userRepository.findById(req.getId());
         log.info("id: {}, pw: {}", req.getId(), req.getPw());
-        log.info("userId: {}, userPw: {}", user.getId(), user.getPw());
 
         // 아이디 확인
         if (user != null) {

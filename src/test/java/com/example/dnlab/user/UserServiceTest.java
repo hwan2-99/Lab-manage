@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,10 +25,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -37,11 +40,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(UserServiceTest.class);
     @Autowired
     private MockMvc mockMvc;
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private HttpSession session;
 
     @InjectMocks
     private UserService userService;
@@ -89,6 +96,47 @@ public class UserServiceTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.studentId").value("1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("1"));
     }
+    @Test
+    public void testLoginSuccess() {
+        // 테스트 데이터 설정
+        String username = "1";
+        String password = "1";
+        String encryptedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        User expectedUser = User.builder()
+                .num(1)
+                .id(username)
+                .pw(encryptedPassword) // 암호화된 패스워드 저장
+                .studentId(12345)
+                .name("1")
+                .build();
+
+        log.info("Expected User: {}", expectedUser.getName()); // 예상 사용자 정보를 로그에 출력
+
+        // userRepository.findById 메서드가 호출될 때 반환할 사용자 객체 설정
+        when(userRepository.findById(username)).thenReturn(expectedUser);
+
+        LoginReqDto loginReqDto = LoginReqDto.builder()
+                .id(username)
+                .pw(password)
+                .build();
+
+        log.info("Login Request: id={}, pw={}", loginReqDto.getId(), loginReqDto.getPw()); // 로그인 요청 정보를 로그에 출력
+
+        UserResDto loginResult = userService.login(loginReqDto, session);
+
+        log.info("Login Result: name={}, id={}, loginSuccess={}", loginResult.getName(), loginResult.getId(), loginResult.isLoginSuccess()); // 로그인 결과를 로그에 출력
+
+        // 결과 검증
+        assertNotNull(loginResult);
+        assertEquals(expectedUser.getName(), loginResult.getName());
+        assertEquals(expectedUser.getId(), loginResult.getId());
+        assertTrue(loginResult.isLoginSuccess());
+
+        // 로그 메시지 추가
+        log.info("로그인 테스트 결과: 사용자 '{}'가 성공적으로 로그인하였습니다.", username);
+    }
+
 
     @Test
     public void 로그인성공() throws Exception {
@@ -104,23 +152,18 @@ public class UserServiceTest {
                 .studentId(12345)
                 .build();
 
-        // 패스워드를 BCrypt로 암호화하여 저장
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
         // userRepository.findById 메서드가 호출될 때 반환할 사용자 객체 설정
         User user = User.builder()
                 .num(1)
                 .id(username)
-                .pw(hashedPassword)
+                .pw(password)
                 .studentId(12345)
                 .name("Test User")
                 .role(Role.MEMBER)
                 .build();
 
-        // 모의 객체(Mock)를 사용하여 userRepository.findById의 동작을 설정
         when(userRepository.findById(username)).thenReturn(user);
 
-        // POST 요청으로 로그인 시도
         mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":\"" + username + "\",\"pw\":\"" + password + "\"}"))

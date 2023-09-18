@@ -36,16 +36,16 @@ public class ApplicationController {
         return applicationService.getAllApplications();
     }
 
-    @GetMapping("/detail/{num}")
+    @GetMapping("/detail/{id}")
     @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER')")
-    public Application getApplicationDetail(@PathVariable("num") int num) {
-        return applicationService.getApplicationDetail(num);
+    public Application getApplicationDetail(@PathVariable("id") int id) {
+        return applicationService.getApplicationDetail(id);
     }
 
     @PostMapping("/action")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<String> approveAction(@RequestBody Map<String, Object> request) {
-        int userNum = Integer.parseInt(request.get("user_num").toString());
+        int userNum = Integer.parseInt(request.get("user_id").toString());
         String action = request.get("action").toString();
 
             if (action.equals("approve")) {

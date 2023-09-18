@@ -17,8 +17,8 @@ import java.time.LocalDate;
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num")
-    private int num;  // to-do-list 의 pk
+    @Column(name = "id")
+    private int id;  // to-do-list 의 pk
     @Column(columnDefinition = "TEXT")
     private String content; //할일 내용
     @Column
@@ -29,7 +29,7 @@ public class Todo {
     @Column
     private Timestamp createdAt; // 생성 날짜
 
-    @JoinColumn(name = "user_num")
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     @ManyToOne
     private User user;

@@ -60,7 +60,7 @@ public class ToDoController {
 
         // todo 객체 리스트를 조회하여 유저별로 todo 객체를 묶는 로직
         for (Todo todo : allTodo) {
-            User user = userRepository.getUserByNum(todo.getUser().getNum());
+            User user = userRepository.findById(todo.getUser().getId());
             if (user != null) { // 유저 객체가 null일 경우 무시
                 String userName = user.getName();
                 List<Todo> userTodo = todoByUser.getOrDefault(userName, new ArrayList<>());

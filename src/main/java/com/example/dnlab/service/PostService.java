@@ -34,7 +34,7 @@ public class PostService {
         User user = (User)session.getAttribute("user");
 
         // 게시판 선택 시 게시판 pk 불러오기
-        Board board = boardRepository.findByNum(board_num);
+        Board board = boardRepository.findById(board_num);
 
 
         Post post = Post.builder()
@@ -66,7 +66,7 @@ public class PostService {
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
             Post updatedPost = Post.builder()
-                    .num(post.getNum())
+                    .id(post.getId())
                     .title(post.getTitle())
                     .content(req.getContent())
                     .createdAt(post.getCreatedAt())
@@ -88,6 +88,6 @@ public class PostService {
     }
 
     public List<Post> getPostByBoardNum(int boardNum){
-        return postRepository.findAllByBoardNum(boardNum);
+        return postRepository.findAllByBoardId(boardNum);
     }
 }

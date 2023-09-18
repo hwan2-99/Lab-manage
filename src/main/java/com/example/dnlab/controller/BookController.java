@@ -36,22 +36,22 @@ public class BookController {
         return bookService.getAllBook();
     }
 
-    @PostMapping("/borrow/{bookNum}")
-    public void borrowBook(@PathVariable int bookNum) {
-        bookService.borrowBook(bookNum);
+    @PostMapping("/borrow/{bookId}")
+    public void borrowBook(@PathVariable int bookId) {
+        bookService.borrowBook(bookId);
     }
 
-    @PostMapping("/return/{bookNum}")
-    public ResponseEntity<String> returnBook(@PathVariable int bookNum, HttpSession session) {
+    @PostMapping("/return/{bookId}")
+    public ResponseEntity<String> returnBook(@PathVariable int bookId, HttpSession session) {
 
-        bookService.returnBook(bookNum);
+        bookService.returnBook(bookId);
         return ResponseEntity.ok("책 반납이 완료되었습니다.");
     }
 
     @RequestMapping("/board")
     @Controller
     public static class BoardViewController {
-        @GetMapping("/{board_num}/posts")
+        @GetMapping("/{board_id}/posts")
         public String getBoardPosts(){
             return "board";
         }

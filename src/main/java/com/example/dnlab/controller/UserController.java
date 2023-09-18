@@ -53,18 +53,18 @@ public class UserController {
     }
 
 
-    // 로그인
-    @PostMapping("/login")
-    public ResponseEntity<UserResDto> login(@RequestBody LoginReqDto req, HttpSession session) {
-         UserResDto res = userService.login(req, session);
-        if (res.isLoginSuccess()) {
-            // 로그인이 성공하면 메인 페이지로 리다이렉트
-            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/").body(res);
-        } else {
-            // 로그인이 실패하면 로그인 페이지로 리다이렉트
-            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/user/login?error").body(res);
-        }
-    }
+//    // 로그인
+//    @PostMapping("/login")
+//    public ResponseEntity<UserResDto> login(@RequestBody LoginReqDto req, HttpSession session) {
+//         UserResDto res = userService.login(req, session);
+//        if (res.isLoginSuccess()) {
+//            // 로그인이 성공하면 메인 페이지로 리다이렉트
+//            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/").body(res);
+//        } else {
+//            // 로그인이 실패하면 로그인 페이지로 리다이렉트
+//            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/user/login?error").body(res);
+//        }
+//    }
 
     //회원 조회
     @GetMapping("/userList")
@@ -95,7 +95,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<UserResDto> getMyPage(HttpSession session) {
         User user = (User)session.getAttribute("user");
-        UserResDto res = userService.getUserByNum(user.getNum());
+        UserResDto res = userService.getUserByNum(user.getId());
 
         return ResponseEntity.ok().body(res);
     }

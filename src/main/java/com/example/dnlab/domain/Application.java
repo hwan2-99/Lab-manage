@@ -13,8 +13,8 @@ import java.time.LocalDate;
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num")
-    private int num; // pk
+    @Column(name = "id")
+    private int id; // pk
     @Column
     private String motive; //지원동기
     @Column
@@ -28,7 +28,7 @@ public class Application {
     @Column
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status; // 신청서 승낙여부
-    @JoinColumn(name = "user_num")
+    @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
 

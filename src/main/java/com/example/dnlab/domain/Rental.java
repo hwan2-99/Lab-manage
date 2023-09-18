@@ -16,20 +16,20 @@ import java.time.LocalDate;
 public class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num")
-    private int num;           // 대여 pk
+    @Column(name = "id")
+    private int id;           // 대여 pk
     @Column
     private LocalDate rent_start_date;  // 도서 대여 시작일
     @Column
     private LocalDate rent_end_date;    // 도서 반납일
 
     @ManyToOne
-    @JoinColumn(name = "user_num")
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "book_num")
+    @JoinColumn(name = "book_id")
     @JsonIgnore
     private Book book;
 }

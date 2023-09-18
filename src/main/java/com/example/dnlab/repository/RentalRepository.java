@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDate;
 
 public interface RentalRepository extends JpaRepository<Rental, Integer> {
-    Rental findByUserNumAndBookNum(int userNum, int bookNum);
+    Rental findByUserIdAndBookId(int userId, int booId);
 
     @Modifying
-    @Query("UPDATE Rental r SET r.rent_end_date = :rentEndDate WHERE r.num = :num")
-    void updateRentEndDate(int num, LocalDate rentEndDate);
+    @Query("UPDATE Rental r SET r.rent_end_date = :rentEndDate WHERE r.id = :id")
+    void updateRentEndDate(int id, LocalDate rentEndDate);
 }

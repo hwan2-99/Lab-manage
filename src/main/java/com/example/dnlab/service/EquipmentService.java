@@ -40,12 +40,12 @@ public class EquipmentService {
 
     // 장비 대여 서비스
     public void borrowEquipment(int equipmentNum) {
-        Equipment equipment = equipmentRepository.getEquipmentByNum(equipmentNum);
+        Equipment equipment = equipmentRepository.findById(equipmentNum);
         User user = (User) session.getAttribute("user");
         if (equipment.isUsingYN()) {
             throw new RuntimeException("이미 대여 된 장비입니다.");
         }
-        log.info("대여자 pk: {}, 책 pk : {}", user.getNum(), equipment.getNum());
+        log.info("대여자 pk: {}, 책 pk : {}", user.getId(), equipment.getId());
 
         EquipRental equipRental = EquipRental.builder()
                 .user(user)
@@ -54,22 +54,22 @@ public class EquipmentService {
                 .build();
 
         equipRentalRepository.save(equipRental);
-        equipmentRepository.updateUsingY(equipment.getNum());
+        equipmentRepository.updateUsingY(equipment.getId());
     }
 
     // 장비 반납 서비스
     public void returnEquipment(int equipmentNum) {
         LocalDate rentEndDate = today;
-        Equipment equipment = equipmentRepository.getEquipmentByNum(equipmentNum);
+        Equipment equipment = equipmentRepository.findById(equipmentNum);
         User user = (User) session.getAttribute("user");
 
-        EquipRental equipRental = equipRentalRepository.findByUserNumAndEquipmentNum(user.getNum(), equipment.getNum());
+        EquipRental equipRental = equipRentalRepository.findByUserIdAndEquipmentId(user.getId(), equipment.getId());
         if (equipRental == null) {
             throw new RuntimeException("대여하지 않은 장비입니다.");
         }
 
         EquipRental updatedUsing = equipRental.builder()
-                .num(equipRental.getNum())
+                .id(equipRental.getId())
                 .user(user)
                 .equipment(equipment)
                 .usingStartDate(equipRental.getUsingStartDate())
@@ -77,7 +77,7 @@ public class EquipmentService {
                 .build();
 
         equipRentalRepository.save(updatedUsing);
-        equipmentRepository.updateUsingN(equipment.getNum());
+        equipmentRepository.updateUsingN(equipment.getId());
     }
 
 }

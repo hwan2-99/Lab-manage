@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num")
-    private int num;
+    @Column(name = "id")
+    private int id;
     @Column
     private String title;
     @Column
@@ -27,12 +27,12 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_num")
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "board_num")
+    @JoinColumn(name = "board_id")
     @JsonIgnore
     private Board board;
 }

@@ -10,13 +10,13 @@ import java.util.List;
 
 public interface ToDoRepository extends JpaRepository<Todo, Integer> {
 
-    List<Todo> findByUserNumAndWeekStartDate(int userNum, LocalDate weekStartDate);
+    List<Todo> findByUserIdAndWeekStartDate(int userNum, LocalDate weekStartDate);
 
-    void deleteByNum(int num);
+    void deleteById(int num);
 
     @Modifying
-    @Query("UPDATE Todo t SET t.content = :content WHERE t.num = :num")
-    void updateContentByNum(int num, String content);
+    @Query("UPDATE Todo t SET t.content = :content WHERE t.id = :id")
+    void updateContentById(int id, String content);
 
     List<Todo> findAllByWeekStartDate(LocalDate weekStartDate);
 }

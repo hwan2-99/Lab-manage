@@ -44,19 +44,19 @@ public class ToDoService {
     //금주의 to-do-list 불러오기
     public List<Todo> viewThisWeekToDo(){
         User user = (User)session.getAttribute("user");
-        return toDoRepository.findByUserNumAndWeekStartDate(user.getNum(),monday);
+        return toDoRepository.findByUserIdAndWeekStartDate(user.getId(),monday);
     }
 
     // to-do-list 삭제
     public void deleteToDo(int num){
-        toDoRepository.deleteByNum(num);
+        toDoRepository.deleteById(num);
     }
 
     //to-do-list 내용 수정
     public void updateContent(int num, TodoUpdateReqDto req){
         log.info("content : {}",req.getContent());
 
-        toDoRepository.updateContentByNum(num, req.getContent());
+        toDoRepository.updateContentById(num, req.getContent());
     }
     // 금주의 연구실생 전원의 to-do-list 불러오기
     public List<Todo> viewThisWeekAllToDo(){

@@ -13,19 +13,19 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User,Integer> {
 
 
-    User findById(String id);
+    User findByUid(String uid);
 
     List<User> getUserByName(String name);
-    @Query("select u from User u where u.name like %:name% order by u.num desc")
+    @Query("select u from User u where u.name like %:name% order by u.id desc")
     Slice<User> findUserByName(@Param("name") String name, Pageable pageable);
 
-    User getUserByNum(int num);
+    User findById(int id);
 
     @Query("SELECT u FROM User u WHERE NOT EXISTS (SELECT a FROM Attendance a WHERE a.user = u AND DATE(a.startTime) = CURRENT_DATE)")
     List<User> getUsersWithoutAttendance();
 
     @Modifying
-    @Query("UPDATE User u SET u.generation = :generation, u.leaderYN = :leaderYN WHERE u.num = :user_num")
-    void updateUserGeneration(@Param("generation") int generation, @Param("user_num") int user_num, @Param("leaderYN") boolean leaderYN);
+    @Query("UPDATE User u SET u.generation = :generation, u.leaderYN = :leaderYN WHERE u.id = :user_id")
+    void updateUserGeneration(@Param("generation") int generation, @Param("user_id") int user_id, @Param("leaderYN") boolean leaderYN);
 
 }

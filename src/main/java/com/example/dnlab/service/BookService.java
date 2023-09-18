@@ -46,12 +46,12 @@ public class BookService {
     }
 
     public void borrowBook(int bookNum){
-        Book book = bookRepository.getBookByNum(bookNum);
+        Book book = bookRepository.findById(bookNum);
         User user = (User)session.getAttribute("user");
         if(book.isBorrowYN()){
             throw new RuntimeException("이미 대여 된 도서입니다.");
         }
-        log.info("대여자 pk: {}, 책 pk : {}",user.getNum(), book.getNum());
+        log.info("대여자 pk: {}, 책 pk : {}",user.getId(), book.getId());
         Rental rental = Rental.builder()
                 .user(user)
                 .book(book)
@@ -59,20 +59,20 @@ public class BookService {
                 .build();
 
         rentalRepository.save(rental);
-        bookRepository.updateBorrowY(book.getNum());
+        bookRepository.updateBorrowY(book.getId());
     }
 
     public void returnBook(int bookNum){
         LocalDate rent_end_date = today;
-        Book book = bookRepository.getBookByNum(bookNum);
+        Book book = bookRepository.findById(bookNum);
         User user = (User)session.getAttribute("user");
 
-        Rental rental = rentalRepository.findByUserNumAndBookNum(user.getNum(), book.getNum());
+        Rental rental = rentalRepository.findByUserIdAndBookId(user.getId(), book.getId());
         if(rental == null){
             throw new RuntimeException("대여하지 않은 도서입니다.");
         }
-        rentalRepository.updateRentEndDate(rental.getNum(), rent_end_date);
-        bookRepository.updateBorrowN(book.getNum());
+        rentalRepository.updateRentEndDate(rental.getId(), rent_end_date);
+        bookRepository.updateBorrowN(book.getId());
     }
 }
 

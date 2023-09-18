@@ -34,7 +34,7 @@ public class ApplicationService {
     //신청서 작성
     public int createApplication(LabSignUpReq req) {
         User user = (User) session.getAttribute("user");
-        log.info("지원 동기: {}, 자기소개: {}, 원하는 연구활동: {}, 유저 pk: {}", req.getMotive(), req.getIntro(), req.getWanted(), user.getNum());
+        log.info("지원 동기: {}, 자기소개: {}, 원하는 연구활동: {}, 유저 pk: {}", req.getMotive(), req.getIntro(), req.getWanted(), user.getId());
         Application application = Application.builder()
                 .motive(req.getMotive())
                 .intro(req.getIntro())
@@ -43,7 +43,7 @@ public class ApplicationService {
                 .status(ApplicationStatus.PENDING)
                 .user(user)
                 .build();
-        return applicationRepository.save(application).getNum();
+        return applicationRepository.save(application).getId();
     }
 
     //모든 신청서 조회
@@ -55,22 +55,22 @@ public class ApplicationService {
         return applicationRepository.getApplicationDetail(num);
     }
 
-    public void approveApplication(int num) {
-        Application application = applicationRepository.getApplicationByNum(num);
-        applicationRepository.accessApplication(application.getNum());
+    public void approveApplication(int id) {
+        Application application = applicationRepository.findById(id);
+        applicationRepository.accessApplication(application.getId());
 
-        User user = userRepository.getUserByNum(application.getUser().getNum());
-        int userNum = user.getNum();
+        User user = userRepository.findById(application.getUser().getId());
+        int userNum = user.getId();
 
         // 기존 권한 유지하고 RESEARCHER 권한 추가
         user.setRole(Role.RESEARCHER);
         userRepository.save(user);
     }
 
-    public void rejectApplication(int num){
+    public void rejectApplication(int id){
 
-        Application application = applicationRepository.getApplicationByNum(num);
-        applicationRepository.rejectApplicationByNum(application.getNum());
+        Application application = applicationRepository.findById(id);
+        applicationRepository.rejectApplicationByNum(application.getId());
 
     }
 

@@ -32,9 +32,9 @@ public class UserService implements UserDetailsService {
 
     // 회원 가입
     public UserResDto join(SignUpReqDto req) {
-        log.info("name : {}, StudentId :{}, id = {}, pw = {} ", req.getName(), req.getStudentId(), req.getId(), req.getPw());
+        log.info("name : {}, StudentId :{}, id = {}, pw = {} ", req.getName(), req.getStudentId(), req.getUid(), req.getPw());
 
-        if (userRepository.findById(req.getId()) != null) {
+        if (userRepository.findByUid(req.getUid()) != null) {
             throw new IllegalArgumentException("이미 존재하는 학번입니다.");
         }
         String salt = BCrypt.gensalt(); // 랜덤한 salt 생성
@@ -44,44 +44,22 @@ public class UserService implements UserDetailsService {
         // 일반 회원으로 초기 역할 설정
         userRepository.save(user);
         return UserResDto.builder()
-                .num(user.getNum())
                 .name(user.getName())
-                .id(user.getId())
+                .uid(user.getUid())
                 .studentId(user.getStudentId())
                 .build();
     }
 
-    // 로그인
-    public UserResDto login(LoginReqDto req, HttpSession session) {
-
-        User user = userRepository.findById(req.getId());
-        log.info("id: {}, pw: {}", req.getId(), req.getPw());
-
-        // 아이디 확인
-        if (user != null) {
-            // 패스워드 비교 (암호화된 패스워드로 비교)
-            if (BCrypt.checkpw(req.getPw(), user.getPw())) {
-                // 로그인 성공 처리
-                session.setAttribute("user", user);
-
-                return UserResDto.builder()
-                        .num(user.getNum())
-                        .name(user.getName())
-                        .id(user.getId())
-                        .loginSuccess(true)
-                        .studentId(user.getStudentId())
-                        .build();
-            }
-        }
-        // 로그인 실패 처리
-        return UserResDto.builder()
-                .loginSuccess(false)
-                .build();
-    }
+//    // 로그인
+//    public UserResDto login(LoginReqDto req, HttpSession session) {
+//
+//
+//
+//    }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 사용자 정보를 UserRepository를 사용하여 가져옴
-        User user = userRepository.findById(username);
+        User user = userRepository.findByUid(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with id: " + username);
         }
@@ -90,7 +68,7 @@ public class UserService implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
-        return new org.springframework.security.core.userdetails.User(user.getId(), user.getPw(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUid(), user.getPw(), authorities);
     }
 
     //전체 회원 조회
@@ -122,12 +100,11 @@ public class UserService implements UserDetailsService {
     }
 
     //회원 한명의 정보 받아오기
-    public UserResDto getUserByNum(int num){
-        User user = userRepository.getUserByNum(num);
+    public UserResDto getUserByNum(int id){
+        User user = userRepository.findById(id);
         return UserResDto.builder()
-                .num(user.getNum())
                 .studentId(user.getStudentId())
-                .id(user.getId())
+                .uid(user.getUid())
                 .generation(user.getGeneration())
                 .name(user.getName())
                 .leaderYN(user.isLeaderYN())

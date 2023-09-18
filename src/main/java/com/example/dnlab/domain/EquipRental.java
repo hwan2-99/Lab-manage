@@ -13,8 +13,8 @@ import java.time.LocalDate;
 public class EquipRental {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num")
-    private int num;
+    @Column(name = "id")
+    private int id;
 
     @Column(name = "using_start_date")
     private LocalDate usingStartDate;
@@ -27,6 +27,6 @@ public class EquipRental {
     private Equipment equipment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_num")
+    @JoinColumn(name = "user_id")
     private User user;
 }

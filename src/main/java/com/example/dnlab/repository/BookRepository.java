@@ -7,14 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface BookRepository extends JpaRepository<Book,Integer> {
-    @Query("SELECT b FROM Book b WHERE b.num = :bookNum")
-    Book getBookByNum(@Param("bookNum") int bookNum);
+    @Query("SELECT b FROM Book b WHERE b.id = :id")
+    Book findById(@Param("id") int id);
 
     @Modifying
-    @Query("UPDATE Book b SET b.borrowYN = true WHERE b.num = :num")
-    void updateBorrowY(@Param("num") int num);
+    @Query("UPDATE Book b SET b.borrowYN = true WHERE b.id = :id")
+    void updateBorrowY(@Param("id") int id);
 
     @Modifying
-    @Query("UPDATE Book b SET b.borrowYN = false WHERE b.num = :num")
-    void updateBorrowN(@Param("num") int num);
+    @Query("UPDATE Book b SET b.borrowYN = false WHERE b.id = :id")
+    void updateBorrowN(@Param("id") int id);
 }

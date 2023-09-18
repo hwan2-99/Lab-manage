@@ -14,8 +14,8 @@ import java.util.Date;
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num")
-    private int num; // 출석 pk
+    @Column(name = "id")
+    private int id; // 출석 pk
     @Column
     @Enumerated(EnumType.STRING)
     private AttendanceStatus status; // 출석 상태;
@@ -24,7 +24,7 @@ public class Attendance {
 //    private Date endTime; // 퇴근 시간
 
     @ManyToOne
-    @JoinColumn(name = "user_num")
+    @JoinColumn(name = "user_id")
     private User user;
 
 }

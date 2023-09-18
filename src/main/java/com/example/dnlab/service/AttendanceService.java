@@ -30,7 +30,7 @@ public class AttendanceService {
     //출석 메소드(정상과 지각만)
     public void doAttendance(AttendanceDto.StartCheck req){
         User user = (User)session.getAttribute("user");
-        int userNum = user.getNum();
+        int userNum = user.getId();
         System.out.println(userNum);
 
         Date today = getTodayAt(0, 0);
@@ -73,8 +73,7 @@ public class AttendanceService {
         Map<String, Map<AttendanceStatus, Integer>> statsMap = new HashMap<>();
 
         for (Attendance attendance : attendanceList) {
-            int userNum = attendance.getUser().getNum();
-            User user = userRepository.getUserByNum(userNum);
+            User user = userRepository.findById(attendance.getUser().getId());
             if (user == null) {
                 // 사용자 정보가 없는 경우 스킵합니다.
                 continue;
@@ -119,7 +118,7 @@ public class AttendanceService {
                     .build();
             absences.add(absence);
 
-            log.info("회원: {}, 결석 처리 날짜: {}", user.getNum(), currentDate);
+            log.info("회원: {}, 결석 처리 날짜: {}", user.getId(), currentDate);
         }
 
         attendanceRepository.saveAll(absences);
@@ -140,8 +139,7 @@ public class AttendanceService {
         int weekdays = 0; // 주말을 제외한 일 수
 
         for (Attendance attendance : attendanceList) {
-            int userNum = attendance.getUser().getNum();
-            User user = userRepository.getUserByNum(userNum);
+            User user = userRepository.findById(attendance.getUser().getId());
             if (user == null) {
                 // 사용자 정보가 없는 경우 스킵합니다.
                 continue;
@@ -199,7 +197,7 @@ public class AttendanceService {
             throw new IllegalArgumentException("유저가 없음");
         }
 
-        int user_num = userList.get(0).getNum();
+        int user_num = userList.get(0).getId();
         List<Attendance> attendanceList = attendanceRepository.getMonthlyAttendanceForUser(year, month, user_num);
         log.info("년도 : {}",year);
         log.info("월 : {}",month);

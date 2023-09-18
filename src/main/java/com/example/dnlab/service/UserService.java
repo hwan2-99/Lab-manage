@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
 
@@ -56,20 +56,6 @@ public class UserService implements UserDetailsService {
 //
 //
 //    }
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 사용자 정보를 UserRepository를 사용하여 가져옴
-        User user = userRepository.findByUid(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with id: " + username);
-        }
-
-        // 권한 정보를 SimpleGrantedAuthority로 변환하여 UserDetails 객체 생성
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
-
-        return new org.springframework.security.core.userdetails.User(user.getUid(), user.getPw(), authorities);
-    }
 
     //전체 회원 조회
     public List<User> getAllUsers() {

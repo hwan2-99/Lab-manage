@@ -53,18 +53,12 @@ public class UserController {
     }
 
 
-//    // 로그인
-//    @PostMapping("/login")
-//    public ResponseEntity<UserResDto> login(@RequestBody LoginReqDto req, HttpSession session) {
-//         UserResDto res = userService.login(req, session);
-//        if (res.isLoginSuccess()) {
-//            // 로그인이 성공하면 메인 페이지로 리다이렉트
-//            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/").body(res);
-//        } else {
-//            // 로그인이 실패하면 로그인 페이지로 리다이렉트
-//            return ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", "/user/login?error").body(res);
-//        }
-//    }
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<LoginTokenResDto> login(@RequestBody LoginReqDto req) {
+        LoginTokenResDto response = userService.login(req);
+        return ResponseEntity.ok(response);
+    }
 
     //회원 조회
     @GetMapping("/userList")

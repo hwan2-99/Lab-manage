@@ -20,25 +20,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final PrincipalDetailsService principalDetailService;
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .formLogin().disable().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.csrf().disable().cors().and()
+                .formLogin().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-
                 .authorizeRequests()
                 .antMatchers("/admin/**").permitAll()
                 .antMatchers("/manager/**").permitAll()
                 .antMatchers("/**", "/user/**", "/book/**").permitAll()
                 .anyRequest().authenticated()
-
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
@@ -47,9 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
 }

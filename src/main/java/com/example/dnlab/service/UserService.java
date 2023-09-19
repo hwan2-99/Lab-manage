@@ -4,17 +4,20 @@ import com.example.dnlab.dto.user.*;
 import com.example.dnlab.domain.Role;
 import com.example.dnlab.domain.User;
 import com.example.dnlab.repository.UserRepository;
+import com.example.dnlab.utils.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     // 회원 가입
     public UserResDto join(SignUpReqDto req) {
@@ -50,12 +55,26 @@ public class UserService {
                 .build();
     }
 
-//    // 로그인
-//    public UserResDto login(LoginReqDto req, HttpSession session) {
-//
-//
-//
-//    }
+    // 로그인
+    public LoginTokenResDto login(LoginReqDto req) {
+        User user = userRepository.findByUid(req.getUid());
+        if(user == null){
+            throw new BadCredentialsException("존재하지 않는 아이디입니다. : " + req.getUid());
+        }
+
+        if(!passwordEncoder.matches(req.getPw(), user.getPw())){
+            throw new BadCredentialsException("비밀번호가 틀렸습니다.: " + req.getPw());
+        }
+
+        String accessToken = jwtProvider.createAccessToken(user.getUid());
+        String refreshToken = jwtProvider.createRefreshToken();
+
+        return LoginTokenResDto.builder()
+                .uid(user.getUid())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
 
     //전체 회원 조회
     public List<User> getAllUsers() {

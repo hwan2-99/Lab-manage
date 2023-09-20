@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>DN Lab</title>
@@ -10,18 +10,18 @@
     <div>
         <h1>Dn 연구실에 오신걸 환영합니다.</h1>
         <p>회원 기능</p>
-        <a th:if="${session.user == null}" href="/user/signUp">회원 가입</a>
-        <a th:if="${session.user == null}" href="/user/login">로그인</a>
-        <a th:if="${session.user != null}" href="/user/userLists">사용자 목록</a>
-        <a th:if="${session.user != null}" href="/user/myPages">마이 페이지</a>
-        <a th:if="${session.user != null}" href="/attendance/attendanceCheck">이달의 출석 확인</a>
-        <a id="attendance-button" th:if="${session.user != null}" href="#">출석 확인</a>
-        <a th:if="${session.user != null}" href="/application/insertApplication">연구실 가입 신청</a>
-        <a th:if="${session.user != null}" href="/application/AllApplication">연구실 가입 승인</a>
-        <a th:if="${session.user != null}" href="/equipment/createEquipment">기자재 추가</a>
-        <a th:if="${session.user != null}" href="/todo/thisWeekTodos">금주의 목표</a>
-        <a th:if="${session.user != null}" href="/post/createPost">게시글 작성</a>
-        <a th:if="${session.user != null}" href="#" onclick="logout(event)">로그 아웃</a>
+        <a id="signup-link" href="/user/signUp">회원 가입</a>
+        <a id="login-link" href="/user/login">로그인</a>
+        <a id="user-list-link" style="display: none;" href="/user/userLists">사용자 목록</a>
+        <a id="my-page-link" style="display: none;" href="/user/myPages">마이 페이지</a>
+        <a id="attendance-check-link" style="display: none;" href="/attendance/attendanceCheck">이달의 출석 확인</a>
+        <a id="attendance-button" style="display: none;" href="#">출석 확인</a>
+        <a id="application-link" style="display: none;" href="/application/insertApplication">연구실 가입 신청</a>
+        <a id="approve-link" style="display: none;" href="/application/AllApplication">연구실 가입 승인</a>
+        <a id="equipment-link" style="display: none;" href="/equipment/createEquipment">기자재 추가</a>
+        <a id="todo-link" style="display: none;" href="/todo/thisWeekTodos">금주의 목표</a>
+        <a id="post-link" style="display: none;" href="/post/createPost">게시글 작성</a>
+        <a id="logout-link" style="display: none;" href="#" onclick="logout(event)">로그 아웃</a>
         <p>게시판 목록</p>
         <ul id="board-list">
             <!-- 게시판 목록 출력 -->
@@ -35,24 +35,32 @@
 <script>
     $(document).ready(function() {
         loadBoardList();
+
+        // 여기에서 JWT 토큰을 확인하고, 사용자 인증 상태에 따라 링크 표시를 조정하세요.
+        var accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            // JWT 토큰이 있으면 로그인 상태로 가정하고 관련 링크를 표시합니다.
+            $("#signup-link, #login-link").hide();
+            $("#user-list-link, #my-page-link, #attendance-check-link, #attendance-button, #application-link, #approve-link, #equipment-link, #todo-link, #post-link, #logout-link").show();
+        } else {
+            // JWT 토큰이 없으면 로그아웃 상태로 가정하고 관련 링크를 숨깁니다.
+            $("#signup-link, #login-link").show();
+            $("#user-list-link, #my-page-link, #attendance-check-link, #attendance-button, #application-link, #approve-link, #equipment-link, #todo-link, #post-link, #logout-link").hide();
+        }
     });
 
     function logout(event) {
         event.preventDefault(); // 기본 동작인 링크 이동을 막습니다.
 
-        $.ajax({
-            type: "POST",
-            url: "/user/logOut",
-            success: function(response) {
-                console.log(response);
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.log(error);
-            }
-        });
+        // 여기에서 JWT 토큰을 삭제하고 로그아웃 처리를 수행하세요.
+        localStorage.removeItem('jwtToken');
+
+        // 로그아웃 후 페이지를 새로고침합니다.
+        location.reload();
     }
+
     function loadBoardList() {
+        // 게시판 목록을 가져오는 코드를 그대로 유지합니다.
         $.ajax({
             url: "/board/boardLists",
             type: "GET",
@@ -61,7 +69,7 @@
                 var boardListHtml = "";
                 $.each(boardList, function(index, board) {
                     // 링크 클릭 이벤트 추가
-                    boardListHtml += "<li><a href='/board/" + board.num + "/posts'>" + board.name + "</a></li>";
+                    boardListHtml += "<li><a href='/board/" + board.id + "/posts'>" + board.name + "</a></li>";
                 });
                 $("#board-list").html(boardListHtml);
             },
@@ -71,40 +79,6 @@
         });
     }
 
-    $("#attendance-button").on("click", function(event) {
-        event.preventDefault(); // 기본 동작 중단
-        var now = new Date();
-        var hour = now.getHours();
-        var minute = now.getMinutes();
-
-        fetch('/attendance/doAttendance', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                startTime: getTodayAt(hour, minute)
-            })
-        })
-            .then(response => response.json())
-            .then(alert("출석확인 되었습니다."))
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    });
-
-    function getTodayAt(hour, minute) {
-        var cal = new Date();
-        cal.setHours(hour);
-        cal.setMinutes(minute);
-        cal.setSeconds(0);
-        cal.setMilliseconds(0);
-        return cal.toISOString();
-    }
-    function loadPostsByBoardNum(boardNum) {
-        console.log(boardNum);
-        location.href = "/board/" + boardNum;
-    }
 </script>
 </body>
 </html>

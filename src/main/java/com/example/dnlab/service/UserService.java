@@ -46,6 +46,7 @@ public class UserService {
         String encodedPassword = BCrypt.hashpw(req.getPw(), salt); // 비밀번호 암호화
 
         User user = req.toEntity();
+        user.setPw(encodedPassword);
         // 일반 회원으로 초기 역할 설정
         userRepository.save(user);
         return UserResDto.builder()

@@ -55,7 +55,7 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<LoginTokenResDto> login(@RequestBody LoginReqDto req) {
+    public ResponseEntity<LoginTokenResDto> login(@Valid @RequestBody LoginReqDto req) {
         LoginTokenResDto response = userService.login(req);
         return ResponseEntity.ok(response);
     }

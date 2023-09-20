@@ -13,19 +13,26 @@
                     "pw": $('input[name=pw]').val()
                 };
                 $.ajax({
-                    url:'/user/login',
-                    type:'POST',
+                    url: '/user/login',
+                    type: 'POST',
                     data: JSON.stringify(user),
                     contentType: 'application/json',
-                    success:function(){
-                        console.log(user);
-                        alert("로그인 되었습니다.");
-                        $('input[name=uid]').val('');
-                        $('input[name=pw]').val('');
-                        window.location.href = "/";
+                    success: function(response) {
+                        console.log(response);
+                        // 서버에서 JWT 토큰을 받아옵니다.
+                        var accessToken = response.accessToken;
+                        if (accessToken) {
+                            // JWT 토큰을 로컬 스토리지에 저장합니다.
+                            localStorage.setItem('accessToken', accessToken);
+
+                            // 로그인 성공 시 이동할 페이지로 리다이렉트합니다.
+                            window.location.href = "/";
+                        } else {
+                            alert("로그인 실패: 서버에서 JWT 토큰을 받지 못했습니다.");
+                        }
                     },
-                    error:function(){
-                        alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+                    error: function() {
+                        alert("로그인 실패: 아이디 또는 비밀번호가 일치하지 않습니다.");
                     }
                 });
             });
@@ -38,6 +45,5 @@
     <input type="password" name="pw" placeholder="비밀번호"><br>
     <button type="submit">로그인</button>
 </form>
-
 </body>
 </html>

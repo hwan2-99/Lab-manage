@@ -21,8 +21,8 @@
         $.get("/book/getAllBook", function(data) {
             $.each(data, function(index, book) {
                 var borrowStatus = book.borrowYN ? "대여중" : "대여가능";
-                var borrowBtn = $("<button onclick='borrowBook(" + book.num + ")'>대여</button>");
-                var returnBtn = $("<button onclick='returnBook(" + book.num + ")'>반납</button>");
+                var borrowBtn = $("<button onclick='borrowBook(" + book.id + ")'>대여</button>");
+                var returnBtn = $("<button onclick='returnBook(" + book.id + ")'>반납</button>");
                 var actionBtn = book.borrowYN ? returnBtn : borrowBtn;
                 var row = $("<tr><td>" + book.title + "</td><td>" + book.author + "</td><td>" + borrowStatus + "</td><td></td><td></td></tr>");
                 row.children().eq(3).append(actionBtn);
@@ -30,10 +30,10 @@
             });
         });
 
-        function borrowBook(bookNum) {
+        function borrowBook(bookId) {
             $.ajax({
-                url: '/book/borrow/' + bookNum,
-                type: 'POST',
+                url: '/book/borrow/' + bookId,
+                type: 'PUT',
                 success: function() {
                     alert('대여가 완료되었습니다.');
                     location.reload();
@@ -44,10 +44,10 @@
             });
         }
 
-        function returnBook(bookNum) {
+        function returnBook(bookId) {
             $.ajax({
-                url: '/book/return/' + bookNum,
-                type: 'POST',
+                url: '/book/return/' + bookId,
+                type: 'PUT',
                 success: function() {
                     alert('반납이 완료되었습니다.');
                     location.reload();

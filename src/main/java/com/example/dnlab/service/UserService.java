@@ -106,7 +106,7 @@ public class UserService {
     }
 
     //회원 한명의 정보 받아오기
-    public UserResDto getUserByNum(int id){
+    public UserResDto getById(int id){
         User user = userRepository.findById(id);
         return UserResDto.builder()
                 .studentId(user.getStudentId())

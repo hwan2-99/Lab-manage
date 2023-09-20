@@ -13,7 +13,9 @@ import java.util.Collection;
 @Getter
 public class PrincipalDetails implements UserDetails {
     private final User user;
-
+    public int getId() {
+        return user.getId();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();

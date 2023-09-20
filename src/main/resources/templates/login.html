@@ -18,13 +18,12 @@
                     data: JSON.stringify(user),
                     contentType: 'application/json',
                     success: function(response) {
-                        console.log(response);
                         // 서버에서 JWT 토큰을 받아옵니다.
                         var accessToken = response.accessToken;
                         if (accessToken) {
                             // JWT 토큰을 로컬 스토리지에 저장합니다.
                             localStorage.setItem('accessToken', accessToken);
-
+                            alert("로그인 성공");
                             // 로그인 성공 시 이동할 페이지로 리다이렉트합니다.
                             window.location.href = "/";
                         } else {

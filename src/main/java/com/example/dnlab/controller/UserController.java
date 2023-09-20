@@ -1,5 +1,6 @@
 package com.example.dnlab.controller;
 
+import com.example.dnlab.domain.auth.PrincipalDetails;
 import com.example.dnlab.dto.user.*;
 import com.example.dnlab.domain.User;
 import com.example.dnlab.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -28,21 +30,13 @@ import java.util.NoSuchElementException;
 public class UserController {
     private final UserService userService;
 
-    //로그아웃
-    @PostMapping("/logOut")
-    public void logout(HttpSession session, HttpServletResponse response) throws IOException {
-        session.invalidate();
+    //로그아웃  --- > 차 후 레디스 사용 처리
+    @PostMapping("/logout")
+    public void logout(@AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
         log.info("logOut");
 
-        // 리다이렉트할 URL
-        String redirectUrl = "/";
+        String uid = principalDetails.getUsername();
 
-        // RedirectView를 생성하여 리다이렉트 설정
-        RedirectView redirectView = new RedirectView(redirectUrl);
-        redirectView.setStatusCode(HttpStatus.SEE_OTHER);
-
-        // HttpServletResponse를 사용하여 리다이렉트 수행
-        response.sendRedirect(redirectView.getUrl());
     }
 
     //회원 가입
@@ -62,7 +56,6 @@ public class UserController {
 
     //회원 조회
     @GetMapping("/userList")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
@@ -86,10 +79,10 @@ public class UserController {
     }
 
     @GetMapping("/myPage")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
-    public ResponseEntity<UserResDto> getMyPage(HttpSession session) {
-        User user = (User)session.getAttribute("user");
-        UserResDto res = userService.getUserByNum(user.getId());
+    public ResponseEntity<UserResDto> getMyPage(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        int userId = principalDetails.getId();
+        UserResDto res = userService.getById(userId);
 
         return ResponseEntity.ok().body(res);
     }

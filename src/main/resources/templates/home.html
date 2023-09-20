@@ -36,31 +36,25 @@
     $(document).ready(function() {
         loadBoardList();
 
-        // 여기에서 JWT 토큰을 확인하고, 사용자 인증 상태에 따라 링크 표시를 조정하세요.
         var accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
-            // JWT 토큰이 있으면 로그인 상태로 가정하고 관련 링크를 표시합니다.
             $("#signup-link, #login-link").hide();
             $("#user-list-link, #my-page-link, #attendance-check-link, #attendance-button, #application-link, #approve-link, #equipment-link, #todo-link, #post-link, #logout-link").show();
         } else {
-            // JWT 토큰이 없으면 로그아웃 상태로 가정하고 관련 링크를 숨깁니다.
             $("#signup-link, #login-link").show();
             $("#user-list-link, #my-page-link, #attendance-check-link, #attendance-button, #application-link, #approve-link, #equipment-link, #todo-link, #post-link, #logout-link").hide();
         }
     });
 
     function logout(event) {
-        event.preventDefault(); // 기본 동작인 링크 이동을 막습니다.
+        event.preventDefault();
 
-        // 여기에서 JWT 토큰을 삭제하고 로그아웃 처리를 수행하세요.
-        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('accessToken');
 
-        // 로그아웃 후 페이지를 새로고침합니다.
         location.reload();
     }
 
     function loadBoardList() {
-        // 게시판 목록을 가져오는 코드를 그대로 유지합니다.
         $.ajax({
             url: "/board/boardLists",
             type: "GET",
@@ -68,7 +62,6 @@
             success: function(boardList) {
                 var boardListHtml = "";
                 $.each(boardList, function(index, board) {
-                    // 링크 클릭 이벤트 추가
                     boardListHtml += "<li><a href='/board/" + board.id + "/posts'>" + board.name + "</a></li>";
                 });
                 $("#board-list").html(boardListHtml);

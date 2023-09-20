@@ -1,15 +1,18 @@
 package com.example.dnlab.controller;
 
 import com.example.dnlab.domain.User;
+import com.example.dnlab.domain.auth.PrincipalDetails;
 import com.example.dnlab.dto.book.BookResDto;
 import com.example.dnlab.dto.book.InsertBookReqDto;
 import com.example.dnlab.domain.Book;
+import com.example.dnlab.dto.rental.RentalResDto;
 import com.example.dnlab.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +29,7 @@ public class BookController {
 
     //도서 추가
     @PostMapping("/insertBook")
-    public ResponseEntity<BookResDto> insertBook(@RequestBody InsertBookReqDto req,HttpSession session){
+    public ResponseEntity<BookResDto> insertBook(@RequestBody InsertBookReqDto req){
         BookResDto res = bookService.insertBook(req);
         return ResponseEntity.ok(res);
     }
@@ -36,16 +39,21 @@ public class BookController {
         return bookService.getAllBook();
     }
 
-    @PostMapping("/borrow/{bookId}")
-    public void borrowBook(@PathVariable int bookId) {
-        bookService.borrowBook(bookId);
+    @PutMapping("/borrow/{bookId}")
+    public ResponseEntity<RentalResDto> borrowBook(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable int bookId) {
+        int userId = principalDetails.getId();
+        log.info("userId:{}" + String.valueOf(userId));
+        RentalResDto res = bookService.borrowBook(bookId,userId);
+
+        return ResponseEntity.ok(res);
     }
 
-    @PostMapping("/return/{bookId}")
-    public ResponseEntity<String> returnBook(@PathVariable int bookId, HttpSession session) {
+    @PutMapping("/return/{bookId}")
+    public ResponseEntity<RentalResDto> returnBook(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable int bookId) {
+        int userId = principalDetails.getId();
+        RentalResDto res = bookService.returnBook(bookId,userId);
 
-        bookService.returnBook(bookId);
-        return ResponseEntity.ok("책 반납이 완료되었습니다.");
+        return ResponseEntity.ok(res);
     }
 
     @RequestMapping("/board")

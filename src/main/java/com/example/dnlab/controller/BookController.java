@@ -29,7 +29,7 @@ public class BookController {
 
     //도서 추가
     @PostMapping("/insertBook")
-    public ResponseEntity<BookResDto> insertBook(@RequestBody InsertBookReqDto req){
+    public ResponseEntity<BookResDto> insertBook(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody InsertBookReqDto req){
         BookResDto res = bookService.insertBook(req);
         return ResponseEntity.ok(res);
     }
@@ -42,7 +42,6 @@ public class BookController {
     @PutMapping("/borrow/{bookId}")
     public ResponseEntity<RentalResDto> borrowBook(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable int bookId) {
         int userId = principalDetails.getId();
-        log.info("userId:{}" + String.valueOf(userId));
         RentalResDto res = bookService.borrowBook(bookId,userId);
 
         return ResponseEntity.ok(res);

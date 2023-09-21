@@ -69,6 +69,7 @@ public class JwtProvider {
                 .compact();
     }
     public Authentication getAuthentication(String token) {
+        log.info("token~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:{}",token);
         PrincipalDetails principalDetails = principalDetailsService.loadUserByUsername(getPayload(token));
         log.info("getAuthentication, email={}", principalDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(principalDetails, "", principalDetails.getAuthorities());

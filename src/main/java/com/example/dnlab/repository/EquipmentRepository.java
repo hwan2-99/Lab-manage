@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.awt.print.Pageable;
+import java.util.List;
+
 public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
     // 대여중인 장비 상태를 표시하기 위한 메소드
     @Modifying
@@ -17,5 +20,7 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
     void updateUsingN(int id);
 
     Equipment findById(int equipmentId);
+
+    List<Equipment> findAllDesc(Pageable pageable);
 
 }

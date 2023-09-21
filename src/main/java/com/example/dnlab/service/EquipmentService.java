@@ -1,19 +1,26 @@
 package com.example.dnlab.service;
 
-import com.example.dnlab.dto.equipment.EquipReqDto;
+import com.example.dnlab.dto.equipment.EquipmentListResponseDto;
+import com.example.dnlab.dto.equipment.EquipmentReqDto;
 
 import com.example.dnlab.domain.Equipment;
+import com.example.dnlab.dto.equipment.EquipmentResDto;
+import com.example.dnlab.dto.equipmentRental.EquipmentRentalResDto;
 import com.example.dnlab.repository.EquipmentRepository;
 import com.example.dnlab.domain.EquipRental;
 import com.example.dnlab.domain.User;
 import com.example.dnlab.repository.EquipRentalRepository;
+import com.example.dnlab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,10 +31,11 @@ public class EquipmentService {
     private final HttpSession session;
     private final EquipmentRepository equipmentRepository;
     private final EquipRentalRepository equipRentalRepository;
+    private final UserRepository userRepository;
     LocalDate today = LocalDate.now();
 
     // 장비추가
-    public void createEquipment(EquipReqDto req){
+    public EquipmentResDto createEquipment(EquipmentReqDto req){
         log.info("이름 : {}, 장비 가격: {}, 구매일 : {} ",req.getName(), req.getPrice(), req.getPurchase_date());
         Equipment equipment = Equipment.builder()
                 .name(req.getName())
@@ -36,12 +44,15 @@ public class EquipmentService {
                 .build();
 
         equipmentRepository.save(equipment);
+        return EquipmentResDto.builder()
+                .name(equipment.getName())
+                .build();
     }
 
     // 장비 대여 서비스
-    public void borrowEquipment(int equipmentNum) {
-        Equipment equipment = equipmentRepository.findById(equipmentNum);
-        User user = (User) session.getAttribute("user");
+    public EquipmentRentalResDto borrowEquipment(int equipmentId, int userId) {
+        Equipment equipment = equipmentRepository.findById(equipmentId);
+        User user = userRepository.findById(userId);
         if (equipment.isUsingYN()) {
             throw new RuntimeException("이미 대여 된 장비입니다.");
         }
@@ -55,13 +66,17 @@ public class EquipmentService {
 
         equipRentalRepository.save(equipRental);
         equipmentRepository.updateUsingY(equipment.getId());
+
+        return EquipmentRentalResDto.builder()
+                .rentalId(equipRental.getId())
+                .build();
     }
 
     // 장비 반납 서비스
-    public void returnEquipment(int equipmentNum) {
+    public EquipmentRentalResDto returnEquipment(int equipmentId, int userId) {
         LocalDate rentEndDate = today;
-        Equipment equipment = equipmentRepository.findById(equipmentNum);
-        User user = (User) session.getAttribute("user");
+        Equipment equipment = equipmentRepository.findById(equipmentId);
+        User user = userRepository.findById(userId);
 
         EquipRental equipRental = equipRentalRepository.findByUserIdAndEquipmentId(user.getId(), equipment.getId());
         if (equipRental == null) {
@@ -78,6 +93,11 @@ public class EquipmentService {
 
         equipRentalRepository.save(updatedUsing);
         equipmentRepository.updateUsingN(equipment.getId());
+
+        return EquipmentRentalResDto.builder()
+                .rentalId(equipRental.getId())
+                .build();
     }
+
 
 }

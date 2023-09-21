@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import java.util.Date;
 @Getter
-public class EquipReqDto {
+public class EquipmentReqDto {
     private String name;
     private Date purchase_date;
     private int price;

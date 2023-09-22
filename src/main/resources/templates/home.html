@@ -18,7 +18,6 @@
         <a id="attendance-button" style="display: none;" href="#">출석 확인</a>
         <a id="application-link" style="display: none;" href="/application/insertApplication">연구실 가입 신청</a>
         <a id="approve-link" style="display: none;" href="/application/AllApplication">연구실 가입 승인</a>
-        <a id="equipment-link" style="display: none;" href="/equipment/createEquipment">기자재 추가</a>
         <a id="todo-link" style="display: none;" href="/todo/thisWeekTodos">금주의 목표</a>
         <a id="post-link" style="display: none;" href="/post/createPost">게시글 작성</a>
         <a id="logout-link" style="display: none;" href="#" onclick="logout(event)">로그 아웃</a>
@@ -27,8 +26,11 @@
             <!-- 게시판 목록 출력 -->
         </ul>
         <p>도서 기능</p>
-        <a href="/book/insertBook">도서 추가</a>
-        <a href="/book/bookLists">도서 목록</a>
+        <a id="book-add-link" style="display: none;" href="/book/insertBook">도서 추가</a>
+        <a id="book-list-link" style="display: none;" href="/book/bookLists">도서 목록</a>
+        <p>기자재 기능</p>
+        <a id="equipment-add-link" style="display: none;" href="/equipment/createEquipment">기자재 추가</a>
+        <a id="equipment-list-link" style="display: none;" href="/equipment/AllEquipment">기자재 목록</a>
     </div>
 </div>
 
@@ -39,10 +41,10 @@
         var accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
             $("#signup-link, #login-link").hide();
-            $("#user-list-link, #my-page-link, #attendance-check-link, #attendance-button, #application-link, #approve-link, #equipment-link, #todo-link, #post-link, #logout-link").show();
+            $("#user-list-link, #my-page-link, #attendance-check-link, #attendance-button, #application-link, #approve-link, #equipment-link, #todo-link, #post-link, #logout-link, #equipment-add-link, #equipment-list-link, #book-add-link, #book-list-link").show();
         } else {
             $("#signup-link, #login-link").show();
-            $("#user-list-link, #my-page-link, #attendance-check-link, #attendance-button, #application-link, #approve-link, #equipment-link, #todo-link, #post-link, #logout-link").hide();
+            $("#user-list-link, #my-page-link, #attendance-check-link, #attendance-button, #application-link, #approve-link, #equipment-link, #todo-link, #post-link, #logout-link, #equipment-add-link, #equipment-list-link, #book-add-link, #book-list-link").hide();
         }
     });
 

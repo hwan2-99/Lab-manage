@@ -1,11 +1,11 @@
 package com.example.dnlab.repository;
 
 import com.example.dnlab.domain.Equipment;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
@@ -21,6 +21,6 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
 
     Equipment findById(int equipmentId);
 
-    List<Equipment> findAllDesc(Pageable pageable);
+    List<Equipment> findAllByOrderByPurchaseDateDesc(Pageable pageable);
 
 }

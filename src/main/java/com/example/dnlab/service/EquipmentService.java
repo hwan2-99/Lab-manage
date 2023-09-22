@@ -13,14 +13,14 @@ import com.example.dnlab.repository.EquipRentalRepository;
 import com.example.dnlab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -99,5 +99,11 @@ public class EquipmentService {
                 .build();
     }
 
+    public List<EquipmentListResponseDto> getAllDesc(Pageable pageable){
+            List<Equipment> equipmentList = equipmentRepository.findAllByOrderByPurchaseDateDesc(pageable);
+            return equipmentList.stream()
+                    .map(EquipmentListResponseDto::new)
+                    .collect(Collectors.toList());
+        }
 
 }

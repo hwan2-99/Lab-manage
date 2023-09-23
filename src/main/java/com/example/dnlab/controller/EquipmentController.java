@@ -9,6 +9,7 @@ import com.example.dnlab.dto.equipmentRental.EquipmentRentalResDto;
 import com.example.dnlab.dto.rental.RentalResDto;
 import com.example.dnlab.service.EquipmentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/equipment")
 @RequiredArgsConstructor
+@Slf4j
 public class EquipmentController {
     private final EquipmentService equipmentService;
 
@@ -47,11 +49,9 @@ public class EquipmentController {
     }
 
     @GetMapping("/AllEquipment")
-    public List<EquipmentListResponseDto> getAllDesc() {
+    public ResponseEntity<List<EquipmentListResponseDto>> getAllDesc() {
         Pageable pageable = PageRequest.of(0, 10);
 
-        List<EquipmentListResponseDto> equipmentList = equipmentService.getAllDesc(pageable);
-
-        return equipmentList;
+        return ResponseEntity.ok(equipmentService.getAllDesc(pageable));
     }
 }

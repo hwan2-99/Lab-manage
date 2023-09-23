@@ -8,26 +8,22 @@
 <table>
   <thead>
   <tr>
-    <th>기자재 명</th>
-    <th>대여 상태</th>
-    <th></th>
+    <th>기자재명</th>
     <th></th>
   </tr>
   </thead>
   <tbody>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    $(document).ready(function() {
-      $.get("/equipment/AllEquipment", function(data) {
-        $.each(data, function(index, equipment) {
-          var borrowStatus = equipment.usingYN ? "대여중" : "대여가능";
-          var borrowBtn = $("<button onclick='borrowEquipment(" + equipment.id + ")'>대여</button>");
-          var returnBtn = $("<button onclick='returnEquipment(" + equipment.id + ")'>반납</button>");
-          var actionBtn = equipment.usingYN ? returnBtn : borrowBtn;
-          var row = $("<tr><td>" + equipment.name + "</td><td>" + borrowStatus + "</td><td></td><td></td></tr>");
-          row.children().eq(3).append(actionBtn);
-          $("tbody").append(row); // 데이터를 테이블에 추가
-        });
+    $.get("/equipment/AllEquipment", function(data) {
+      $.each(data, function(index, equipment) {
+        var borrowStatus = equipment.usingYN ? "대여중" : "대여가능";
+        var borrowBtn = $("<button onclick='borrowEquipment(" + equipment.id + ")'>대여</button>");
+        var returnBtn = $("<button onclick='returnEquipment(" + equipment.id + ")'>반납</button>");
+        var actionBtn = equipment.usingYN ? returnBtn : borrowBtn;
+        var row = $("<tr><td>" + equipment.name + "</td><td>" + borrowStatus + "</td><td></td><td></td></tr>");
+        row.children().eq(2).append(actionBtn);
+        $("tbody").append(row);
       });
     });
 

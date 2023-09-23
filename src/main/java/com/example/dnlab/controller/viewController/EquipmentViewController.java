@@ -12,4 +12,9 @@ public class EquipmentViewController {
     public String createEquipment(){
         return "createEquipment";
     }
+
+    @GetMapping("/equipments")
+    public String allEquipments(){
+        return "equipments";
+    }
 }

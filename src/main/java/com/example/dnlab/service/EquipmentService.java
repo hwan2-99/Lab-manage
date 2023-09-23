@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EquipmentService {
 
-    private final HttpSession session;
     private final EquipmentRepository equipmentRepository;
     private final EquipRentalRepository equipRentalRepository;
     private final UserRepository userRepository;

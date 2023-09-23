@@ -6,14 +6,6 @@ import lombok.*;
 import java.util.Date;
 
 public class AttendanceDto {
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class StartCheck{
-        private Date startTime; // 출근시간
-    }
     @Getter 
     @Setter
     @NoArgsConstructor

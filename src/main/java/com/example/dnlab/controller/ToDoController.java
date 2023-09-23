@@ -27,19 +27,16 @@ public class ToDoController {
     private final UserRepository userRepository;
 
     @PostMapping("/createTodo")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<Void> createTodo(@RequestBody TodoReqDto req){
         todoservice.createToDo(req);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/thisWeekTodo")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public List<Todo> viewThisWeekTodo(){
         return todoservice.viewThisWeekToDo();
     }
 
     @DeleteMapping("/delete/{num}")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public ResponseEntity<Void> deleteTodoById(@PathVariable int num) {
         todoservice.deleteToDo(num);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -53,7 +50,6 @@ public class ToDoController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/thisWeekAllTodo")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'MANAGER', 'RESEARCHER')")
     public Map<String, List<Todo>> viewThisWeekAllTodoByUser() {
         List<Todo> allTodo = todoservice.viewThisWeekAllToDo();       // to-do-list 전부 가져오기
         Map<String, List<Todo>> todoByUser = new HashMap<>();         // 유저별 to-do-list 분류를 위한 hashMap

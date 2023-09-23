@@ -15,7 +15,7 @@
         <a id="user-list-link" style="display: none;" href="/user/userLists">사용자 목록</a>
         <a id="my-page-link" style="display: none;" href="/user/myPages">마이 페이지</a>
         <a id="attendance-check-link" style="display: none;" href="/attendance/attendanceCheck">이달의 출석 확인</a>
-        <a id="attendance-button" style="display: none;" href="#">출석 확인</a>
+        <a id="attendance-button" style="display: none;" href="/">출석 확인</a>
         <a id="application-link" style="display: none;" href="/application/insertApplication">연구실 가입 신청</a>
         <a id="approve-link" style="display: none;" href="/application/AllApplication">연구실 가입 승인</a>
         <a id="todo-link" style="display: none;" href="/todo/thisWeekTodos">금주의 목표</a>
@@ -72,6 +72,51 @@
                 console.log("Error: " + errorThrown);
             }
         });
+    }
+
+    document.getElementById("attendance-button").addEventListener("click", function () {
+        var accessToken = localStorage.getItem('accessToken');
+
+        if (!accessToken) {
+            alert('로그인이 필요합니다.');
+            window.location.href = '/login'; // 로그인 페이지로 리다이렉트 예시
+            return;
+        }
+        var now = new Date();
+        var hour = now.getHours();
+        var minute = now.getMinutes();
+
+        fetch('/attendance/doAttendance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken // 토큰을 헤더에 추가합니다.
+            },
+            body: JSON.stringify({
+                startTime: getTodayAt(hour, minute)
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert("출석 확인이 완료되었습니다.");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    function getTodayAt(hour, minute) {
+        var cal = new Date();
+        cal.setHours(hour);
+        cal.setMinutes(minute);
+        cal.setSeconds(0);
+        cal.setMilliseconds(0);
+        return cal.toISOString();
     }
 
 </script>

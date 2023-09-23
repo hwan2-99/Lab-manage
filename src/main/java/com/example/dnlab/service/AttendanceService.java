@@ -3,6 +3,8 @@ package com.example.dnlab.service;
 import com.example.dnlab.domain.AttendanceStatus;
 import com.example.dnlab.dto.attendance.AttendanceDto;
 import com.example.dnlab.domain.Attendance;
+import com.example.dnlab.dto.attendance.AttendanceReqDto;
+import com.example.dnlab.dto.attendance.AttendanceResDto;
 import com.example.dnlab.repository.AttendanceRepository;
 import com.example.dnlab.domain.User;
 import com.example.dnlab.repository.UserRepository;
@@ -25,38 +27,54 @@ import java.util.*;
 public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final UserRepository userRepository;
-    private final HttpSession session;
 
     //출석 메소드(정상과 지각만)
-    public void doAttendance(AttendanceDto.StartCheck req){
-        User user = (User)session.getAttribute("user");
-        int userNum = user.getId();
-        System.out.println(userNum);
+    public AttendanceResDto doAttendance(int userId, AttendanceReqDto req) {
+        User user = userRepository.findById(userId);
 
         Date today = getTodayAt(0, 0);
         Date endDate = getTodayAt(21, 0);
 
         // 이미 출석했는지 확인 하기 위한 출석 객체 받아오기
-        Attendance attendance = attendanceRepository.findAttendanceByUserNumAndStartTimeBetween(userNum, today,endDate);
-        log.info("출석확인");
-
+        Attendance attendance = attendanceRepository.findAttendanceByUserIdAndStartTimeBetween(userId, today, endDate);
         if (attendance == null) { // 출석한 적이 없는 경우에만 출석체크를 처리
-            if(req.getStartTime().before(getTodayAt(10,0))){
-                log.info("d");
-                AttendanceStatus attendanceStatus = req.getStartTime().before(getTodayAt(10, 0)) ? AttendanceStatus.NORMAL : AttendanceStatus.LATE;
-
+            log.info("service:{}",req.getStartTime());
+            if (req.getStartTime().before(getTodayAt(10, 0))) {
+                AttendanceStatus attendanceStatus = AttendanceStatus.NORMAL;
                 Attendance newAttendance = Attendance.builder()
                         .user(user)
                         .status(attendanceStatus)
                         .startTime(req.getStartTime())
                         .build();
                 attendanceRepository.save(newAttendance);
-                log.info("회원: {}, 출근시간: {}",userNum,req.getStartTime());
+                log.info("회원: {}, 출근시간: {}", userId, req.getStartTime());
+                return AttendanceResDto.builder()
+                        .startTime(newAttendance.getStartTime())
+                        .status(newAttendance.getStatus())
+                        .build();
+            }else{
+                AttendanceStatus attendanceStatus = AttendanceStatus.LATE;
+                Attendance newAttendance = Attendance.builder()
+                        .user(user)
+                        .status(attendanceStatus)
+                        .startTime(req.getStartTime())
+                        .build();
+                attendanceRepository.save(newAttendance);
+                log.info("회원: {}, 출근시간: {}", userId, req.getStartTime());
+                return AttendanceResDto.builder()
+                        .startTime(newAttendance.getStartTime())
+                        .status(newAttendance.getStatus())
+                        .build();
             }
-        } else { // 이미 출석한 경우
-            log.info("회원: {}, 이미 출석한 날짜: {}",userNum,today);
+        } else {
+            log.info("이미 출석한 적이 있습니다."); // 이미 출석한 경우에 대한 처리
+            return AttendanceResDto.builder()
+                    .startTime(attendance.getStartTime())
+                    .status(attendance.getStatus())
+                    .build();
         }
     }
+
     // 금일의 시간 반환 메소드
     public Date getTodayAt(int hour, int minute) {
         Calendar cal = Calendar.getInstance();

@@ -21,9 +21,9 @@
 </div>
 
 <script>
-    function updateTodoContent(num, content) {
+    function updateTodoContent(id, content) {
         $.ajax({
-            url: "/todo/updateContent/" + num,
+            url: "/todo/updateContent/" + id,
             type: "PUT",
             contentType: "application/json",
             data: JSON.stringify({
@@ -38,9 +38,9 @@
             }
         });
     }
-    function deleteTodo(num) {
+    function deleteTodo(id) {
         $.ajax({
-            url: "/todo/delete/"+num,
+            url: "/todo/delete/"+id,
             type: "DELETE",
             success: function(data) {
                 refreshTodoList();
@@ -51,9 +51,20 @@
         });
     }
     function refreshTodoList() {
+        var accessToken = localStorage.getItem('accessToken');
+
+        // 토큰이 없는 경우 로그인 페이지로 리다이렉트 또는 다른 처리를 수행할 수 있습니다.
+        if (!accessToken) {
+            alert('로그인이 필요합니다.');
+            window.location.href = '/login'; // 로그인 페이지로 리다이렉트 예시
+            return;
+        }
         $.ajax({
-            url: "/todo/thisWeekTodo",
+            url: "/todo/myTodo",
             type: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + accessToken // 토큰을 헤더에 추가합니다.
+            },
             success: function(data) {
                 var todoList = $("#todo-list");
                 todoList.empty();
@@ -62,9 +73,9 @@
                     var newTodo = $("<div>").addClass("todo-item");
                     var checkbox = $("<input>").attr({
                         "type": "checkbox",
-                        "id": "todo-" + todo.num
+                        "id": "todo-" + todo.id
                     });
-                    var label = $("<label>").attr("for", "todo-" + todo.num).text(todo.content);
+                    var label = $("<label>").attr("for", "todo-" + todo.id).text(todo.content);
 
                     // 수정 버튼 생성
                     let editBtn = $("<button>").addClass("edit-todo-btn").text("수정");
@@ -83,7 +94,7 @@
                             var saveBtn = $("<button>").addClass("save-todo-btn").text("저장");
                             saveBtn.click(function() {
                                 var newContent = editInput.val();
-                                updateTodoContent(todo.num, newContent);
+                                updateTodoContent(todo.id, newContent);
                                 label.text(newContent);
                                 editInput.replaceWith(label);
                                 editBtn.show();
@@ -94,7 +105,7 @@
                         });
 
                         deleteBtn.click(function() {
-                            deleteTodo(todo.num);
+                            deleteTodo(todo.id);
                             newTodo.remove();
                         });
                     })(todo, label, editBtn, deleteBtn, newTodo);
@@ -111,10 +122,21 @@
         });
     }
     $(document).ready(function() {
+        var accessToken = localStorage.getItem('accessToken');
+
+        // 토큰이 없는 경우 로그인 페이지로 리다이렉트 또는 다른 처리를 수행할 수 있습니다.
+        if (!accessToken) {
+            alert('로그인이 필요합니다.');
+            window.location.href = '/login'; // 로그인 페이지로 리다이렉트 예시
+            return;
+        }
         // Load user information
         $.ajax({
             url: "/user/myPage",
             type: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + accessToken // 토큰을 헤더에 추가합니다.
+            },
             success: function(data) {
                 var user = data;
                 var userInfo = "<p>Student ID: " + user.studentId + "</p>";
@@ -129,9 +151,20 @@
 
         // Load todo list
         function loadTodoList() {
+            var accessToken = localStorage.getItem('accessToken');
+
+            // 토큰이 없는 경우 로그인 페이지로 리다이렉트 또는 다른 처리를 수행할 수 있습니다.
+            if (!accessToken) {
+                alert('로그인이 필요합니다.');
+                window.location.href = '/login'; // 로그인 페이지로 리다이렉트 예시
+                return;
+            }
             $.ajax({
-                url: "/todo/thisWeekTodo",
+                url: "/todo/myTodo",
                 type: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken // 토큰을 헤더에 추가합니다.
+                },
                 success: function(data) {
                     var todoList = $("#todo-list");
                     todoList.empty();
@@ -140,9 +173,9 @@
                         var newTodo = $("<div>").addClass("todo-item");
                         var checkbox = $("<input>").attr({
                             "type": "checkbox",
-                            "id": "todo-" + todo.num
+                            "id": "todo-" + todo.id
                         });
-                        var label = $("<label>").attr("for", "todo-" + todo.num).text(todo.content);
+                        var label = $("<label>").attr("for", "todo-" + todo.id).text(todo.content);
 
                         // 수정 버튼 생성
                         let editBtn = $("<button>").addClass("edit-todo-btn").text("수정");
@@ -161,7 +194,7 @@
                                 var saveBtn = $("<button>").addClass("save-todo-btn").text("저장");
                                 saveBtn.click(function() {
                                     var newContent = editInput.val();
-                                    updateTodoContent(todo.num, newContent);
+                                    updateTodoContent(todo.id, newContent);
                                     label.text(newContent);
                                     editInput.replaceWith(label);
                                     editBtn.show();
@@ -172,7 +205,7 @@
                             });
 
                             deleteBtn.click(function() {
-                                deleteTodo(todo.num);
+                                deleteTodo(todo.id);
                                 newTodo.remove();
                             });
                         })(todo, label, editBtn, deleteBtn, newTodo);
@@ -192,8 +225,17 @@
         loadTodoList();
 
         $("#add-todo-btn").click(function() {
-            var todoContent = $("#todo-input").val();
-            if (todoContent === "") {
+            var accessToken = localStorage.getItem('accessToken');
+
+            // 토큰이 없는 경우 로그인 페이지로 리다이렉트 또는 다른 처리를 수행할 수 있습니다.
+            if (!accessToken) {
+                alert('로그인이 필요합니다.');
+                window.location.href = '/login'; // 로그인 페이지로 리다이렉트 예시
+                return;
+            }
+
+            var content = $("#todo-input").val();
+            if (content === "") {
                 alert("내용을 입력해주세요.");
                 return;
             }
@@ -202,8 +244,11 @@
                 url: "/todo/createTodo",
                 type: "POST",
                 contentType: "application/json",
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken // 토큰을 헤더에 추가합니다.
+                },
                 data: JSON.stringify({
-                    content: todoContent
+                    content: content
                 }),
                 success: function (data) {
                     var newTodo = "<div class='todo-item'><input type='checkbox' id='todo-" + data.id + "'><label for='todo-" + data.id + "'>" + data.content + "</label></div>";

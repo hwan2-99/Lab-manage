@@ -2,7 +2,6 @@ package com.example.dnlab.controller;
 
 import com.example.dnlab.domain.AttendanceStatus;
 import com.example.dnlab.domain.auth.PrincipalDetails;
-import com.example.dnlab.dto.attendance.AttendanceDto;
 import com.example.dnlab.domain.Attendance;
 import com.example.dnlab.dto.attendance.AttendanceReqDto;
 import com.example.dnlab.dto.attendance.AttendanceResDto;

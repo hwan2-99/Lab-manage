@@ -1,7 +1,6 @@
 package com.example.dnlab.service;
 
 import com.example.dnlab.domain.AttendanceStatus;
-import com.example.dnlab.dto.attendance.AttendanceDto;
 import com.example.dnlab.domain.Attendance;
 import com.example.dnlab.dto.attendance.AttendanceReqDto;
 import com.example.dnlab.dto.attendance.AttendanceResDto;

@@ -1,6 +1,7 @@
 package com.example.dnlab.service;
 
 import com.example.dnlab.dto.todo.TodoCreateReqDto;
+import com.example.dnlab.dto.todo.TodoDeleteResDto;
 import com.example.dnlab.dto.todo.TodoListResDto;
 import com.example.dnlab.dto.todo.TodoResDto;
 import com.example.dnlab.domain.Todo;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -54,15 +56,23 @@ public class ToDoService {
     }
 
     // to-do-list 삭제
-    public void deleteToDo(int num){
-        toDoRepository.deleteById(num);
+    public TodoDeleteResDto deleteToDo(int id){
+        Todo todo = toDoRepository.findById(id);
+
+        toDoRepository.deleteById(id);
+        return TodoDeleteResDto.builder()
+                .id(id)
+                .build();
     }
 
     //to-do-list 내용 수정
-    public void updateContent(int num, TodoCreateReqDto req){
-        log.info("content : {}",req.getContent());
+    public TodoResDto updateContent(int id, TodoCreateReqDto req){
 
-        toDoRepository.updateContentById(num, req.getContent());
+        toDoRepository.updateContentById(id, req.getContent());
+        return TodoResDto.builder()
+                .id(id)
+                .content(req.getContent())
+                .build();
     }
     // 금주의 연구실생 전원의 to-do-list 불러오기
     public List<TodoListResDto> viewThisWeekAllToDo(Pageable pageable){

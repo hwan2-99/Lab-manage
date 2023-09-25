@@ -2,6 +2,7 @@ package com.example.dnlab.controller;
 
 import com.example.dnlab.domain.auth.PrincipalDetails;
 import com.example.dnlab.dto.todo.TodoCreateReqDto;
+import com.example.dnlab.dto.todo.TodoDeleteResDto;
 import com.example.dnlab.dto.todo.TodoListResDto;
 import com.example.dnlab.dto.todo.TodoResDto;
 import com.example.dnlab.domain.Todo;
@@ -41,16 +42,15 @@ public class ToDoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteTodoById(@PathVariable int id) {
-        todoservice.deleteToDo(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<TodoDeleteResDto> deleteTodoById(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable int id) {
+        TodoDeleteResDto deleteResDto = todoservice.deleteToDo(id);
+        return ResponseEntity.ok(deleteResDto);
     }
 
     @PutMapping("/updateContent/{id}")
-    public ResponseEntity<Void> updateContent(@PathVariable int id, @RequestBody TodoCreateReqDto req) {
-        todoservice.updateContent(id, req);
-        log.info("수정대상:{} , 수정내용: {}",id,req.getContent());
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<TodoResDto> updateContent(@PathVariable int id, @RequestBody TodoCreateReqDto req) {
+        TodoResDto res = todoservice.updateContent(id, req);
+        return ResponseEntity.ok(res);
     }
     @GetMapping("/thisWeekAllTodo")
     public ResponseEntity<List<TodoListResDto>> viewThisWeekAllTodoByUser() {

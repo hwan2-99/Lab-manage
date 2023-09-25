@@ -1,6 +1,7 @@
 package com.example.dnlab.repository;
 
 import com.example.dnlab.domain.Application;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,8 +15,8 @@ public interface ApplicationRepository extends JpaRepository<Application,Integer
     Application findById(int num);
 
     // 신청서 조회(교수님 전용)
-    @Query("SELECT a FROM Application a")
-    List<Application> getAllApplicationsWithUserInfo();
+    @Query("SELECT a FROM Application a ORDER BY a.createdAt DESC")
+    List<Application> findAllDesc(Pageable pageable);
 
     // 신청서 상세
     @Query("SELECT a FROM Application a WHERE a.id = :id")
@@ -24,7 +25,7 @@ public interface ApplicationRepository extends JpaRepository<Application,Integer
     // 신청서 승인
     @Modifying
     @Query("UPDATE Application a SET a.status = 'approved' WHERE a.id = :id")
-    void accessApplication(@Param("id") int num);
+    void accessApplication(@Param("id") int id);
 
     // 신청서 거절
     @Modifying

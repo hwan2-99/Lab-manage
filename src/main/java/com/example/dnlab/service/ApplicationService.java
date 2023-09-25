@@ -2,20 +2,23 @@ package com.example.dnlab.service;
 
 import com.example.dnlab.domain.Application;
 import com.example.dnlab.domain.ApplicationStatus;
-import com.example.dnlab.dto.application.LabSignUpReq;
+import com.example.dnlab.dto.application.ApplicationListResDto;
+import com.example.dnlab.dto.application.ApplicationResDto;
+import com.example.dnlab.dto.application.ApplicationSignUpReqDto;
 import com.example.dnlab.repository.ApplicationRepository;
 import com.example.dnlab.domain.Role;
 import com.example.dnlab.domain.User;
 import com.example.dnlab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,34 +28,38 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
-    private final HttpSession session;
     LocalDate today = LocalDate.now();
     LocalDateTime now = LocalDateTime.now();
     int year = now.getYear();
     int generation = year-2003;
 
     //신청서 작성
-    public int createApplication(LabSignUpReq req) {
-        User user = (User) session.getAttribute("user");
+    public ApplicationResDto createApplication(int userId, ApplicationSignUpReqDto req) {
+        User user = userRepository.findById(userId);
+        Application application = req.toEntity(user);
         log.info("지원 동기: {}, 자기소개: {}, 원하는 연구활동: {}, 유저 pk: {}", req.getMotive(), req.getIntro(), req.getWanted(), user.getId());
-        Application application = Application.builder()
-                .motive(req.getMotive())
-                .intro(req.getIntro())
-                .wanted(req.getWanted())
-                .createdAt(LocalDate.now())
-                .status(ApplicationStatus.PENDING)
-                .user(user)
+        application.setCreatedAt(today);
+
+        applicationRepository.save(application);
+
+        return ApplicationResDto.builder()
+                .userId(user.getId())
+                .status(application.getStatus())
                 .build();
-        return applicationRepository.save(application).getId();
     }
 
     //모든 신청서 조회
-    public List<Application> getAllApplications(){
-        return applicationRepository.getAllApplicationsWithUserInfo();
+    public List<ApplicationListResDto> getAllApplications(Pageable pageable){
+        List<Application> applicationList = applicationRepository.findAllDesc(pageable);
+
+
+        return applicationList.stream()
+                .map(ApplicationListResDto::new)
+                .collect(Collectors.toList());
     }
 
-    public Application getApplicationDetail(int num){
-        return applicationRepository.getApplicationDetail(num);
+    public Application getApplicationDetail(int id){
+        return applicationRepository.getApplicationDetail(id);
     }
 
     public void approveApplication(int id) {

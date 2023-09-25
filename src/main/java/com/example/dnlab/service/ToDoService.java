@@ -57,8 +57,6 @@ public class ToDoService {
 
     // to-do-list 삭제
     public TodoDeleteResDto deleteToDo(int id){
-        Todo todo = toDoRepository.findById(id);
-
         toDoRepository.deleteById(id);
         return TodoDeleteResDto.builder()
                 .id(id)

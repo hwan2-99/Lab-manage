@@ -26,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-    private final BoardService boardService;
 
     @PostMapping("/createPost")
     public ResponseEntity<PostResDto> createPost(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody PostReqDto req, @RequestParam int boardId) {
@@ -35,15 +34,15 @@ public class PostController {
         return ResponseEntity.ok(res);
     }
 
-    @DeleteMapping("/{num}")
-    public ResponseEntity<Void> deletePost(@PathVariable int num) {
-        postService.deletePost(num);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PostResDto> deletePost(@PathVariable int id) {
+        PostResDto res = postService.deletePost(id);
+        return ResponseEntity.ok(res);
     }
 
-    @PutMapping("/{num}")
-    public ResponseEntity<Void> updateContent(@PathVariable int num, @RequestBody PostUpdateReqDto req) {
-        postService.updateContent(num, req);
+    @PutMapping("/{id}")
+    public ResponseEntity<PostResDto> updateContent(@PathVariable int id, @RequestBody PostUpdateReqDto req) {
+        postService.updateContent(id, req);
         return ResponseEntity.ok().build();
     }
 

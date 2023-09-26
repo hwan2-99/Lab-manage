@@ -31,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     throw new ExpiredJwtException(null, null, "JWT 토큰이 만료됬습니다.");
                 }
                 Authentication authentication = jwtProvider.getAuthentication(token);
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("authentication={}", authentication.getPrincipal());
             }

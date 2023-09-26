@@ -54,38 +54,32 @@ public class PostService {
     }
 
     // 게시글 삭제
-    public void deletePost(int num){
-        Optional<Post> postOptional = postRepository.findById(num);
+    public PostResDto deletePost(int id){
+        Optional<Post> postOptional = postRepository.findById(id);
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
             postRepository.delete(post);
         } else {
             throw new NoSuchElementException("존재하지 않는 게시글입니다.");
         }
+        return PostResDto.builder()
+                .id(postOptional.get().getId())
+                .build();
     }
 
     //게시글 내용 수정
-    public void updateContent(int id, PostUpdateReqDto req){
+    public PostResDto updateContent(int id, PostUpdateReqDto req){
         log.info("content: {}", req.getContent());
         Optional<Post> postOptional = postRepository.findById(id);
         if (postOptional.isPresent()) {
-            Post post = postOptional.get();
-            Post updatedPost = Post.builder()
-                    .id(post.getId())
-                    .title(post.getTitle())
-                    .content(req.getContent())
-                    .createdAt(post.getCreatedAt())
-                    .updatedAt(today)
-                    .user(post.getUser())
-                    .board(post.getBoard())
-                    .build();
-
-            postRepository.save(updatedPost);
-
+            postRepository.updateContentById(id,req.getContent());
         } else {
             throw new NoSuchElementException("게시글을 찾을 수 없습니다");
         }
 
+        return PostResDto.builder()
+                .id(postOptional.get().getId())
+                .build();
     }
     // 모든 게시글 조회
     public List<Post> getAllPost(){

@@ -6,12 +6,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder
+@Setter
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +24,9 @@ public class Post {
     @Column
     private String content;
     @Column
-    private LocalDateTime  createdAt;
+    private LocalDate createdAt;
     @Column
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

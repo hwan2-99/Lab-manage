@@ -15,13 +15,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function() {
-    var boardNum = location.pathname.split("/")[2];
-    loadPostList(boardNum);
+    var boardId = location.pathname.split("/")[2];
+    loadPostList(boardId);
   });
 
-  function loadPostList(boardNum) {
+  function loadPostList(boardId) {
     $.ajax({
-      url: "/board/" + boardNum,
+      url: "/post/board/" + boardId,
       type: "GET",
       dataType: "json",
       success: function(postList) {
@@ -30,7 +30,7 @@
         $.each(postList, function(index, post) {
 
           postListHtml += "<li>" +
-                  "<a href='/post/" + post.num + "'>" + post.title + "</a>" +
+                  "<a href='/post/" + post.id + "'>" + post.title + "</a>" +
                   "<span>" + post.createdAt + "</span>" +
                   "</li>";
         });

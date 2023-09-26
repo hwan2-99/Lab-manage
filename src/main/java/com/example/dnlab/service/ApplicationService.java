@@ -58,8 +58,18 @@ public class ApplicationService {
                 .collect(Collectors.toList());
     }
 
-    public Application getApplicationDetail(int id){
-        return applicationRepository.getApplicationDetail(id);
+    public ApplicationResDto getApplicationDetail(int id){
+        Application application = applicationRepository.findById(id);
+
+
+        return ApplicationResDto.builder()
+                .motive(application.getMotive())
+                .intro(application.getIntro())
+                .wanted(application.getWanted())
+                .userId(application.getUser().getId())
+                .userName(application.getUser().getName())
+                .studentId(application.getUser().getStudentId())
+                .build();
     }
 
     public void approveApplication(int id) {
@@ -67,7 +77,6 @@ public class ApplicationService {
         applicationRepository.accessApplication(application.getId());
 
         User user = userRepository.findById(application.getUser().getId());
-        int userNum = user.getId();
 
         // 기존 권한 유지하고 RESEARCHER 권한 추가
         user.setRole(Role.RESEARCHER);

@@ -17,13 +17,13 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  var applicationNum = window.location.pathname.split('/').pop();
+  var applicationId = window.location.pathname.split('/').pop();
 
   // 버튼 클릭 이벤트 핸들러 함수
   function handleButtonClick(event) {
     var action = event.target.id === "approve-btn" ? "approve" : "reject";
     var dataToSend = {
-      user_num: applicationNum,
+      user_id: applicationId,
       action: action
     };
     $.ajax({
@@ -48,7 +48,7 @@
 
   // 신청서 정보 요청 및 출력
   $.ajax({
-    url: "/application/detail/" + applicationNum,
+    url: "/application/detail/" + applicationId,
     type: "GET",
     dataType: "json",
     success: function(data) {

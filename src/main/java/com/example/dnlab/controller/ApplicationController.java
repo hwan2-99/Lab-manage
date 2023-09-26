@@ -43,19 +43,20 @@ public class ApplicationController {
     }
 
     @GetMapping("/detail/{id}")
-    public Application getApplicationDetail(@PathVariable("id") int id) {
-        return applicationService.getApplicationDetail(id);
+    public ResponseEntity<ApplicationResDto> getApplicationDetail(@PathVariable("id") int id) {
+        ApplicationResDto res = applicationService.getApplicationDetail(id);
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/action")
     public ResponseEntity<String> approveAction(@RequestBody Map<String, Object> request) {
-        int userNum = Integer.parseInt(request.get("user_id").toString());
+        int userId = Integer.parseInt(request.get("user_id").toString());
         String action = request.get("action").toString();
 
             if (action.equals("approve")) {
-                applicationService.approveApplication(userNum);
+                applicationService.approveApplication(userId);
             } else if (action.equals("reject")) {
-            applicationService.rejectApplication(userNum);
+            applicationService.rejectApplication(userId);
             } else {
                 return new ResponseEntity<>("Invalid action", HttpStatus.BAD_REQUEST);
             }

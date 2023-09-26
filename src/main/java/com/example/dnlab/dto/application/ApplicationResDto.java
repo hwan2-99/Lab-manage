@@ -14,4 +14,6 @@ public class ApplicationResDto {
     private String wanted; // 가입 후 하고싶은 연구활동
     private ApplicationStatus status; // 신청서 승낙여부
     private int userId;
+    private String userName;
+    private int studentId;
 }

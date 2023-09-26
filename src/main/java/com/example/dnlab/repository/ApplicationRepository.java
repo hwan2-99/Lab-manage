@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ApplicationRepository extends JpaRepository<Application,Integer> {
     // pk로 신청서 가져오기
-    Application findById(int num);
+    Application findById(int id);
 
     // 신청서 조회(교수님 전용)
     @Query("SELECT a FROM Application a ORDER BY a.createdAt DESC")

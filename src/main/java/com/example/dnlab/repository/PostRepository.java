@@ -13,6 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     // 게시판 번호에 따라 게시글 불러오기
     List<Post> findAllByBoardIdOrderByCreatedAtDesc(int boardId, Pageable pageable);
+    @Query("SELECT p FROM Post p ORDER BY p.createdAt DESC")
     List<Post> findAllOrderByCreatedAtDesc(Pageable pageable);
 
     @Modifying

@@ -47,9 +47,9 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        List<Post> posts = postService.getAllPost();
-        return ResponseEntity.ok(posts);
+    public ResponseEntity<List<PostListResDto>> getAllPosts() {
+        Pageable pageable = PageRequest.of(0, 10);
+        return ResponseEntity.ok(postService.getAllPost(pageable));
     }
 
     @GetMapping("/board/{boardId}")

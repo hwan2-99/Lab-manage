@@ -82,8 +82,11 @@ public class PostService {
                 .build();
     }
     // 모든 게시글 조회
-    public List<Post> getAllPost(){
-        return postRepository.findAll();
+    public List<PostListResDto> getAllPost(Pageable pageable){
+        List<Post> posts = postRepository.findAllOrderByCreatedAtDesc(pageable);
+        return posts.stream()
+                .map(PostListResDto::new)
+                .collect(Collectors.toList());
     }
 
     public List<PostListResDto> getPostByBoardId(int boardId, Pageable pageable){

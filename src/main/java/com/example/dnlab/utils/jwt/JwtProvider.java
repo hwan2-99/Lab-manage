@@ -35,6 +35,7 @@ public class JwtProvider {
     private String secretKey;
 
     public Token createToken(String payload) {
+
         return Token.builder()
                 .accessToken(createAccessToken(payload))
                 .refreshToken(createRefreshToken())
@@ -45,6 +46,7 @@ public class JwtProvider {
         Claims claims = Jwts.claims().setSubject(payload);
         Date now = new Date();
         Date validity = new Date(now.getTime() + accessTokenExpiredIn);
+        log.info("토큰만든다~~~~~~~~~~~~~~~~~~~~");
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)

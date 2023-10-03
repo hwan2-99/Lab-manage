@@ -1,10 +1,7 @@
 package com.example.dnlab.user;
 
 import com.example.dnlab.domain.User;
-import com.example.dnlab.dto.user.LoginReqDto;
-import com.example.dnlab.dto.user.LoginTokenResDto;
-import com.example.dnlab.dto.user.SignUpReqDto;
-import com.example.dnlab.dto.user.UserResDto;
+import com.example.dnlab.dto.user.*;
 import com.example.dnlab.repository.UserRepository;
 import com.example.dnlab.service.UserService;
 import org.assertj.core.api.Assertions;
@@ -17,8 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -58,14 +61,16 @@ public class UserServiceTest {
                         .uid("admin")
                         .pw("123")
                         .build());
-
         //when
         User user = userRepository.findByUid("admin");
 
         //then
         Assertions.assertThat(user.getUid()).isEqualTo(result.getUid());
-
     }
 
+    @Test
+    public void 회원검색(){
+
+    }
 
 }
